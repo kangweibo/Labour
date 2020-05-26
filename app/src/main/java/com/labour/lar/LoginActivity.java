@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.labour.lar.activity.FindPwdActivity;
+import com.labour.lar.activity.RegistActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(this,MainActivity.class));
                 break;
             case R.id.regist_btn:
-                startActivity(new Intent(this,RegistActivity.class));
+                startActivity(new Intent(this, RegistActivity.class));
                 break;
             case R.id.findpwd_btn:
                 startActivity(new Intent(this, FindPwdActivity.class));

@@ -50,11 +50,11 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             android:launchMode="singleTask"></activity>
         <activity
-            android:name=".RegistActivity"
+            android:name=".activity.RegistActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"></activity>
         <activity
-            android:name=".FindPwdActivity"
+            android:name=".activity.FindPwdActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"></activity>
     </application>

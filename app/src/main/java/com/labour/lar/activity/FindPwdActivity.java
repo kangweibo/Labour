@@ -1,10 +1,13 @@
-package com.labour.lar;
+package com.labour.lar.activity;
 
 import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.labour.lar.BaseActivity;
+import com.labour.lar.MainActivity;
+import com.labour.lar.R;
 import com.labour.lar.util.MCountDownTimer;
 
 import butterknife.BindView;
@@ -80,7 +83,7 @@ public class FindPwdActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.login_btn:
-                startActivity(new Intent(this,MainActivity.class));
+                startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.getVerfyCode_tv:
                 if(isGetVerfyCodeClicked){
