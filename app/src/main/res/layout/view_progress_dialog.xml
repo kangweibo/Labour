@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_black_bg_corner"
+    android:orientation="vertical" >
+
+    <FrameLayout android:id="@+id/dialog_fl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+    </FrameLayout>
+
+    <TextView android:id="@+id/msg_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="操作中..."
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:paddingBottom="5dp"/>
+
+</LinearLayout>

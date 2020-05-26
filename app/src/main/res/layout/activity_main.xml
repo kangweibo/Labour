@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.labour.lar.widget.TabBarView
+        android:id="@+id/mainTabBarView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        app:layout="@layout/widget_tabbar_view"
+        app:noPagerIndex="-1"
+        app:tabbar_bg="@color/white" />
 
-</android.support.constraint.ConstraintLayout>
+    <View
+        android:id="@+id/br_line_v"
+        style="@style/HorizontalLine"
+        android:layout_above="@id/mainTabBarView" />
+
+    <com.labour.lar.widget.MainScrollViewPager
+        android:id="@+id/mainViewpager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/br_line_v"
+        android:persistentDrawingCache="animation" />
+</RelativeLayout>

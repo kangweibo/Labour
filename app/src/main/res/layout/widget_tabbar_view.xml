@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+ 
+    <CheckedTextView
+        android:id="@+id/tabBar_btn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="5dp"
+        android:drawableTop="@drawable/selector_tab_home"
+        android:text="@string/main_tab_home"
+        android:textColor="@drawable/main_tabbar_textcolor"
+        android:textSize="@dimen/home_tab_text_size"
+        android:textAlignment="center"/>
+
+    <CheckedTextView
+        android:id="@+id/tabBar_btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/selector_tab_msg"
+        android:text="@string/main_tab_msg"
+        android:textColor="@drawable/main_tabbar_textcolor"
+        android:textSize="@dimen/home_tab_text_size"
+        android:drawablePadding="5dp"
+        android:textAlignment="center"/>
+
+    <CheckedTextView
+        android:id="@+id/tabBar_btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/selector_tab_mine"
+        android:text="@string/main_tab_mine"
+        android:textColor="@drawable/main_tabbar_textcolor"
+        android:textSize="@dimen/home_tab_text_size"
+        android:drawablePadding="5dp"
+        android:textAlignment="center"/>
+
+    <CheckedTextView
+        android:id="@+id/tabBar_btn4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/selector_tab_kaoqin"
+        android:text="@string/main_tab_attendance"
+        android:textColor="@drawable/main_tabbar_textcolor"
+        android:textSize="@dimen/home_tab_text_size"
+        android:drawablePadding="5dp"
+        android:textAlignment="center"/>
+
+</LinearLayout>

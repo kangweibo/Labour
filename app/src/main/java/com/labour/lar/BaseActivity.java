@@ -1,6 +1,7 @@
 package com.labour.lar;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -20,8 +21,10 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         fm = getSupportFragmentManager();
+        beforeInitLayout();
         setContentView(getActivityLayoutId());
         unbinder = ButterKnife.bind(this);
+        afterInitLayout();
 
         //http://stackoverflow.com/questions/4341600/how-to-prevent-multiple-instances-of-an-activity-when-it-is-launched-with-differ/
         // should be in launcher activity, but all app use this can avoid the problem
@@ -34,7 +37,12 @@ public abstract class BaseActivity extends FragmentActivity {
             }
         }
     }
+    public void beforeInitLayout(){
 
+    }
+    public void afterInitLayout(){
+
+    }
     public abstract int getActivityLayoutId();
 
     public void onResume() {
