@@ -40,6 +40,7 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int getFragmentLayoutId();
     public abstract void initView();
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
