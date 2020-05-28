@@ -25,4 +25,6 @@
     <color name="content">#252525</color>
     <color name="content2">#7C7979</color>
 
+    <color name="fence_fill">#3376d4f3</color>
+    <color name="fence_stroke">#cc3f91fc</color>
 </resources>
