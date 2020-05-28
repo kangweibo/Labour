@@ -92,4 +92,7 @@ dependencies {
     implementation 'com.amap.api:location:latest.integration'
     //搜索功能
     implementation 'com.amap.api:search:latest.integration'
+
+    //EasyPermissions Simplify Android M system permissions
+    implementation 'pub.devrel:easypermissions:2.0.1'
 }

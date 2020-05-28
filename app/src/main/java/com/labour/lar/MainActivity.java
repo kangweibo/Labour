@@ -1,5 +1,6 @@
 package com.labour.lar;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import com.labour.lar.fragment.KaoqinFrag;
 import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
 import com.labour.lar.fragment.ProjectFrag;
+import com.labour.lar.service.LocationFenceService;
 import com.labour.lar.service.LocationService;
 import com.labour.lar.widget.MainScrollViewPager;
 import com.labour.lar.widget.TabBarView;
@@ -49,7 +51,13 @@ public class MainActivity extends BaseActivity {
         mainTabBarView.selectedTab(DEFAULT_SELECT_TAB);
 
         Intent intent = new Intent(this,LocationService.class);
+        intent.setComponent(new ComponentName( getPackageName(),"com.labour.lar.service.LocationService"));
         intent.setAction(Constants.LOCATION_SERVICE_ACTION);
         startService(intent);
+
+        Intent fenceIntent = new Intent(this, LocationFenceService.class);
+        fenceIntent.setComponent(new ComponentName( getPackageName(),"com.labour.lar.service.LocationFenceService"));
+        fenceIntent.setAction(Constants.LOCATION_FENCE_SERVICE_ACTION);
+        startService(fenceIntent);
     }
 }

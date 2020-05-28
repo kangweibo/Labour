@@ -14,8 +14,17 @@ public interface Constants {
     //public static final String WX_APP_ID = "wx7b3b870087366108";
    // public static final String WX_SECRET = "a842a4d7b05d3901ec8da0392e0fe0aa";
 
+    //地图定位service
     public static String LOCATION_SERVICE_ACTION = "com.labour.lar.service.LocationService.ACTION";
+    //定位接收
     public static String LOCATION_RECEIVER_ACTION = "com.labour.lar.receiver.LocationReceiver.ACTION";
     public static String LOCATION_RECEIVER_PERMISSION = "com.labour.lar.receiver.LocationReceiver.PERMISSION";
+    //定位接收
     public static String LOCATION_MAP_RECEIVER_ACTION = "com.labour.lar.receiver.LocationReceiver.MAP_ACTION";
+
+    //地理围栏service
+    public static String LOCATION_FENCE_SERVICE_ACTION = "com.labour.lar.service.LocationFenceService.ACTION";
+    //地理围栏定位接收
+    public static String LOCATION_FENCE_RECEIVER_ACTION = "com.labour.lar.receiver.LocationFenceReceiver.ACTION";
+
 }

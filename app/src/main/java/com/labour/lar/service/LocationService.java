@@ -66,24 +66,25 @@ public class LocationService extends Service implements AMapLocationListener {
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        if (amapLocation != null && amapLocation.getErrorCode() == 0) {
-            // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
-            int locationType = amapLocation.getLocationType();
-            Log.e("amap", "LocationService onMyLocationChange 定位成功， lat: " + amapLocation.getLatitude() + " lon: " + amapLocation.getLongitude()+ " locationType: " + locationType);
+        if(amapLocation != null){
+            if (amapLocation.getErrorCode() == 0) {
+                // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
+                int locationType = amapLocation.getLocationType();
+                Log.e("amap", "LocationService onMyLocationChange 定位成功， lat: " + amapLocation.getLatitude() + " lon: " + amapLocation.getLongitude()+ " locationType: " + locationType);
 
-            LatLng latlng = new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude());
-            Intent intent = new Intent(Constants.LOCATION_RECEIVER_ACTION);
-            intent.setComponent(new ComponentName( getPackageName(),"com.labour.lar.receiver.LocationReceiver"));
-            intent.putExtra("latlng", latlng);
-            sendBroadcast(intent,Constants.LOCATION_RECEIVER_PERMISSION);
-        } else {
-            if(amapLocation != null){
+                LatLng latlng = new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude());
+                Intent intent = new Intent(Constants.LOCATION_RECEIVER_ACTION);
+                intent.setComponent(new ComponentName( getPackageName(),"com.labour.lar.receiver.LocationReceiver"));
+                intent.putExtra("latlng", latlng);
+                sendBroadcast(intent,Constants.LOCATION_RECEIVER_PERMISSION);
+            } else {
                 int errorCode = amapLocation.getErrorCode();
                 String errorInfo =amapLocation.getErrorInfo();
                 String errText = "定位失败," + "errorCode:"+errorCode+",errorInfo:"+errorInfo;
                 Log.e("amap",errText);
             }
         }
+
     }
 
 }

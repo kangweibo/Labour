@@ -80,15 +80,13 @@ public class AMapGeoFence implements GeoFenceListener {
     //三里屯
     private static final DPoint mDpoint10 = new DPoint(39.938526, 116.45437);*/
 
-
     public AMapGeoFence(Context context, AMap amap, Handler handler) {
         mContext = context;
         mHandler = handler;
         mCustomEntitys = new ConcurrentHashMap<String, Object>();
         mAMap = amap;
 
-        IntentFilter fliter = new IntentFilter(
-                ConnectivityManager.CONNECTIVITY_ACTION);
+        IntentFilter fliter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         fliter.addAction(GEOFENCE_BROADCAST_ACTION);
         mContext.registerReceiver(mGeoFenceReceiver, fliter);
 
@@ -264,7 +262,7 @@ public class AMapGeoFence implements GeoFenceListener {
                 GeoFence fence = bundle.getParcelable(GeoFence.BUNDLE_KEY_FENCE);
 
                 int code = bundle.getInt(GeoFence.BUNDLE_KEY_LOCERRORCODE);
-                Log.e(TAG, "定位失败"+code);
+                Log.e(TAG, "定位Code:"+code);
                 StringBuffer sb = new StringBuffer();
                 switch (status) {
                     case GeoFence.STATUS_LOCFAIL:

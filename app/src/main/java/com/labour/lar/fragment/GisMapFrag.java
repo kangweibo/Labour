@@ -29,6 +29,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.DPoint;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
@@ -42,6 +43,8 @@ import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.maps2d.model.Polygon;
+import com.amap.api.maps2d.model.PolygonOptions;
 import com.amap.api.maps2d.model.Text;
 import com.amap.api.maps2d.model.TextOptions;
 import com.labour.lar.BaseFragment;
@@ -67,17 +70,17 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     private AMap aMap;
 //    private AMapLocationClient mlocationClient;
 //    private AMapLocationClientOption mLocationOption;
-    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
-    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
-    private static final int NO_STROKE_COLOR = Color.argb(0, 0, 0, 0);
-    private static final int NO_FILL_COLOR = Color.argb(0, 0, 0, 0);
+//    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
+//    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
+//    private static final int NO_STROKE_COLOR = Color.argb(0, 0, 0, 0);
+//    private static final int NO_FILL_COLOR = Color.argb(0, 0, 0, 0);
 
     //实时定位
     private LocalBroadcastManager localBroadcastManager;
     private MapLocationReceiver mapLocationReceiver = new MapLocationReceiver();
 
     //地理围栏
-    private AMapGeoFence mAMapGeoFence;
+//    private AMapGeoFence mAMapGeoFence;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,8 +104,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         localBroadcastManager = LocalBroadcastManager.getInstance(getContext()) ;
         localBroadcastManager.registerReceiver( mapLocationReceiver , filter );
 
-        mAMapGeoFence = new AMapGeoFence(getContext(), aMap, handler);
+//        mAMapGeoFence = new AMapGeoFence(getContext(), aMap, handler);
     }
+
     /**
      * 设置一些amap的属性
      */
@@ -210,10 +214,28 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         Marker marker = aMap.addMarker(new MarkerOptions()
                 .position(latlng)
                 .title("好好学习")
-                .icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 .draggable(true));
         marker.showInfoWindow();// 设置默认显示一个infowinfow
+    }
+    //朝阳公园
+    private static final String mPolygonFenceString1 = "116.48954,39.949035;116.48956,39.946986;116.489545,39.945793;116.489545,39.945151;116.489547,39.944534;116.489537,39.942016;116.489542,39.940404;116.489532,39.939772;116.489516,39.936447;116.489476,39.935253;116.489468,39.933894;116.488858,39.933901;116.488646,39.933904;116.486819,39.933926;116.486029,39.933919;116.482808,39.933924;116.481209,39.933928;116.477237,39.93393;116.474738,39.93395;116.474632,39.934851;116.474466,39.935205;116.474103,39.935351;116.473723,39.935406;116.473488,39.935378;116.473412,39.935423;116.4734,39.93551;116.473558,39.935659;116.473987,39.936095;116.474344,39.936446;116.474609,39.936707;116.474815,39.936986;116.474899,39.937155;116.474915,39.93733;116.474916,39.937721;116.474919,39.93805;116.4749,39.938376;116.474871,39.938953;116.474855,39.939258;116.474816,39.93977;116.474781,39.940558;116.474724,39.941285;116.474689,39.941889;116.474649,39.942447;116.474628,39.942775;116.474608,39.943028;116.474601,39.943117;116.474551,39.943673;116.474499,39.944207;116.474488,39.944354;116.474467,39.944524;116.474415,39.945015;116.47436,39.945305;116.474335,39.945401;116.474247,39.945691;116.47414,39.946063;116.47393,39.946832;116.473854,39.94711;116.473716,39.94752;116.47362,39.947742;116.473991,39.947865;116.474236,39.947932;116.474385,39.947925;116.474506,39.94798;116.474887,39.948182;116.475212,39.948319;116.475795,39.948419;116.476327,39.948544;116.476614,39.948657;116.477115,39.948675;116.477472,39.948712;116.477793,39.948754;116.478074,39.948851;116.478588,39.948964;116.478705,39.949009;116.478752,39.949069;116.478818,39.949282;116.47883,39.949374;116.478824,39.949446;116.478789,39.949503;116.478648,39.949599;116.478616,39.949629;116.478538,39.949775;116.478451,39.949898;116.478378,39.94997;116.478336,39.950033;116.478318,39.950072;116.478328,39.950211;116.478418,39.950352;116.478481,39.95041;116.47855,39.950433;116.478575,39.95046;116.478593,39.950512;116.478417,39.950964;116.478236,39.951219;116.478168,39.951292;116.477863,39.951713;116.476722,39.953685;116.476775,39.953867;116.479074,39.954626;116.480838,39.955196;116.483278,39.955976;116.483806,39.956138;116.484569,39.956407;116.485044,39.956637;116.486039,39.95704;116.486266,39.957121;116.487219,39.957523;116.487311,39.95754;116.487474,39.957491;116.48762,39.957241;116.487655,39.957173;116.487715,39.957055;116.487805,39.956968;116.488078,39.956501;116.488223,39.956233;116.488432,39.955773;116.488625,39.955281;116.4887,39.95508;116.488843,39.954612;116.489033,39.953949;116.489154,39.95345;116.489218,39.953167;116.489278,39.952847;116.489303,39.952651;116.489309,39.952553;116.489299,39.952429;116.489257,39.952256;116.48923,39.952153;116.489223,39.951986;116.489266,39.951738;116.489317,39.951608;116.48936,39.95151;116.489402,39.951426;116.489434,39.951363;116.489466,39.951212;116.489493,39.950603;116.48954,39.94958;116.48954,39.949035";
+    //绘制多边形
+    public void drawPolygon(){
+        List<LatLng> pointList = MapUtil.toAMapList(mPolygonFenceString1);
+        LatLng firstLatLng = pointList.get(0);
+        List<Polygon> polygonList = new ArrayList<Polygon>();
+        PolygonOptions polygonOption = new PolygonOptions();
+        polygonOption.addAll(pointList);
+        polygonOption.fillColor(getResources().getColor(R.color.fence_fill));
+        polygonOption.strokeColor(getResources().getColor(R.color.fence_stroke));
+        polygonOption.strokeWidth(4);
+        Polygon polygon = aMap.addPolygon(polygonOption);
+        polygonList.add(polygon);
+        if(firstLatLng != null){
+            CameraUpdate cameraUpdate = CameraUpdateFactory.changeLatLng(firstLatLng);
+            aMap.moveCamera(cameraUpdate);
+        }
     }
 
     /**
@@ -241,17 +263,18 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        mAMapGeoFence.removeAll();
+//        mAMapGeoFence.removeAll();
         localBroadcastManager.unregisterReceiver(mapLocationReceiver);
     }
 
-    Handler handler = new Handler() {
+    /*Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
 //                    Toast.makeText(getApplicationContext(), "添加围栏成功",
 //                            Toast.LENGTH_SHORT).show();
-                    mAMapGeoFence.drawFenceToMap();
+//                    mAMapGeoFence.drawFenceToMap();
+                    drawPolygon();
                     break;
                 case 1:
                     int errorCode = msg.arg1;
@@ -267,7 +290,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
                     break;
             }
         }
-    };
+    };*/
 
 
     /* *//**

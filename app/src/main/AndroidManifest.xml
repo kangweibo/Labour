@@ -99,7 +99,6 @@
                 <action android:name="com.labour.lar.service.LocationService.ACTION"/>
             </intent-filter>
         </service>
-
         <receiver android:name=".receiver.LocationReceiver"
             android:permission="com.labour.lar.receiver.LocationReceiver.PERMISSION"
             android:enabled="true"
@@ -109,8 +108,25 @@
             </intent-filter>
         </receiver>
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="984ad95a668135eeff4a8820138d1e31">
-        </meta-data>
+        <service android:name=".service.LocationFenceService">
+            <intent-filter>
+                <action android:name="com.labour.lar.service.LocationFenceService.ACTION"/>
+            </intent-filter>
+        </service>
+
+        <!--版本更新所要用到的 fileProvider 用于兼容7.0通知栏的安装-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <!--元数据-->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="984ad95a668135eeff4a8820138d1e31"/>
     </application>
 
 </manifest>
