@@ -161,9 +161,10 @@ public class AMapGeoFence implements GeoFenceListener {
             polygonList.add(polygon);
             mCustomEntitys.put(fence.getFenceId(), polygonList);
         }
-        //测试
-        CameraUpdate cameraUpdate = CameraUpdateFactory.changeLatLng(firstLatLng);
-        mAMap.moveCamera(cameraUpdate);
+        if(firstLatLng != null){
+            CameraUpdate cameraUpdate = CameraUpdateFactory.changeLatLng(firstLatLng);
+            mAMap.moveCamera(cameraUpdate);
+        }
     }
 
     /*private void drawCircle(GeoFence fence) {
