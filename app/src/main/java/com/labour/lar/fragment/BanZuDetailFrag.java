@@ -62,7 +62,7 @@ public class BanZuDetailFrag extends BaseFragment {
         fm = this.getChildFragmentManager();
 
         frgs.add(new BanZuDetailListFrag());
-        frgs.add(new BanZuDetailListFrag());
+        frgs.add(new GisMapFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 

@@ -1,4 +1,4 @@
-package com.labour.lar.util;
+package com.labour.lar.map;
 
 import com.amap.api.location.DPoint;
 import com.amap.api.maps2d.model.LatLng;

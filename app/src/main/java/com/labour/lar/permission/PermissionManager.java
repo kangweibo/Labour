@@ -3,6 +3,7 @@ package com.labour.lar.permission;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
@@ -12,20 +13,32 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class PermissionManager implements EasyPermissions.PermissionCallbacks {
+
     //如果设置了target > 28，需要增加这个权限，否则不会弹出"始终允许"这个选择框
     private static String BACK_LOCATION_PERMISSION = "android.permission.ACCESS_BACKGROUND_LOCATION";
-    public static String[] perms = {
+    private String[] perms = {
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
-            BACK_LOCATION_PERMISSION
     };
 
     private Activity mContext;
+
     private PermissionManager(Activity mContext){
         this.mContext = mContext;
+        if(Build.VERSION.SDK_INT > 28
+                && mContext.getApplicationInfo().targetSdkVersion > 28) {
+            perms = new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_PHONE_STATE,
+                    BACK_LOCATION_PERMISSION
+            };
+        }
     }
     public static PermissionManager getPermissionManager(Activity mContext){
         return new PermissionManager(mContext);

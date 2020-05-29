@@ -62,7 +62,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
         fm = this.getChildFragmentManager();
 
         frgs.add(new TaskTeamDetailListFrag());
-        frgs.add(new TaskTeamDetailListFrag());
+        frgs.add(new GisMapFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 

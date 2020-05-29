@@ -18,7 +18,7 @@ import com.amap.api.fence.GeoFence;
 import com.amap.api.fence.GeoFenceClient;
 import com.amap.api.fence.GeoFenceListener;
 import com.labour.lar.Constants;
-import com.labour.lar.util.MapUtil;
+import com.labour.lar.map.MapUtil;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;

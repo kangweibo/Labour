@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:paddingLeft="@dimen/common_margin_left"
+    android:paddingRight="@dimen/common_margin_right"
+    >
+
+    <TextView android:id="@+id/name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/title"
+        android:textSize="@dimen/text_size_16"
+        android:layout_marginTop="3dp"
+        android:text="南苑花园c座"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:drawableLeft="@mipmap/message_icon"
+        android:drawablePadding="10dp"/>
+
+    <TextView android:id="@+id/company_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/content"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginTop="3dp"
+        android:text="方正通信"
+        android:layout_marginLeft="35dp"/>
+
+    <TextView android:id="@+id/type_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/content"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginTop="3dp"
+        android:text="写字楼"
+        android:layout_marginLeft="35dp"/>
+
+</LinearLayout>

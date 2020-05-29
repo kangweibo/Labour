@@ -1,16 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:id="@+id/title_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_size_16"
+    <include layout="@layout/layout_header"/>
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingTop="5dp"
+        android:background="@color/common_blue_deep">
+
+        <com.labour.lar.widget.RoundImageView
+            android:id="@+id/photo_iv"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"
+            app:type="circle"
+            android:background="@color/white"
+            android:layout_gravity="center"/>
+
+        <TextView android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16"
+            android:layout_marginTop="3dp"
+            android:text="南苑花园c座"
+            android:textStyle="bold"
+            android:layout_toLeftOf="@id/state_tv"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_gravity="center"/>
+
+        <TextView android:id="@+id/brief_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginTop="3dp"
+            android:text="方正通信"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="身份信息未验证，点击此处验证 >"
         android:textColor="@color/black"
-        android:text="我的"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        android:textSize="@dimen/text_size_14"
+        android:background="#F7F88D"
+        android:gravity="center"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none" >
+        <com.labour.lar.widget.NoScrollGridView
+            android:id="@+id/main_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:horizontalSpacing="0.0dip"
+            android:listSelector="@null"
+            android:numColumns="3"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="0.0dip">
+
+        </com.labour.lar.widget.NoScrollGridView>
+    </ScrollView>
+
+</LinearLayout>

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
-import com.labour.lar.adapter.FragmentViewPagerAdapter;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 
 import java.util.ArrayList;
@@ -64,7 +63,7 @@ public class ProjectDetailFrag extends BaseFragment {
 
         frgs.add(new ProjectDetailListFrag());
         frgs.add(new GisMapFrag());
-        frgs.add(new ProjectDetailListFrag());
+        frgs.add(new ProjectDetailProgressFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 

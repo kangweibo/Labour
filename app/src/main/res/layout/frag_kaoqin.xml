@@ -1,16 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView android:id="@+id/title_tv"
-        android:layout_width="wrap_content"
+    <include layout="@layout/layout_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:layout_marginRight="@dimen/common_margin_right"
+        android:layout_marginTop="15dp">
+
+        <TextView android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/common_blue"
+            android:text="当前位置："
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:drawableLeft="@mipmap/location_icon"/>
+0
+        <TextView android:id="@+id/location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_15"
+            android:textColor="@color/content2"
+            android:text="正在定位..."
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp">
+        <ImageView android:id="@+id/sign_iv"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@mipmap/kaoqin_sign_icon"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/grey"
+            android:text="请在柔和的正面光源下进行验证\n取下眼镜、露出额头、并保持正脸注视屏幕"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <Button android:id="@+id/sign_btn"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/selector_button"
         android:textSize="@dimen/text_size_16"
-        android:textColor="@color/black"
-        android:text="考勤"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="@dimen/common_margin_right"
+        android:layout_marginLeft="@dimen/common_margin_right"
+        android:text="签到"/>
+</LinearLayout>

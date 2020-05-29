@@ -1,4 +1,4 @@
-package com.labour.lar.util;
+package com.labour.lar.map;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,8 +17,6 @@ import com.amap.api.location.DPoint;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.model.Circle;
-import com.amap.api.maps2d.model.CircleOptions;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Polygon;
 import com.amap.api.maps2d.model.PolygonOptions;
