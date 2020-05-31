@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         unbinder = ButterKnife.bind(this);
 
-        permissionManager = PermissionManager.getPermissionManager(this);
+        permissionManager = PermissionManager.getInstance(this);
         permissionManager.checkAllPermissions();
     }
 

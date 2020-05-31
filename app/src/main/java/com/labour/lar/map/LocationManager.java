@@ -54,7 +54,7 @@ public class LocationManager {
             mlocationClient = new AMapLocationClient(context);
             mLocationOption = new AMapLocationClientOption();
             // 每10秒定位一次
-            mLocationOption.setInterval(1000);
+            mLocationOption.setInterval(1000 * 20);
             //获取一次定位结果：
             //该方法默认为false。
             mLocationOption.setOnceLocation(once);

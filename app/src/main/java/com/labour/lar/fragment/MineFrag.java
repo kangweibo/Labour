@@ -10,6 +10,7 @@ import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.widget.NoScrollGridView;
+import com.labour.lar.widget.RoundImageView;
 
 import butterknife.BindView;
 
@@ -25,6 +26,9 @@ public class MineFrag extends BaseFragment {
     @BindView(R.id.main_gridview)
     NoScrollGridView main_gridview;
 
+    @BindView(R.id.photo_iv)
+    RoundImageView photo_iv;
+
     MineGridViewAdapter mineGridViewAdapter;
 
     @Override
@@ -36,6 +40,8 @@ public class MineFrag extends BaseFragment {
     public void initView() {
         back_iv.setVisibility(View.INVISIBLE);
         title_tv.setText("我的");
+
+        photo_iv.setImageResource(R.mipmap.test);
     }
 
     @Override

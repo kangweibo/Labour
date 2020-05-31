@@ -11,6 +11,10 @@ public interface Constants {
     public static final String PULLTYPE_DOWN = "pulldown";
     public static final String PULLTYPE_UP = "pullup";
 
+    public static final int ERROR_CODE = -1;
+    public static final int SUCCESS_CODE = 200;
+    public static final String ERROR_MESSAGE= "加载数据出错";
+
     //public static final String WX_APP_ID = "wx7b3b870087366108";
    // public static final String WX_SECRET = "a842a4d7b05d3901ec8da0392e0fe0aa";
 

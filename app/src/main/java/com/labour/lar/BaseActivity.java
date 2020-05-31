@@ -24,8 +24,6 @@ public abstract class BaseActivity extends FragmentActivity {
         beforeInitLayout();
         setContentView(getActivityLayoutId());
         unbinder = ButterKnife.bind(this);
-        afterInitLayout();
-
         //http://stackoverflow.com/questions/4341600/how-to-prevent-multiple-instances-of-an-activity-when-it-is-launched-with-differ/
         // should be in launcher activity, but all app use this can avoid the problem
         if(!isTaskRoot()){
@@ -36,6 +34,7 @@ public abstract class BaseActivity extends FragmentActivity {
                 return;
             }
         }
+        afterInitLayout();
     }
     public void beforeInitLayout(){
 

@@ -6,5 +6,7 @@
     <string name="main_tab_mine">我的</string>
     <string name="main_tab_attendance">考勤</string>
 
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 
 </resources>

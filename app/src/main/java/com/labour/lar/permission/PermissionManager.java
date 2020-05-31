@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
     };
 
     private Activity mContext;
+    private BatteryPermisson batteryPermisson;
 
     private PermissionManager(Activity mContext){
         this.mContext = mContext;
@@ -39,14 +41,18 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
                     BACK_LOCATION_PERMISSION
             };
         }
+
+        this.batteryPermisson = new BatteryPermisson(mContext);
     }
-    public static PermissionManager getPermissionManager(Activity mContext){
+    public static PermissionManager getInstance(Activity mContext){
         return new PermissionManager(mContext);
     }
     public void checkAllPermissions(){
         if(!checkPermissions(mContext,perms)){
             requestPermissions(mContext,"当前应用缺少必要权限。请点击\"确定\"-打开所需权限",101, perms);
         }
+
+        checkBatteryPermisson();
     }
     /**
      * 检查权限
@@ -88,4 +94,16 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
         //将请求结果传递EasyPermission库处理
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
+
+    //电池白名单权限
+    public void checkBatteryPermisson(){
+        this.batteryPermisson.check();
+    }
+
+    //厂商后台管理 手机管家白名单设置页面
+    public void requestMobileButlerSetting(){
+        this.batteryPermisson.requestMobileButlerSetting();
+    }
+
+
 }

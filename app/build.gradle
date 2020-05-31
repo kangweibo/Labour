@@ -95,4 +95,9 @@ dependencies {
 
     //EasyPermissions Simplify Android M system permissions
     implementation 'pub.devrel:easypermissions:2.0.1'
+    //fastjson
+    implementation 'com.alibaba:fastjson:1.2.68'
+
+    //网速监听
+    implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
 }
