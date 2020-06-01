@@ -20,6 +20,7 @@ import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
 import com.labour.lar.fragment.ProjectFrag;
 import com.labour.lar.module.UserLatLon;
+import com.labour.lar.net.ConnectionState;
 import com.labour.lar.service.LocationFenceService;
 import com.labour.lar.service.LocationService;
 import com.labour.lar.widget.MainScrollViewPager;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity implements ConnectionClassManager.ConnectionClassStateChangeListener {
+public class MainActivity extends BaseActivity {
 
     @BindView(R.id.mainTabBarView)
     TabBarView mainTabBarView;
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity implements ConnectionClassManager
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     private FragmentViewPagerAdapter fragmentPagerAdapter;
     private int DEFAULT_SELECT_TAB = 0;
+    private ConnectionState connectionState;
 
     @Override
     public int getActivityLayoutId() {
@@ -47,8 +49,8 @@ public class MainActivity extends BaseActivity implements ConnectionClassManager
 
     @Override
     public void afterInitLayout() {
-        ConnectionClassManager.getInstance().register(this);
-        DeviceBandwidthSampler.getInstance().startSampling();
+        connectionState = new ConnectionState(this);
+        connectionState.getCurrentBandwidthQuality();
 
         frgs.add(new ProjectFrag());
         frgs.add(new MessageFrag());
@@ -72,6 +74,7 @@ public class MainActivity extends BaseActivity implements ConnectionClassManager
         fenceIntent.setAction(Constants.LOCATION_FENCE_SERVICE_ACTION);
         startService(fenceIntent);
 
+        //启动时提交gps信息
         UserLatLonCache userLatLonCache = new UserLatLonCache(this);
 //        userLatLonCache.clear();
         ArrayList<UserLatLon> list = userLatLonCache.get();
@@ -80,38 +83,6 @@ public class MainActivity extends BaseActivity implements ConnectionClassManager
 //            for(UserLatLon u : list){
 //                Log.i("JSONArrayUserLatLon",u.toString());
 //            }
-        }
-
-        ConnectionQuality cq = ConnectionClassManager.getInstance().getCurrentBandwidthQuality();
-        //onBandwidthStateChange(cq);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(this.isFinishing()){
-            ConnectionClassManager.getInstance().remove(this);
-            DeviceBandwidthSampler.getInstance().stopSampling();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBandwidthStateChange(ConnectionQuality bandwidthState) {
-        if(bandwidthState.equals(ConnectionQuality.UNKNOWN)){
-            Toast.makeText(this,"网络有问题",Toast.LENGTH_SHORT).show();
-        } else if(bandwidthState.equals(ConnectionQuality.POOR)){
-            Toast.makeText(this,"网络较差",Toast.LENGTH_SHORT).show();
-        } else if(bandwidthState.equals(ConnectionQuality.MODERATE)){
-            Toast.makeText(this,"网络还行",Toast.LENGTH_SHORT).show();
-        } else if(bandwidthState.equals(ConnectionQuality.GOOD)){
-            Toast.makeText(this,"网络很好",Toast.LENGTH_SHORT).show();
-        } else if(bandwidthState.equals(ConnectionQuality.EXCELLENT)){
-            Toast.makeText(this,"网络超级好",Toast.LENGTH_SHORT).show();
         }
     }
 }

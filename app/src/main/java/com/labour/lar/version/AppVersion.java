@@ -1,75 +1,65 @@
 package com.labour.lar.version;
 
+import android.content.Context;
+
+import com.alibaba.fastjson.JSONObject;
+import com.labour.lar.Constants;
+import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.StringUtils;
+import com.labour.lar.util.Utils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2018/6/25.
  */
 
 public class AppVersion {
 
-    private int status;//":200,
-    private String info;//":"成功",
-    private Data data = new Data();
 
-    public static class Data {
-        private String code;//":"10", //版本code
-        private String version;//":"1", //版本号
-        private String note;//":"11",//更新内容
-        private String download;//"
+    private final String check_app_version_url = Constants.HTTP_BASE + "/Api/index/version";
+    private Context context;
 
-        public String getCode() {
-            return code;
-        }
-
-        public void setCode(String code) {
-            this.code = code;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-
-        public String getNote() {
-            return note;
-        }
-
-        public void setNote(String note) {
-            this.note = note;
-        }
-
-        public String getDownload() {
-            return download;
-        }
-
-        public void setDownload(String download) {
-            this.download = download;
-        }
+    public AppVersion(Context context){
+        this.context = context;
     }
 
-    public int getStatus() {
-        return status;
+    /**
+     * 检查版本
+     */
+    public void checkAppVersion(){
+        final Map<String, String> param = new HashMap<String, String>();
+        OkGo.<String>get(check_app_version_url).params(param).tag("check_app_version_url").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                AjaxResult jr = new AjaxResult(response.body());
+                int status = jr.getStatus();
+                Version versionBean = null;
+                if(status == 200){
+                    versionBean = JSONObject.toJavaObject(jr.getJsonObj(), Version.class);
+                }
+                int lcode = Utils.Version.getAppVersionCode(context);
+                String rversion = versionBean.getData().getCode();
+                if(!StringUtils.isEmpty(rversion)){
+                    try{
+                        float c = Float.parseFloat(rversion);
+                        if(lcode < c){
+                            VersionDialog.show(context,versionBean.getData().getDownload());
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+            }
+        });
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public Data getData() {
-        return data;
-    }
-
-    public void setData(Data data) {
-        this.data = data;
-    }
 }

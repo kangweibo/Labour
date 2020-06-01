@@ -95,6 +95,14 @@
             android:name=".activity.GongRenDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+        <activity
+            android:name="com.labour.lar.widget.ImagePagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+        <activity
+            android:name="com.labour.lar.activity.MyInfoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
 
         <service android:name="com.amap.api.location.APSService"></service>
 

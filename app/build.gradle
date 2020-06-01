@@ -100,4 +100,9 @@ dependencies {
 
     //网速监听
     implementation 'com.facebook.network.connectionclass:connectionclass:1.0.1'
+
+    //图片
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    //图片压缩
+    implementation 'top.zibin:Luban:1.1.3'
 }

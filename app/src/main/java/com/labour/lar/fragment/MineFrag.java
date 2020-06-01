@@ -1,13 +1,17 @@
 package com.labour.lar.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
+import com.labour.lar.activity.FindPwdActivity;
+import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.widget.NoScrollGridView;
 import com.labour.lar.widget.RoundImageView;
@@ -49,5 +53,13 @@ public class MineFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         mineGridViewAdapter = new MineGridViewAdapter(context);
         main_gridview.setAdapter(mineGridViewAdapter);
+        main_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 0){
+                    startActivity(new Intent(context, MyInfoActivity.class));
+                }
+            }
+        });
     }
 }

@@ -27,7 +27,6 @@
         android:layout_margin="10dp"
         android:textSize="16sp"
         android:textColor="#595854"
-        android:background="@drawable/shape_white_bg_corner_rect"
         android:gravity="start"
         android:padding="5dp"
         android:minHeight="80dp"
@@ -53,7 +52,7 @@
 
         <Button
             android:id="@+id/ok_btn"
-            style="@style/DialogRedBtn"
+            style="@style/DialogBlueBtn"
             android:layout_toRightOf="@id/btn_span_v"
             android:text="@string/ok"
              />

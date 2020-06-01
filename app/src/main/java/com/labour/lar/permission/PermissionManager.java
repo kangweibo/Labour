@@ -23,12 +23,24 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.CAMERA
     };
-
+    public static final String selectImagesPerms[] = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
+    public static final String takePhotoPerms[] ={
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+    };
     private Activity mContext;
-    private BatteryPermisson batteryPermisson;
+    private PermissionCallbacks permissionCallbacks;
 
-    private PermissionManager(Activity mContext){
+    private BatteryPermisson batteryPermisson;
+    public static interface PermissionCallbacks {
+        public void onPermissionsGranted(int requestCode);
+    }
+    private PermissionManager(Activity mContext) {
         this.mContext = mContext;
         if(Build.VERSION.SDK_INT > 28
                 && mContext.getApplicationInfo().targetSdkVersion > 28) {
@@ -38,21 +50,35 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.CAMERA,
                     BACK_LOCATION_PERMISSION
             };
         }
 
         this.batteryPermisson = new BatteryPermisson(mContext);
     }
+
+    public void setPermissionCallbacks(PermissionCallbacks permissionCallbacks) {
+        this.permissionCallbacks = permissionCallbacks;
+    }
+
     public static PermissionManager getInstance(Activity mContext){
         return new PermissionManager(mContext);
     }
-    public void checkAllPermissions(){
-        if(!checkPermissions(mContext,perms)){
-            requestPermissions(mContext,"当前应用缺少必要权限。请点击\"确定\"-打开所需权限",101, perms);
-        }
 
+    public void checkPermissions(){
+        checkPermissions(perms,100);
         checkBatteryPermisson();
+    }
+
+    public void checkPermissions(String[] permissions,int requestCode){
+        if(!checkPermissions(mContext,permissions)){
+            requestPermissions(mContext,"当前应用缺少必要权限。请点击\"确定\"-打开所需权限",requestCode, perms);
+        } else {
+            if(permissionCallbacks != null){
+                permissionCallbacks.onPermissionsGranted(requestCode);
+            }
+        }
     }
     /**
      * 检查权限
@@ -75,6 +101,9 @@ public class PermissionManager implements EasyPermissions.PermissionCallbacks {
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
         Toast.makeText(mContext, "用户授权成功",Toast.LENGTH_SHORT).show();
+        if(permissionCallbacks != null){
+            permissionCallbacks.onPermissionsGranted(requestCode);
+        }
     }
 
     @Override

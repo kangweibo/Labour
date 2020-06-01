@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -43,6 +44,12 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
     /** * view的宽度  */
     private int mWidth;
     private RectF mRoundRect;
+    private RectF bRoundRect;
+
+    private static final int BORDER_COLOR_DEFAULT = Color.parseColor("#FFFFFF");
+    private int borderColor;
+    private int borderWidth;
+    private Paint mBorderPaint;
 
     public RoundImageView(Context context, AttributeSet attrs)
     {
@@ -50,6 +57,8 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
         mMatrix = new Matrix();
         mBitmapPaint = new Paint();
         mBitmapPaint.setAntiAlias(true);
+
+
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.RoundImageView);
         mBorderRadius = a.getDimensionPixelSize(
@@ -58,6 +67,16 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
                                 BODER_RADIUS_DEFAULT, getResources()
                                         .getDisplayMetrics()));// 默认为10dp
         type = a.getInt(R.styleable.RoundImageView_type, TYPE_CIRCLE);// 默认为Circle
+        borderColor = a.getInt(R.styleable.RoundImageView_borderColor, BORDER_COLOR_DEFAULT);// 默认为Circle
+        borderWidth = a.getDimensionPixelSize(
+                R.styleable.RoundImageView_borderWidth, (int) TypedValue
+                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                                0, getResources()
+                                        .getDisplayMetrics()));// 默认为10dp
+
+        mBorderPaint = new Paint();
+        mBorderPaint.setAntiAlias(true);
+        mBorderPaint.setColor(borderColor);
         a.recycle();
     }
 
@@ -123,11 +142,12 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
         setUpShader();
         if (type == TYPE_ROUND)
         {
-            canvas.drawRoundRect(mRoundRect, mBorderRadius, mBorderRadius,
-                    mBitmapPaint);
+            canvas.drawRoundRect(bRoundRect, mBorderRadius, mBorderRadius, mBorderPaint);
+            canvas.drawRoundRect(mRoundRect, mBorderRadius, mBorderRadius, mBitmapPaint);
         } else
         {
-            canvas.drawCircle(mRadius, mRadius, mRadius, mBitmapPaint);
+            canvas.drawCircle(mRadius, mRadius,mRadius, mBorderPaint);
+            canvas.drawCircle(mRadius, mRadius, mRadius - borderWidth, mBitmapPaint);
         }
     }
 
@@ -136,7 +156,9 @@ public class RoundImageView extends android.support.v7.widget.AppCompatImageView
     {
         super.onSizeChanged(w, h, oldw, oldh);
         // 圆角图片的范围
-        if (type == TYPE_ROUND)
-            mRoundRect = new RectF(0, 0, getWidth(), getHeight());
+        if (type == TYPE_ROUND) {
+            bRoundRect = new RectF(0, 0, getWidth(), getHeight());
+            mRoundRect = new RectF(0 + borderWidth, 0 + borderWidth, getWidth() - borderWidth, getHeight() - borderWidth);
+        }
     }
 }

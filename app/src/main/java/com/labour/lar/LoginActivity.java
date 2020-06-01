@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         unbinder = ButterKnife.bind(this);
 
         permissionManager = PermissionManager.getInstance(this);
-        permissionManager.checkAllPermissions();
+        permissionManager.checkPermissions();
     }
 
     @OnClick({R.id.login_btn,R.id.regist_btn,R.id.findpwd_btn})
