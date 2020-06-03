@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
@@ -19,6 +20,7 @@ import com.labour.lar.fragment.KaoqinFrag;
 import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
 import com.labour.lar.fragment.ProjectFrag;
+import com.labour.lar.keepappalive.KeepAliveManager;
 import com.labour.lar.module.UserLatLon;
 import com.labour.lar.net.ConnectionState;
 import com.labour.lar.service.LocationFenceService;
@@ -41,6 +43,7 @@ public class MainActivity extends BaseActivity {
     private FragmentViewPagerAdapter fragmentPagerAdapter;
     private int DEFAULT_SELECT_TAB = 0;
     private ConnectionState connectionState;
+    private KeepAliveManager keepAliveManager;
 
     @Override
     public int getActivityLayoutId() {
@@ -74,15 +77,22 @@ public class MainActivity extends BaseActivity {
         fenceIntent.setAction(Constants.LOCATION_FENCE_SERVICE_ACTION);
         startService(fenceIntent);
 
+        keepAliveManager = new KeepAliveManager(this);
+        keepAliveManager.startKeepAlive();
+
+
+
         //启动时提交gps信息
         UserLatLonCache userLatLonCache = new UserLatLonCache(this);
-//        userLatLonCache.clear();
         ArrayList<UserLatLon> list = userLatLonCache.get();
         if(list != null){
             Log.i("UserLatLonCache","init list.size(): "+list.size());
-//            for(UserLatLon u : list){
-//                Log.i("JSONArrayUserLatLon",u.toString());
-//            }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+//        super.onBackPressed(); //注释super,拦截返回键功能
     }
 }

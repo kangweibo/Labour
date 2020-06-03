@@ -17,6 +17,7 @@ import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.labour.lar.Constants;
 import com.labour.lar.MainActivity;
 import com.labour.lar.R;
 import com.labour.lar.util.Utils;
@@ -139,12 +140,12 @@ public class UpdateService extends Service {
             notificationManager.createNotificationChannel(channel);
             mBuilder = new Notification.Builder(context, channelId)
                     .setOngoing(true)//设置是否是一个正在执行的通知
-                    .setContentTitle("更新包")
+                    .setContentTitle(Constants.APP_NAME)
                     .setContentText("Apk 下载中...")
                     .setSmallIcon(R.mipmap.ic_launcher);
         } else {
             mCompatBuilder = new NotificationCompat.Builder(this);
-            mCompatBuilder.setContentTitle("更新包")
+            mCompatBuilder.setContentTitle(Constants.APP_NAME)
                     .setContentText("Apk 下载中...")
                     .setTicker("开始下载")
                     .setSmallIcon(R.mipmap.ic_launcher);

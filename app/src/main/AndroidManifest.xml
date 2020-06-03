@@ -126,6 +126,22 @@
             </intent-filter>
         </service>
 
+        <!--bao huo -->
+        <!--注册Service-->
+        <service android:name=".keepappalive.DaemonService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":daemon_service"/>
+
+        <service android:name=".keepappalive.CancelNoticeService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":service"/>
+        <service
+            android:name=".keepappalive.AliveJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+
         <!--版本更新所要用到的 fileProvider 用于兼容7.0通知栏的安装-->
         <provider
             android:name="android.support.v4.content.FileProvider"

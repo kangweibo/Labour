@@ -1,6 +1,9 @@
 package com.labour.lar;
 
 public interface Constants {
+    public static final String APP_NAME = "应用名称";
+    public static final String APP_DESC = "这里是简单的应用描述";
+    public static final String PKG_NAME = "com.labour.lar";
 
     public static final int REQUEST_CODE_SELECT_IMAGE = 1;
 
