@@ -45,7 +45,7 @@
             android:text="方正通信"
             android:layout_gravity="center"/>
     </LinearLayout>
-    <TextView
+    <TextView android:id="@+id/identified_tv"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:text="身份信息未验证，点击此处验证 >"

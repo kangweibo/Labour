@@ -15,7 +15,6 @@
     <!--<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />-->
     <!--<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
     <!--<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>-->
-
     <uses-permission android:name="android.permission.READ_LOGS" /><!-- Bugly 错误统计用-->
 
 
@@ -25,6 +24,7 @@
 
     <!-- 8.0 系统需要-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
 
     <!-- 多媒体相关 -->
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -49,6 +49,10 @@
         android:name="com.labour.lar.receiver.LocationReceiver.PERMISSION"
         android:protectionLevel="normal" />
     <uses-permission android:name="com.labour.lar.receiver.LocationReceiver.PERMISSION"></uses-permission>
+
+    <uses-feature android:name="android.hardware.camera2.full"/>
+    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:name="com.labour.lar.BaseApplication"
@@ -103,6 +107,14 @@
             android:name="com.labour.lar.activity.MyInfoActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+        <activity
+            android:name="com.labour.lar.activity.IdentifiedActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+
+        <activity android:name="com.baidu.ocr.ui.camera.CameraActivity"
+            android:configChanges="screenSize|orientation"
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen"/>
 
         <service android:name="com.amap.api.location.APSService"></service>
 
@@ -127,19 +139,13 @@
         </service>
 
         <!--bao huo -->
+        <receiver android:name="com.labour.lar.keepalive.receiver.NotificationClickReceiver"/>
+        <activity android:name="com.labour.lar.keepalive.activity.OnePixelActivity" android:theme="@style/onePixelActivity" android:launchMode="singleInstance" android:excludeFromRecents="true"/>
+        <service android:name="com.labour.lar.keepalive.service.LocalService"/>
+        <service android:name="com.labour.lar.keepalive.service.HideForegroundService"/>
+        <service android:name="com.labour.lar.keepalive.service.JobHandlerService" android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name="com.labour.lar.keepalive.service.RemoteService" android:process=":remote"/>
         <!--注册Service-->
-        <service android:name=".keepappalive.DaemonService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":daemon_service"/>
-
-        <service android:name=".keepappalive.CancelNoticeService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":service"/>
-        <service
-            android:name=".keepappalive.AliveJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
 
         <!--版本更新所要用到的 fileProvider 用于兼容7.0通知栏的安装-->

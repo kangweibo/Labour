@@ -13,16 +13,6 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    defaultConfig {
-        applicationId "com.labour.lar"
-        minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled = true
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
     signingConfigs {
         release {
             storeFile file('keystore.jks')
@@ -105,4 +95,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     //图片压缩
     implementation 'top.zibin:Luban:1.1.3'
+
+    //ocr识别界面
+    implementation project(path: ':ocr_ui')
 }

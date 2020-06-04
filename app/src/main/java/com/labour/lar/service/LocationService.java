@@ -10,6 +10,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -19,14 +20,20 @@ import com.labour.lar.Constants;
 import com.labour.lar.cache.UserLatLonCache;
 import com.labour.lar.map.LocationManager;
 import com.labour.lar.module.UserLatLon;
+import com.labour.lar.util.AjaxResult;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class LocationService extends Service implements AMapLocationListener {
 
     private LocationManager locationManager;
     private ArrayBlockingQueue<UserLatLon> arrayBlockingQueue = new ArrayBlockingQueue<UserLatLon>(500);
-    private boolean running = true;
+    private boolean running = false;
     private ConsumerUserLatLon consumerUserLatLon;
 
     @Override
@@ -44,10 +51,11 @@ public class LocationService extends Service implements AMapLocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(locationManager.createClientIfNeeded()){
             locationManager.startLocation();
-
-            running = true;
-            consumerUserLatLon = new ConsumerUserLatLon(this);
-            consumerUserLatLon.start();
+            if(!running){
+                running = true;
+                consumerUserLatLon = new ConsumerUserLatLon(this);
+                consumerUserLatLon.start();
+            }
         }
         return START_REDELIVER_INTENT;
     }
@@ -55,6 +63,7 @@ public class LocationService extends Service implements AMapLocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i("amap","LocationService destoryed.......");
         locationManager.release();
         if(consumerUserLatLon != null){
             running = false;
@@ -85,7 +94,7 @@ public class LocationService extends Service implements AMapLocationListener {
                 userLatLon.setLon(amapLocation.getLongitude()+"");
 
                 try {
-                    Log.i("UserLatLonCache","Queue: put.........");
+                    Log.i("amap","Queue: put.........");
                     arrayBlockingQueue.put(userLatLon);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -108,14 +117,31 @@ public class LocationService extends Service implements AMapLocationListener {
         public void run() {
             while (running){
                 try {
-                    Log.i("UserLatLonCache","Queue: take.........");
+                    Log.i("amap","Amap Queue: take.........");
                     UserLatLon userLatLon = arrayBlockingQueue.take();
                     userLatLonCache.put(userLatLon);
+
+                    loadBanner();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+    public void loadBanner(){
+        String user_url = "http://192.168.150.119:8080/test/testRequest";
 
+        final Map<String,String> param = new HashMap<String,String>();
+        OkGo.<String>get(user_url).params(param).tag("user_url").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                AjaxResult jr = new AjaxResult(response.body());
+                Log.i("amap",jr.toString());
+            }
+
+            @Override
+            public void onError(Response<String> response) {
+            }
+        });
+    }
 }

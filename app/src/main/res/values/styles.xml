@@ -51,5 +51,9 @@
     <style name="DialogGreyBtn" parent="DialogBlueBtn">
         <item name="android:background">@drawable/selector_grey_btn</item>
     </style>
-
+    <!--1像素保活透明Activity-->
+    <style name="onePixelActivity" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 </resources>

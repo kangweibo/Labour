@@ -206,6 +206,7 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
 //                        String url = Constants.IMAGE_HTTP_BASE + imgUrl;
 
                         String url = file.getAbsolutePath();
+                        Log.i("idcard" , url);
                         Glide.with(MyInfoActivity.this).load(url).into(photo_iv);
                     }
 

@@ -1,2 +1,2 @@
 rootProject.name='Labour'
-include ':app'
+include ':app', ':ocr_ui'

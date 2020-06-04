@@ -1,5 +1,7 @@
 package com.labour.lar.util;
 
+import android.support.annotation.NonNull;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -21,6 +23,12 @@ public class AjaxResult {
             jsonObj.put("status",-1);
             e.printStackTrace();
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return jsonObj.toJSONString();
     }
 
     //{"code":"200","data":"","msg":"发送成功，请注意查收"}

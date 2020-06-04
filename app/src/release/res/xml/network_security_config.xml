@@ -3,6 +3,6 @@
   <!-- deny cleartext traffic for React Native packager ips in release -->
   <domain-config cleartextTrafficPermitted="false">
     <domain includeSubdomains="false">localhost</domain>
-    <domain includeSubdomains="false">10.0.2.2</domain>
+    <domain includeSubdomains="false"> 192.168.150.119</domain>
   </domain-config>
 </network-security-config>

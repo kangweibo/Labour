@@ -11,12 +11,14 @@ import android.widget.TextView;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.activity.FindPwdActivity;
+import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.widget.NoScrollGridView;
 import com.labour.lar.widget.RoundImageView;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MineFrag extends BaseFragment {
 
@@ -58,8 +60,18 @@ public class MineFrag extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0){
                     startActivity(new Intent(context, MyInfoActivity.class));
+                } else if(position == 1){
+
                 }
             }
         });
+    }
+    @OnClick({R.id.identified_tv})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.identified_tv:
+                startActivity(new Intent(context, IdentifiedActivity.class));
+                break;
+        }
     }
 }
