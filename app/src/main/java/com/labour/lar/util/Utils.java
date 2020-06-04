@@ -81,6 +81,10 @@ public class Utils {
         }
         return path;
     }
+    public static File getSaveFile(Context context,String fileName) {
+        File file = new File(getTakePhotoPath(), fileName);
+        return file;
+    }
     public static interface DelayCallBack {
         public void callback();
     }

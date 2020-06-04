@@ -35,7 +35,8 @@
                     android:layout_height="160dp"
                     android:background="@mipmap/zhengmian"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"/>
+                    android:layout_marginRight="20dp"
+                    android:scaleType="fitXY"/>
                 <TextView android:id="@+id/zheng_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,7 +60,7 @@
                     android:background="@mipmap/zhengmian"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    />
+                    android:scaleType="fitXY"/>
 
                 <TextView android:id="@+id/fan_tv"
                     android:layout_width="wrap_content"

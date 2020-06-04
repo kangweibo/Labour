@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -33,6 +34,7 @@ import com.labour.lar.widget.toast.AppMsg;
 import com.labour.lar.widget.toast.AppToast;
 
 import java.io.File;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -50,6 +52,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     ImageView photo_zheng_iv;
     @BindView(R.id.zheng_tv)
     TextView zheng_tv;
+
     @BindView(R.id.photo_fan_iv)
     ImageView photo_fan_iv;
     @BindView(R.id.fan_tv)
@@ -70,35 +73,10 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
         title_tv.setText("身份验证");
-        file1 = FileUtil.getSaveFile(this,"identified1_temp.png");
-        file2 = FileUtil.getSaveFile(this,"identified2_temp.png");
+        file1 = Utils.getSaveFile(this,"identified1_temp.png");
+        file2 = Utils.getSaveFile(this,"identified2_temp.png");
 
         initAccessTokenWithAkSk();
-        //  初始化本地质量控制模型,释放代码在onDestory中
-        //  调用身份证扫描必须加上 intent.putExtra(CameraActivity.KEY_NATIVE_MANUAL, true); 关闭自动初始化和释放本地模型
-        CameraNativeHelper.init(this, OCR.getInstance(this).getLicense(),
-                new CameraNativeHelper.CameraNativeInitCallback() {
-                    @Override
-                    public void onError(int errorCode, Throwable e) {
-                        String msg;
-                        switch (errorCode) {
-                            case CameraView.NATIVE_SOLOAD_FAIL:
-                                msg = "加载so失败，请确保apk中存在ui部分的so";
-                                break;
-                            case CameraView.NATIVE_AUTH_FAIL:
-                                msg = "授权本地质量控制token获取失败";
-                                break;
-                            case CameraView.NATIVE_INIT_FAIL:
-                                msg = "本地质量控制";
-                                break;
-                            default:
-                                msg = String.valueOf(errorCode);
-                        }
-                        AppToast.show(IdentifiedActivity.this,msg);
-//                        infoTextView.setText("本地质量控制初始化错误，错误原因： " + msg);
-                    }
-                });
-
     }
     /**
      * 用明文ak，sk初始化
@@ -126,8 +104,6 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 finish();
                 break;
             case R.id.photo_zheng_iv:
-                Log.i("idcard onClick" , file1.getAbsolutePath());
-
                 Intent intent = new Intent(IdentifiedActivity.this, CameraActivity.class);
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file1.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
@@ -145,7 +121,6 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     @Override
     public void onPause() {
         if(this.isFinishing()){
-            CameraNativeHelper.release();
             OCR.getInstance(this).release();
         }
         super.onPause();
@@ -174,39 +149,14 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
             }
         }
     }
-    private Uri getUriForFile(Context context, File file) {
-        Uri fileUri;
-        if (Build.VERSION.SDK_INT >= 24) {
-            //参数：authority 需要和清单文件中配置的保持完全一致：${applicationId}.xxx
-            fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
-        } else {
-            fileUri = Uri.fromFile(file);
-        }
-        return fileUri;
-    }
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        //不能直接调用contentprovider的接口函数，需要使用contentresolver对象，通过URI间接调用contentprovider
-        if (cursor == null) {
-            // Source is Dropbox or other similar local file path
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
-    }
+
     private void recIDCard(String idCardSide, String filePath) {
         Log.i("idcard recIDCard" , filePath);
-        if(CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(idCardSide)){
+        if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
             Glide.with(IdentifiedActivity.this).load(file1).into(photo_zheng_iv);
-        } else if(CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(idCardSide)){
+        } else if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
             Glide.with(IdentifiedActivity.this).load(file2).into(photo_fan_iv);
         }
-        Glide.with(IdentifiedActivity.this).load(file1).into(photo_fan_iv);
 
         IDCardParams param = new IDCardParams();
         param.setImageFile(new File(filePath));
@@ -216,18 +166,22 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         param.setDetectDirection(true);
         // 设置图像参数压缩质量0-100, 越大图像质量越好但是请求时间越长。 不设置则默认值为20
         param.setImageQuality(20);
+        param.setDetectDirection(true);
+        Map<String,String> params = param.getStringParams();
+        params.put("detect_photo","true");
 
         OCR.getInstance(this).recognizeIDCard(param, new OnResultListener<IDCardResult>() {
             @Override
             public void onResult(IDCardResult result) {
                 if (result != null) {
-                    AppToast.show(IdentifiedActivity.this, result.toString());
+                    Log.i("idcard", result.toString());
+                    AppToast.show(IdentifiedActivity.this, result.toString(), Toast.LENGTH_LONG);
                 }
             }
 
             @Override
             public void onError(OCRError error) {
-                AppToast.show(IdentifiedActivity.this,error.getMessage());
+                AppToast.show(IdentifiedActivity.this,error.getMessage(), Toast.LENGTH_LONG);
             }
         });
     }
