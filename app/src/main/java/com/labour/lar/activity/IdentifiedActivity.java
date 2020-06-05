@@ -1,13 +1,9 @@
 package com.labour.lar.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,25 +11,41 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.IDCardParams;
-import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.ui.camera.CameraActivity;
-import com.baidu.ocr.ui.camera.CameraNativeHelper;
-import com.baidu.ocr.ui.camera.CameraView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.labour.lar.BaseActivity;
+import com.labour.lar.Constants;
+import com.labour.lar.MainActivity;
 import com.labour.lar.R;
+import com.labour.lar.cache.GlideCacheUtil;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.module.User;
+import com.labour.lar.ocr.BaiDuIDCardResult;
+import com.labour.lar.ocr.BaiDuOCR;
 import com.labour.lar.permission.PermissionManager;
-import com.labour.lar.util.FileUtil;
+import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.Base64Bitmap;
+import com.labour.lar.util.StringUtils;
 import com.labour.lar.util.Utils;
-import com.labour.lar.widget.toast.AppMsg;
+import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import java.io.File;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -58,6 +70,9 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     @BindView(R.id.fan_tv)
     TextView fan_tv;
 
+    @BindView(R.id.photo_iv)
+    ImageView photo_iv;
+
     File file1;
     File file2;
     private static final int REQUEST_CODE_CAMERA = 102;
@@ -73,26 +88,23 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
         title_tv.setText("身份验证");
-        file1 = Utils.getSaveFile(this,"identified1_temp.png");
-        file2 = Utils.getSaveFile(this,"identified2_temp.png");
 
         initAccessTokenWithAkSk();
     }
+
     /**
      * 用明文ak，sk初始化
      */
     private void initAccessTokenWithAkSk() {
-        OCR.getInstance(this).initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
+        baiDuOCR.setAutoCacheToken(true);
+        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
             @Override
             public void onResult(AccessToken result) {
-                String token = result.getAccessToken();
-
             }
-
             @Override
             public void onError(OCRError error) {
                 error.printStackTrace();
-                //("AK，SK方式获取token失败", error.getMessage());
             }
         }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
     }
@@ -104,16 +116,21 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 finish();
                 break;
             case R.id.photo_zheng_iv:
+                file1 = Utils.getSaveFile(this,"idcard_"+new Date().getTime()+".png");
                 Intent intent = new Intent(IdentifiedActivity.this, CameraActivity.class);
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file1.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
                 break;
             case R.id.photo_fan_iv:
+                file2 = Utils.getSaveFile(this,"idcard_"+new Date().getTime()+".png");
                 intent = new Intent(IdentifiedActivity.this, CameraActivity.class);
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file2.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_BACK);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
+                break;
+            case R.id.submit_btn:
+                save();
                 break;
         }
     }
@@ -121,7 +138,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     @Override
     public void onPause() {
         if(this.isFinishing()){
-            OCR.getInstance(this).release();
+            BaiDuOCR.getInstance(this).release();
         }
         super.onPause();
     }
@@ -152,11 +169,15 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
 
     private void recIDCard(String idCardSide, String filePath) {
         Log.i("idcard recIDCard" , filePath);
+
         if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
             Glide.with(IdentifiedActivity.this).load(file1).into(photo_zheng_iv);
         } else if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
             Glide.with(IdentifiedActivity.this).load(file2).into(photo_fan_iv);
         }
+
+        final ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
 
         IDCardParams param = new IDCardParams();
         param.setImageFile(new File(filePath));
@@ -167,22 +188,77 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         // 设置图像参数压缩质量0-100, 越大图像质量越好但是请求时间越长。 不设置则默认值为20
         param.setImageQuality(20);
         param.setDetectDirection(true);
-        Map<String,String> params = param.getStringParams();
-        params.put("detect_photo","true");
 
-        OCR.getInstance(this).recognizeIDCard(param, new OnResultListener<IDCardResult>() {
+        BaiDuOCR.getInstance(this).recognizeIDCard(param, new OnResultListener<BaiDuIDCardResult>() {
             @Override
-            public void onResult(IDCardResult result) {
+            public void onResult(BaiDuIDCardResult result) {
+                dialog.dismiss();
                 if (result != null) {
+                    if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
+                        String photo = result.getPhoto();
+                        if(photo != null) {
+                            Bitmap bitmap = Base64Bitmap.base64ToBitmap(photo);
+                            photo_iv.setImageBitmap(bitmap);
+                        }
+                    }
                     Log.i("idcard", result.toString());
-                    AppToast.show(IdentifiedActivity.this, result.toString(), Toast.LENGTH_LONG);
+                    AppToast.show(IdentifiedActivity.this, result.toString());
                 }
             }
 
             @Override
             public void onError(OCRError error) {
-                AppToast.show(IdentifiedActivity.this,error.getMessage(), Toast.LENGTH_LONG);
+                dialog.dismiss();
+                AppToast.show(IdentifiedActivity.this,error.getMessage());
             }
         });
     }
+
+    public void save() {
+        /*String name = name_et.getText().toString();
+        String sex = sex_et.getText().toString();
+        String phone = phone_et.getText().toString();
+        String password = password_et.getText().toString();
+        String role = checkedRole;
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(sex) || StringUtils.isBlank(phone) || StringUtils.isBlank(password)){
+            AppToast.show(this,"请填写完整信息！");
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("name",name);
+        param.put("passwd",password);
+        param.put("gender",sex);
+        param.put("phone",phone);
+        param.put("role",role);
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/register";
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
+                    UserCache userCache = new UserCache(RegistActivity.this);
+                    userCache.put(ub);
+                    startActivity(new Intent(RegistActivity.this, MainActivity.class));
+                    finish();
+                } else {
+                    AppToast.show(RegistActivity.this,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(RegistActivity.this,"提交出错!");
+            }
+        });*/
+    }
+
 }

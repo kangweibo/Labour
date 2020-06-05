@@ -4,5 +4,8 @@
   <domain-config cleartextTrafficPermitted="false">
     <domain includeSubdomains="false">localhost</domain>
     <domain includeSubdomains="false"> 192.168.150.119</domain>
+    <domain includeSubdomains="false">verify.baidubce.com</domain>
+    <domain includeSubdomains="false">aip.baidubce.com</domain>
+    <domain includeSubdomains="false">lhok.natapp4.cc</domain>
   </domain-config>
 </network-security-config>

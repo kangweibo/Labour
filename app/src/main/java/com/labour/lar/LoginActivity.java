@@ -7,9 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.activity.FindPwdActivity;
 import com.labour.lar.activity.RegistActivity;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.module.User;
 import com.labour.lar.permission.PermissionManager;
+import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.StringUtils;
+import com.labour.lar.widget.ProgressDialog;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_btn:
-                startActivity(new Intent(this,MainActivity.class));
+                login();
                 break;
             case R.id.regist_btn:
                 startActivity(new Intent(this, RegistActivity.class));
@@ -76,4 +90,52 @@ public class LoginActivity extends AppCompatActivity {
                 break;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        OkGo.getInstance().cancelTag("request_tag");
+    }
+
+    public void login() {
+        String phone = phone_et.getText().toString();
+        String password = password_et.getText().toString();
+        if(StringUtils.isBlank(phone) || StringUtils.isBlank(password)){
+            AppToast.show(this,"请填写完整信息！");
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("username",phone);
+        param.put("passwd",password);
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/login";
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
+                    UserCache userCache = new UserCache(LoginActivity.this);
+                    userCache.put(ub);
+                    startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    finish();
+                } else {
+                    AppToast.show(LoginActivity.this,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(LoginActivity.this,"登录出错!");
+            }
+        });
+    }
+
 }

@@ -6,12 +6,75 @@
     android:orientation="vertical">
 
     <include layout="@layout/layout_header"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="50dp"
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:layout_marginRight="@dimen/common_margin_right"
+        android:background="@drawable/login_input_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/xingming_icon"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="#8a8a8a"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+        <EditText android:id="@+id/name_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/black"
+            android:hint="请输入姓名"
+            android:textColorHint="@color/text_input_tip"
+            android:background="@color/white"
+            android:textSize="@dimen/text_size_16"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="10dp"
+            android:inputType="text"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:layout_marginRight="@dimen/common_margin_right"
+        android:background="@drawable/login_input_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/xingbie_icon"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="#8a8a8a"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"/>
+        <TextView android:id="@+id/sex_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textColor="@color/black"
+            android:hint="请选择性别"
+            android:textColorHint="@color/text_input_tip"
+            android:background="@color/white"
+            android:textSize="@dimen/text_size_16"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/common_margin_left"
         android:layout_marginRight="@dimen/common_margin_right"
         android:background="@drawable/login_input_bg"
@@ -47,7 +110,8 @@
         android:layout_marginRight="@dimen/common_margin_right"
         android:background="@drawable/login_input_bg"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:paddingRight="10dp"
+        android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +171,50 @@
             android:layout_marginBottom="1dp"
             android:layout_marginRight="10dp"
             android:inputType="textPassword"/>
+
     </LinearLayout>
+
+    <RadioGroup android:id="@+id/role_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:layout_marginRight="@dimen/common_margin_right">
+        <RadioButton android:id="@+id/xiangmubu_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/black"
+            android:text="项目部"
+            android:button="@drawable/selector_radio"
+            android:checked="true"
+            android:paddingLeft="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+        <RadioButton android:id="@+id/zuoyedui_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/black"
+            android:text="作业队"
+            android:button="@drawable/selector_radio"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+        <RadioButton android:id="@+id/gongren_rb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_14"
+            android:textColor="@color/black"
+            android:text="工人"
+            android:button="@drawable/selector_radio"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"/>
+    </RadioGroup>
 
     <Button android:id="@+id/login_btn"
         android:layout_width="match_parent"

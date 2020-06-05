@@ -71,6 +71,18 @@
                     android:layout_marginTop="20dp"
                     android:layout_centerInParent="true"/>
             </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/photo_iv"
+                android:layout_width="130dp"
+                android:layout_height="150dp"
+                android:background="@mipmap/zhengmian"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitXY"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"/>
+
             <Button android:id="@+id/submit_btn"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"

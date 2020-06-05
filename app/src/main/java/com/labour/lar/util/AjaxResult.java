@@ -39,15 +39,12 @@ public class AjaxResult {
         return jsonObj.getJSONObject(key);
     }
     public String getMsg() {
-        return jsonObj.getString("msg");
+        return jsonObj.getString("errmsg");
     }
     public String getInfo() {
         return jsonObj.getString("info");
     }
     public JSONObject getData() {
-        return jsonObj.getJSONObject("obj");
-    }
-    public JSONObject getData2() {
         return jsonObj.getJSONObject("data");
     }
     public JSONArray getJSONArrayData(){
@@ -61,6 +58,9 @@ public class AjaxResult {
     }
     public int getCode(){
         return jsonObj.getIntValue("code");
+    }
+    public int getSuccess(){
+        return jsonObj.getIntValue("success");
     }
     public String getString(String key){
         return jsonObj.getString(key);

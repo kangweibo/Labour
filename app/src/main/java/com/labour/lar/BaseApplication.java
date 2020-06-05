@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.labour.lar.module.User;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -35,6 +36,8 @@ public class BaseApplication extends Application {
 
     public ActivityManager activityManager;
     private static BaseApplication instance;
+    private User user;
+
     //static 代码段可以防止内存泄露
     static {
         //设置全局的Header构建器
@@ -73,13 +76,13 @@ public class BaseApplication extends Application {
 //        JShareInterface.init(this,platformConfig);
     }
 //
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
