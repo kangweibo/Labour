@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.wwkkj.psyc.R;
 import com.circledialog.res.drawable.CircleDrawable;
 import com.circledialog.res.values.CircleDimen;
 import com.circledialog.scale.ScaleUtils;
+import com.labour.lar.R;
 
 /**
  * Created by hupei on 2017/3/29.
