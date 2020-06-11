@@ -1,11 +1,8 @@
 package com.labour.lar.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -13,22 +10,20 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.circledialog.CircleDialog;
-import com.circledialog.callback.ConfigButton;
-import com.circledialog.callback.ConfigDialog;
-import com.circledialog.params.ButtonParams;
-import com.circledialog.params.DialogParams;
+import com.labour.lar.widget.circledialog.CircleDialog;
+import com.labour.lar.widget.circledialog.callback.ConfigButton;
+import com.labour.lar.widget.circledialog.callback.ConfigDialog;
+import com.labour.lar.widget.circledialog.params.ButtonParams;
+import com.labour.lar.widget.circledialog.params.DialogParams;
 import com.labour.lar.BaseActivity;
-import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.permission.PermissionManager;
 import com.labour.lar.util.Utils;
@@ -36,11 +31,9 @@ import com.labour.lar.widget.RoundImageView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import pub.devrel.easypermissions.EasyPermissions;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
@@ -58,6 +51,18 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
 
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
+    @BindView(R.id.name_et)
+    EditText name_et;
+    @BindView(R.id.sex_et)
+    TextView sex_et;
+    @BindView(R.id.phone_et)
+    TextView phone_et;
+    @BindView(R.id.nation_et)
+    TextView nation_et;
+    @BindView(R.id.birthday_et)
+    TextView birthday_et;
+    @BindView(R.id.address_et)
+    TextView address_et;
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
     public static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -80,14 +85,14 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
 
     }
 
-    @OnClick({R.id.back_iv,R.id.submit_btn,R.id.photo_ll})
+    @OnClick({R.id.back_iv,R.id.photo_ll})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
             case R.id.photo_ll:
-                showPhotoDialog();
+                //showPhotoDialog();
                 break;
         }
     }

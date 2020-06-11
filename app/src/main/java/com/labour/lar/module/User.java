@@ -1,5 +1,7 @@
 package com.labour.lar.module;
 
+import com.labour.lar.Constants;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -51,6 +53,15 @@ public class User implements Serializable {
 
     public String getProle() {
         return prole;
+    }
+
+    public Constants.ROLE getRole(){
+        if(prole.equals("empoyee")){
+            return Constants.ROLE.employee;
+        } else if(prole.equals("staff")){
+            return Constants.ROLE.staff;
+        }
+        return Constants.ROLE.manager;
     }
 
     public void setProle(String prole) {

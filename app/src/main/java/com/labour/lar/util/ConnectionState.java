@@ -1,4 +1,4 @@
-package com.labour.lar.net;
+package com.labour.lar.util;
 
 import android.content.Context;
 import android.widget.Toast;

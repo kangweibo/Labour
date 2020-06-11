@@ -3,6 +3,7 @@ package com.labour.lar.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.MainActivity;
 import com.labour.lar.R;
+import com.labour.lar.cache.ACache;
 import com.labour.lar.cache.GlideCacheUtil;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.User;
@@ -69,14 +71,17 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     ImageView photo_fan_iv;
     @BindView(R.id.fan_tv)
     TextView fan_tv;
-
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
+    @BindView(R.id.idcard_no_tv)
+    TextView idcard_no_tv;
 
     File file1;
     File file2;
     private static final int REQUEST_CODE_CAMERA = 102;
     PermissionManager permissionManager;
+    private Map<String,String> idCardInfo = new HashMap<>();
+    private User user;
 
     @Override
     public int getActivityLayoutId() {
@@ -88,8 +93,8 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
         title_tv.setText("身份验证");
-
         initAccessTokenWithAkSk();
+        user = UserCache.getInstance(IdentifiedActivity.this).get();
     }
 
     /**
@@ -139,6 +144,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     public void onPause() {
         if(this.isFinishing()){
             BaiDuOCR.getInstance(this).release();
+            OkGo.getInstance().cancelTag("request_tag");
         }
         super.onPause();
     }
@@ -167,7 +173,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         }
     }
 
-    private void recIDCard(String idCardSide, String filePath) {
+    private void recIDCard(final String idCardSide, String filePath) {
         Log.i("idcard recIDCard" , filePath);
 
         if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
@@ -192,18 +198,47 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         BaiDuOCR.getInstance(this).recognizeIDCard(param, new OnResultListener<BaiDuIDCardResult>() {
             @Override
             public void onResult(BaiDuIDCardResult result) {
-                dialog.dismiss();
                 if (result != null) {
+                    if(user != null) {
+                        idCardInfo.put("userid", user.getId()+"");
+                        idCardInfo.put("prole", user.getProle());
+                    }
+
                     if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
                         String photo = result.getPhoto();
                         if(photo != null) {
+                            photo_iv.setVisibility(View.VISIBLE);
                             Bitmap bitmap = Base64Bitmap.base64ToBitmap(photo);
                             photo_iv.setImageBitmap(bitmap);
                         }
+                        idcard_no_tv.setText("身份证号:"+result.getIdNumber().getWords());
+                        idCardInfo.put("idcard",result.getIdNumber().getWords());
+                        if(photo_zheng_iv.getDrawable() != null){
+                            Bitmap bitmap1 =((BitmapDrawable)photo_zheng_iv.getDrawable()).getBitmap();
+                            idCardInfo.put("idpic1",Base64Bitmap.bitmapToBase64(bitmap1));
+                        }
+                        idCardInfo.put("avatar",photo);
+                        idCardInfo.put("name",result.getName().getWords());
+                        idCardInfo.put("nation",result.getEthnic().getWords());
+                        idCardInfo.put("address",result.getAddress().getWords());
+                        idCardInfo.put("gender",result.getGender().getWords());
+                        idCardInfo.put("birthday",result.getBirthday().getWords());
+                        idCardInfo.put("identified","true");
+                    }
+                    if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
+                        if(photo_fan_iv.getDrawable() != null) {
+                            Bitmap bitmap2 = ((BitmapDrawable) photo_fan_iv.getDrawable()).getBitmap();
+                            idCardInfo.put("idpic2",Base64Bitmap.bitmapToBase64(bitmap2));
+
+                            idCardInfo.put("signDate",result.getSignDate().getWords());
+                            idCardInfo.put("expiryDate",result.getExpiryDate().getWords());
+                            idCardInfo.put("issueAuthority",result.getIssueAuthority().getWords());
+                        }
                     }
                     Log.i("idcard", result.toString());
-                    AppToast.show(IdentifiedActivity.this, result.toString());
+                    //AppToast.show(IdentifiedActivity.this, result.toString());
                 }
+                dialog.dismiss();
             }
 
             @Override
@@ -215,25 +250,27 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     }
 
     public void save() {
-        /*String name = name_et.getText().toString();
-        String sex = sex_et.getText().toString();
-        String phone = phone_et.getText().toString();
-        String password = password_et.getText().toString();
-        String role = checkedRole;
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(sex) || StringUtils.isBlank(phone) || StringUtils.isBlank(password)){
+        if(user == null){
+            AppToast.show(this,Constants.LOGIN_ERROR_TIP);
+            return;
+        }
+        String idCardNo = idCardInfo.get("idcard");
+        String idpic1 = idCardInfo.get("idpic1");
+        String idpic2 = idCardInfo.get("idpic2");
+        String avatar = idCardInfo.get("avatar");
+        String signDate = idCardInfo.get("signDate");
+
+        if(StringUtils.isBlank(idCardNo) || StringUtils.isBlank(idpic1) || StringUtils.isBlank(idpic2)){
             AppToast.show(this,"请填写完整信息！");
             return;
         }
+        if(StringUtils.isBlank(avatar)||StringUtils.isBlank(signDate)){
+            AppToast.show(this,"照片拍摄不正确！");
+            return;
+        }
 
-        final Map<String,String> param = new HashMap<>();
-        param.put("name",name);
-        param.put("passwd",password);
-        param.put("gender",sex);
-        param.put("phone",phone);
-        param.put("role",role);
-        String jsonParams = JSON.toJSONString(param);
-
-        String url = Constants.HTTP_BASE + "/api/register";
+        String jsonParams = JSON.toJSONString(idCardInfo);
+        String url = Constants.HTTP_BASE + "/api/identify";
         ProgressDialog dialog = ProgressDialog.createDialog(this);
         dialog.show();
 
@@ -245,20 +282,20 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 if(jr.getSuccess() == 1){
                     JSONObject jo = jr.getData();
                     User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-                    UserCache userCache = new UserCache(RegistActivity.this);
-                    userCache.put(ub);
-                    startActivity(new Intent(RegistActivity.this, MainActivity.class));
-                    finish();
+//                    UserCache userCache = new UserCache(RegistActivity.this);
+//                    userCache.put(ub);
+//                    startActivity(new Intent(RegistActivity.this, MainActivity.class));
+//                    finish();
                 } else {
-                    AppToast.show(RegistActivity.this,jr.getMsg());
+                    AppToast.show(IdentifiedActivity.this,jr.getMsg());
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
-                AppToast.show(RegistActivity.this,"提交出错!");
+                AppToast.show(IdentifiedActivity.this,"提交出错!");
             }
-        });*/
+        });
     }
 
 }

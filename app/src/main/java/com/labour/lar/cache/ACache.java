@@ -65,7 +65,8 @@ public class ACache {
 	}
 
 	public static ACache get(Context ctx, String cacheName) {
-		File f = new File(ctx.getCacheDir(), cacheName);
+//		File f = new File(ctx.getCacheDir(), cacheName);
+		File f = new File(com.labour.lar.util.Utils.getCachePath(), cacheName);
 		return get(f, MAX_SIZE, MAX_COUNT);
 	}
 
@@ -74,7 +75,7 @@ public class ACache {
 	}
 
 	public static ACache get(Context ctx, long max_zise, int max_count) {
-		File f = new File(ctx.getCacheDir(), "ACache");
+		File f = new File(com.labour.lar.util.Utils.getCachePath(), "ACache");
 		return get(f, max_zise, max_count);
 	}
 

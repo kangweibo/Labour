@@ -1,5 +1,7 @@
 package com.labour.lar.module;
 
+import com.labour.lar.Constants;
+
 import java.io.Serializable;
 
 //用户经纬度
@@ -9,6 +11,7 @@ public class UserLatLon implements Serializable {
     private String lat;
     private String lon;
     private String createTime;
+    private Constants.ROLE role;
 
     public int getUserId() {
         return userId;
@@ -40,6 +43,14 @@ public class UserLatLon implements Serializable {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public Constants.ROLE getRole() {
+        return role;
+    }
+
+    public void setRole(Constants.ROLE role) {
+        this.role = role;
     }
 
     @Override

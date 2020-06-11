@@ -15,7 +15,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        userCache = new UserCache(this);
+        userCache = UserCache.getInstance(this);
         User user = userCache.get();
         if(user == null){
             startActivity(new Intent(WelcomeActivity.this,LoginActivity.class));

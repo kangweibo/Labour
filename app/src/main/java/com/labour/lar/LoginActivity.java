@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(jr.getSuccess() == 1){
                     JSONObject jo = jr.getData();
                     User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-                    UserCache userCache = new UserCache(LoginActivity.this);
+                    UserCache userCache = UserCache.getInstance(LoginActivity.this);
                     userCache.put(ub);
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();

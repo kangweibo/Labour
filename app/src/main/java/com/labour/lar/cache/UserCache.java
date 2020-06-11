@@ -9,10 +9,19 @@ import com.labour.lar.module.User;
 public class UserCache {
     private Context context;
     private ACache aCache;
-    public UserCache(Context context){
+    private static UserCache userCache;
+
+    private UserCache(Context context){
         this.context = context;
-        this.aCache = ACache.get(context);
+        this.aCache = ACache.get(context,"user");
     }
+    public static UserCache getInstance(Context context){
+        if(userCache == null){
+            userCache = new UserCache(context);
+        }
+        return userCache;
+    }
+
     public void put(User user){
         BaseApplication app = BaseApplication.getInstance();
         app.setUser(user);

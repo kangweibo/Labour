@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-        <RelativeLayout android:id="@+id/photo_ll"
+        <LinearLayout android:id="@+id/photo_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/common_margin_left"
@@ -22,13 +22,13 @@
             android:paddingRight="@dimen/common_margin_right"
             android:paddingBottom="5dp"
             android:orientation="horizontal">
-            <TextView
+            <TextView android:id="@+id/photo_tip_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="头像"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
-                android:layout_centerVertical="true"/>
+                android:layout_gravity="center_vertical"/>
 
             <com.labour.lar.widget.RoundImageView
                 android:id="@+id/photo_iv"
@@ -37,20 +37,45 @@
                 app:type="circle"
                 app:borderWidth="1dp"
                 android:background="@drawable/circle_shape"
-                android:layout_toLeftOf="@id/arraw1"/>
-            <ImageView android:id="@+id/arraw1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/right_arraw"
-                android:layout_gravity="center_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/common_margin_left"/>
-        </RelativeLayout>
+                android:layout_toRightOf="@id/photo_tip_tv"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/line" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="@dimen/common_margin_left"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/common_margin_right"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="姓名"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+                <EditText android:id="@+id/name_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/transparent_bg"
+                    android:gravity="center_vertical|left"
+                    android:text="张三"
+                    android:inputType="text"
+                    android:textColor="#979797"
+                    android:textSize="@dimen/text_size_16"
+                    android:enabled="false"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,35 +88,146 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="昵称"
+                    android:text="性别"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16" />
 
-                <EditText android:id="@+id/nickname_et"
+                <TextView android:id="@+id/sex_et"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/transparent_bg"
                     android:gravity="center_vertical|left"
-                    android:hint="请输入昵称"
                     android:inputType="text"
                     android:textColor="#979797"
                     android:textSize="@dimen/text_size_16"
-                    />
+                    android:enabled="false"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="@dimen/common_margin_left"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/common_margin_right"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+                <TextView android:id="@+id/phone_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/transparent_bg"
+                    android:gravity="center_vertical|left"
+                    android:inputType="text"
+                    android:textColor="#979797"
+                    android:textSize="@dimen/text_size_16"
+                    android:enabled="false"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="@dimen/common_margin_left"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/common_margin_right"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="民族"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+                <TextView android:id="@+id/nation_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/transparent_bg"
+                    android:gravity="center_vertical|left"
+                    android:inputType="text"
+                    android:textColor="#979797"
+                    android:textSize="@dimen/text_size_16"
+                    android:enabled="false"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="@dimen/common_margin_left"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/common_margin_right"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="生日"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+                <TextView android:id="@+id/birthday_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/transparent_bg"
+                    android:gravity="center_vertical|left"
+                    android:inputType="text"
+                    android:textColor="#979797"
+                    android:textSize="@dimen/text_size_16"
+                    android:enabled="false"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:paddingLeft="@dimen/common_margin_left"
+                android:paddingTop="5dp"
+                android:paddingRight="@dimen/common_margin_right"
+                android:paddingBottom="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="住址"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16" />
+
+                <TextView android:id="@+id/address_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/transparent_bg"
+                    android:gravity="center_vertical|left"
+                    android:inputType="text"
+                    android:textColor="#979797"
+                    android:textSize="@dimen/text_size_16"
+                    android:enabled="false"/>
             </LinearLayout>
 
-
-            <Button android:id="@+id/submit_btn"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:textColor="@color/white"
-            android:background="@drawable/selector_button"
-            android:text="提交"
-            android:textSize="@dimen/text_size_16"
-            android:layout_marginRight="@dimen/common_margin_right"
-            android:layout_marginLeft="@dimen/common_margin_left"
-            android:layout_marginTop="25dp"/>
+            <!--<Button android:id="@+id/submit_btn"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:textColor="@color/white"
+                android:background="@drawable/selector_button"
+                android:text="提交"
+                android:textSize="@dimen/text_size_16"
+                android:layout_marginRight="@dimen/common_margin_right"
+                android:layout_marginLeft="@dimen/common_margin_left"
+                android:layout_marginTop="25dp"/>-->
 
         </LinearLayout>
     </ScrollView>

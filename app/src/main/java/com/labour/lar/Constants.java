@@ -34,4 +34,10 @@ public interface Constants {
     //地理围栏定位接收
     public static String LOCATION_FENCE_RECEIVER_ACTION = "com.labour.lar.receiver.LocationFenceReceiver.ACTION";
 
+    //定位接收
+    public static String SIGN_CHECK_IN_OUT_RECEIVER_ACTION = "com.labour.lar.MainActivity.CheckInOutBroadcastReceiver.ACTION";
+
+    public static final String LOGIN_ERROR_TIP = "请登录！";
+    //role
+    public static enum ROLE {employee,staff,manager}
 }

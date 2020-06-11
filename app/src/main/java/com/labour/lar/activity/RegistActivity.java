@@ -5,17 +5,16 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.circledialog.CircleDialog;
-import com.circledialog.callback.ConfigButton;
-import com.circledialog.callback.ConfigDialog;
-import com.circledialog.params.ButtonParams;
-import com.circledialog.params.DialogParams;
+import com.labour.lar.widget.circledialog.CircleDialog;
+import com.labour.lar.widget.circledialog.callback.ConfigButton;
+import com.labour.lar.widget.circledialog.callback.ConfigDialog;
+import com.labour.lar.widget.circledialog.params.ButtonParams;
+import com.labour.lar.widget.circledialog.params.DialogParams;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.MainActivity;
@@ -201,7 +200,7 @@ public class RegistActivity extends BaseActivity {
                 if(jr.getSuccess() == 1){
                     JSONObject jo = jr.getData();
                     User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-                    UserCache userCache = new UserCache(RegistActivity.this);
+                    UserCache userCache = UserCache.getInstance(RegistActivity.this);
                     userCache.put(ub);
                     startActivity(new Intent(RegistActivity.this,MainActivity.class));
                     finish();

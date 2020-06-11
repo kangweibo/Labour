@@ -66,5 +66,6 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="@dimen/common_margin_right"
         android:layout_marginLeft="@dimen/common_margin_right"
-        android:text="签到"/>
+        android:text="签到"
+        android:enabled="false"/>
 </LinearLayout>

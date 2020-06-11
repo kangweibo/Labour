@@ -17,14 +17,19 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.model.LatLng;
 import com.labour.lar.Constants;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserLatLonCache;
+import com.labour.lar.cache.UserSignCache;
 import com.labour.lar.map.LocationManager;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserLatLon;
 import com.labour.lar.util.AjaxResult;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -34,7 +39,8 @@ public class LocationService extends Service implements AMapLocationListener {
     private LocationManager locationManager;
     private ArrayBlockingQueue<UserLatLon> arrayBlockingQueue = new ArrayBlockingQueue<UserLatLon>(500);
     private boolean running = false;
-    private ConsumerUserLatLon consumerUserLatLon;
+    private DaemoConsumerUserLatLon consumerUserLatLon;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void onCreate() {
@@ -53,7 +59,7 @@ public class LocationService extends Service implements AMapLocationListener {
             locationManager.startLocation();
             if(!running){
                 running = true;
-                consumerUserLatLon = new ConsumerUserLatLon(this);
+                consumerUserLatLon = new DaemoConsumerUserLatLon(this);
                 consumerUserLatLon.start();
             }
         }
@@ -75,12 +81,18 @@ public class LocationService extends Service implements AMapLocationListener {
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        if(amapLocation != null){
+        if(!UserSignCache.isSign(this)){//签到后才能提交定位信息
+            Log.i("amap","User sign out!");
+            return;
+        }
+        Log.i("amap","User sign in........");
+        if(amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
                 // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
                 int locationType = amapLocation.getLocationType();
                 Log.e("amap", "LocationService onMyLocationChange 定位成功， lat: " + amapLocation.getLatitude() + " lon: " + amapLocation.getLongitude()+ " locationType: " + locationType);
 
+                //发送坐标到LocationReceiver 再到GisMapFrag中
                 LatLng latlng = new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude());
                 Intent intent = new Intent(Constants.LOCATION_RECEIVER_ACTION);
                 intent.setComponent(new ComponentName( getPackageName(),"com.labour.lar.receiver.LocationReceiver"));
@@ -88,8 +100,13 @@ public class LocationService extends Service implements AMapLocationListener {
                 sendBroadcast(intent,Constants.LOCATION_RECEIVER_PERMISSION);
 
                 UserLatLon userLatLon = new UserLatLon();
-                userLatLon.setUserId(1);
-                userLatLon.setCreateTime("2020-12-20 23:40:11");
+                UserCache userCache = UserCache.getInstance(this);
+                User user = userCache.get();
+                if(user != null) {
+                    userLatLon.setUserId(user.getId());
+                    userLatLon.setRole(user.getRole());
+                }
+                userLatLon.setCreateTime(sdf.format(new Date()));
                 userLatLon.setLat(amapLocation.getLatitude()+"");
                 userLatLon.setLon(amapLocation.getLongitude()+"");
 
@@ -108,9 +125,9 @@ public class LocationService extends Service implements AMapLocationListener {
         }
     }
 
-    class ConsumerUserLatLon extends Thread {
+    class DaemoConsumerUserLatLon extends Thread {
         UserLatLonCache userLatLonCache;
-        ConsumerUserLatLon(Context contex){
+        DaemoConsumerUserLatLon(Context contex){
             userLatLonCache = new UserLatLonCache(contex);
         }
         @Override
@@ -119,29 +136,22 @@ public class LocationService extends Service implements AMapLocationListener {
                 try {
                     Log.i("amap","Amap Queue: take.........");
                     UserLatLon userLatLon = arrayBlockingQueue.take();
-                    userLatLonCache.put(userLatLon);
+                    LocationHttp.requestSync(userLatLon, new LocationHttp.OnProcessResultListener() {
+                        @Override
+                        public void onSuccess() {
+                        }
 
-                    loadBanner();
+                        @Override
+                        public void onError() {//加入缓存
+                            userLatLonCache.put(userLatLon,UserLatLonCache.LATLON_CACHE_KEY);
+                        }
+                    });
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-    public void loadBanner(){
-        String user_url = "http://192.168.150.119:8080/test/testRequest";
 
-        final Map<String,String> param = new HashMap<String,String>();
-        OkGo.<String>get(user_url).params(param).tag("user_url").execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                AjaxResult jr = new AjaxResult(response.body());
-                Log.i("amap",jr.toString());
-            }
 
-            @Override
-            public void onError(Response<String> response) {
-            }
-        });
-    }
 }

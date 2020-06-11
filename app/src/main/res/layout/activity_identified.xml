@@ -81,7 +81,17 @@
                 android:layout_marginRight="20dp"
                 android:scaleType="fitXY"
                 android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"/>
+
+            <TextView android:id="@+id/idcard_no_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_centerInParent="true"/>
 
             <Button android:id="@+id/submit_btn"
                 android:layout_width="match_parent"

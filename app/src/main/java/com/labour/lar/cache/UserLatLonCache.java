@@ -14,43 +14,56 @@ public class UserLatLonCache {
 
     private ACache aCache;
     private Context context;
-    private String CACHE_KEY = "user_latlon_cache";
+    public static final String LATLON_CACHE_KEY = "user_latlon_cache";
+    public static final String TEMP_LATLON_CACHE_KEY = "temp_user_latlon_cache";
 
     public UserLatLonCache(Context context){
-        aCache = ACache.get(context,CACHE_KEY);
+        aCache = ACache.get(context,"latLon");
     }
 
-    public void put(UserLatLon userLatLon){
+    public synchronized void put(UserLatLon userLatLon,String key){
         if(aCache != null){
-            ArrayList<UserLatLon> list = get();
+            ArrayList<UserLatLon> list = get(key);
             if(list == null){
                 list = new ArrayList<>();
             }
             Log.i("UserLatLonCache","list.size(): "+list.size());
             list.add(userLatLon);
-            aCache.put(CACHE_KEY,list);
+            aCache.put(key,list);
         }
     }
-    public void putList(ArrayList<UserLatLon> tlist){
+    public synchronized void putList(ArrayList<UserLatLon> tlist,String key){
         if(aCache != null){
-            ArrayList<UserLatLon> list = (ArrayList<UserLatLon>)aCache.getAsObject(CACHE_KEY);
+            ArrayList<UserLatLon> list = (ArrayList<UserLatLon>)aCache.getAsObject(key);
             if(list == null){
                 list = new ArrayList<>();
             }
             list.addAll(tlist);
-            aCache.put(CACHE_KEY,list);
+            aCache.put(key,list);
         }
     }
-    public ArrayList<UserLatLon> get(){
+    public synchronized ArrayList<UserLatLon> get(String key){
         if(aCache != null){
-            ArrayList<UserLatLon> list = (ArrayList<UserLatLon>)aCache.getAsObject(CACHE_KEY);
+            ArrayList<UserLatLon> list = (ArrayList<UserLatLon>)aCache.getAsObject(key);
             return list;
         }
        return null;
     }
-    public void clear(){
+    public synchronized void remove(String key){
         if(aCache != null){
-            aCache.remove(CACHE_KEY);
+            aCache.remove(key);
+        }
+    }
+
+    public synchronized void copy(String sourceKey,String distKey) {
+        ArrayList<UserLatLon> slist = get(sourceKey);
+        if(slist != null && slist.size() > 0){
+            ArrayList<UserLatLon> dlist = get(distKey);
+            if(dlist == null){
+                dlist = new  ArrayList<UserLatLon>();
+            }
+            dlist.addAll(slist);
+            aCache.put(distKey,dlist);
         }
     }
 
@@ -59,7 +72,6 @@ public class UserLatLonCache {
         return "UserLatLonCache{" +
                 "aCache=" + aCache +
                 ", context=" + context +
-                ", CACHE_KEY='" + CACHE_KEY + '\'' +
                 '}';
     }
 }

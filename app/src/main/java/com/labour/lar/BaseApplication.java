@@ -2,9 +2,15 @@ package com.labour.lar;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDex;
 
+import com.labour.lar.keepalive.KeepLive;
+import com.labour.lar.keepalive.config.ForegroundNotification;
+import com.labour.lar.keepalive.config.ForegroundNotificationClickListener;
+import com.labour.lar.keepalive.config.IKeepLiveService;
 import com.labour.lar.module.User;
+import com.labour.lar.service.KeepLiveService;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -37,6 +43,7 @@ public class BaseApplication extends Application {
     public ActivityManager activityManager;
     private static BaseApplication instance;
     private User user;
+    private String signState;
 
     //static 代码段可以防止内存泄露
     static {
@@ -57,6 +64,7 @@ public class BaseApplication extends Application {
             }
         });
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -74,14 +82,23 @@ public class BaseApplication extends Application {
 //                .setSinaWeibo("2473675599", "1d9ee7dded31e2685f43a79ef96af234", "https://www.jiguang.cn");
 
 //        JShareInterface.init(this,platformConfig);
+
     }
-//
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getSignState() {
+        return signState;
+    }
+
+    public void setSignState(String signState) {
+        this.signState = signState;
     }
 
     @Override

@@ -36,6 +36,16 @@
                 android:drawableTop="@mipmap/menu_locate"
                 android:text="重新定位"
                 android:drawablePadding="5dp"/>
+            <TextView
+                android:id="@+id/refresh_sign_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_12"
+                android:textColor="@color/content"
+                android:drawableTop="@mipmap/shuaxin_icon1"
+                android:text="刷新打卡"
+                android:drawablePadding="5dp"
+                android:layout_marginLeft="10dp"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
