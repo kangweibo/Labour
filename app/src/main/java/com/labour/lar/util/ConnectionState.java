@@ -17,7 +17,7 @@ public class ConnectionState implements ConnectionClassManager.ConnectionClassSt
     @Override
     public void onBandwidthStateChange(ConnectionQuality bandwidthState) {
         if(bandwidthState.equals(ConnectionQuality.UNKNOWN)){
-            Toast.makeText(context,"网络有问题",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,"网络有问题",Toast.LENGTH_SHORT).show();
         } else if(bandwidthState.equals(ConnectionQuality.POOR)){
             Toast.makeText(context,"网络较差",Toast.LENGTH_SHORT).show();
         } else if(bandwidthState.equals(ConnectionQuality.MODERATE)){

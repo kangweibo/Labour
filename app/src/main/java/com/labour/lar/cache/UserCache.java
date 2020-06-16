@@ -40,4 +40,8 @@ public class UserCache {
         }
         return user;
     }
+
+    public void clear(){
+        aCache.clear();
+    }
 }

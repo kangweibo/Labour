@@ -1,6 +1,7 @@
 package com.labour.lar.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,7 +33,27 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
     @Override
     protected void fillView(int position, Project item, ItemHolder holder) {
         //Glide.with(mContext).load(Constants.IMAGE_HTTP_BASE + item.getAvatar()).into(holder.photo_iv);
-        holder.photo_iv.setImageResource(R.mipmap.test);
+        holder.photo_iv.setImageResource(R.mipmap.picture);
+        if (!TextUtils.isEmpty(item.getName())){
+            holder.name_tv.setText(item.getName());
+        } else {
+            holder.name_tv.setText("");
+        }
+        if (!TextUtils.isEmpty(item.getSupervisor())){
+            holder.company_tv.setText(item.getSupervisor());
+        } else {
+            holder.company_tv.setText("");
+        }
+        if (!TextUtils.isEmpty(item.getProjectfunction())){
+            holder.type_tv.setText(item.getProjectfunction());
+        } else {
+            holder.type_tv.setText("");
+        }
+        if (!TextUtils.isEmpty(item.getBuildaera())){
+            holder.mianji_tv.setText(item.getBuildaera());
+        } else {
+            holder.mianji_tv.setText("");
+        }
     }
 
     class ItemHolder {

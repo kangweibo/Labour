@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.labour.lar.BaseApplication;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -44,18 +46,34 @@ public class Utils {
         return 0;
     }
 
-    public static String getStoragePath(){
-        String storageState = Environment.getExternalStorageState();
-        if (storageState.equals(Environment.MEDIA_MOUNTED) && !storageState.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
-            String path = Environment.getExternalStorageDirectory().getPath() + File.separator + BASE_DIRECTORY;
+//    public static String getStoragePath(){
+//        String storageState = Environment.getExternalStorageState();
+//        if (storageState.equals(Environment.MEDIA_MOUNTED) && !storageState.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
+//            String path = Environment.getExternalStorageDirectory().getPath() + File.separator + BASE_DIRECTORY;
+//            File dir = new File(path);
+//            if (!dir.exists()) {
+//                dir.mkdir();
+//            }
+//            return path;
+//        }
+//        return null;
+//    }
+
+    // 获取缓存目录
+    private static String getStoragePath(){
+        File externalCacheDir = BaseApplication.getInstance().getExternalCacheDir();
+        if (externalCacheDir != null) {
+            String path = externalCacheDir.getAbsolutePath();
             File dir = new File(path);
             if (!dir.exists()) {
                 dir.mkdir();
             }
             return path;
+
         }
         return null;
     }
+
     public static File getCachePath(){
         String cache_path = Utils.getStoragePath() + "/" + CACHE_DIRECTORY;
         File f = new File(cache_path);

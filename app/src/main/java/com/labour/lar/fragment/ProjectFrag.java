@@ -10,17 +10,28 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
+import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.ProjectDetailActivity;
 import com.labour.lar.adapter.ProjectAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.User;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
+import com.labour.lar.widget.ProgressDialog;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +56,7 @@ public class ProjectFrag extends BaseFragment {
     TextView noresult_view;
 
     ProjectAdapter projectAdapter;
+    List<Project> projectList = new ArrayList<>();
 
     @Override
     public int getFragmentLayoutId() {
@@ -81,17 +93,58 @@ public class ProjectFrag extends BaseFragment {
         });
 
         //测试
-        List<Project> list = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            list.add(new Project());
-        }
-        projectAdapter.setList(list);
-        projectAdapter.notifyDataSetChanged();
+//        List<Project> list = new ArrayList<>();
+//        for(int i=0;i<10;i++){
+//            list.add(new Project());
+//        }
+        projectAdapter.setList(projectList);
+//        projectAdapter.notifyDataSetChanged();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(context, ProjectDetailActivity.class));
+                Project project = projectList.get(position);
+
+                Intent intent = new Intent(context, ProjectDetailActivity.class);
+                intent.putExtra("project", project);
+                startActivity(intent);
+            }
+        });
+
+        getProject();
+    }
+
+    private void getProject() {
+        UserCache userCache = UserCache.getInstance(getContext());
+        User user = userCache.get();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/projects";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    List<Project> projects = JSON.parseArray(JSON.toJSONString(jsonArray), Project.class);
+
+                    projectList.clear();
+                    projectList.addAll(projects);
+                    projectAdapter.notifyDataSetChanged();
+                } else {
+                    AppToast.show(getContext(),"获取项目信息失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"获取项目信息出错!");
             }
         });
     }

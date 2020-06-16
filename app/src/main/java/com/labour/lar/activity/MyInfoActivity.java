@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +19,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.labour.lar.widget.circledialog.CircleDialog;
+//import com.labour.lar.widget.circledialog.CircleDialog;
+import com.labour.lar.BaseApplication;
+import com.labour.lar.Constants;
+import com.labour.lar.cache.UserInfoCache;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.circledialog.callback.ConfigButton;
 import com.labour.lar.widget.circledialog.callback.ConfigDialog;
 import com.labour.lar.widget.circledialog.params.ButtonParams;
@@ -82,7 +87,7 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
         photoFile =new File(Utils.getTakePhotoPath(),"temp.png");
 
         title_tv.setText("个人信息");
-
+        showUserInfo();
     }
 
     @OnClick({R.id.back_iv,R.id.photo_ll})
@@ -99,7 +104,7 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
 
     private void showPhotoDialog() {
         final String[] items = {"拍照","从相册选择"};
-        new CircleDialog.Builder(this)
+        new com.labour.lar.widget.circledialog.CircleDialog.Builder(this)
                 .configDialog(new ConfigDialog() {
                     @Override
                     public void onConfig(DialogParams params) {
@@ -244,4 +249,20 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
         sendBroadcast(mediaScanIntent);
     }
 
+    private void showUserInfo(){
+        UserInfo userInfo = UserInfoCache.getInstance(this).get();
+        if (userInfo == null) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(userInfo.getPic())) {
+            Glide.with(BaseApplication.getInstance()).load(Constants.HTTP_BASE + userInfo.getPic()).into(photo_iv);
+        }
+
+        name_et.setText(userInfo.getName());
+        phone_et.setText(userInfo.getPhone());
+        nation_et.setText(userInfo.getNation());
+        birthday_et.setText(userInfo.getBirthday());
+        address_et.setText(userInfo.getAddress());
+    }
 }

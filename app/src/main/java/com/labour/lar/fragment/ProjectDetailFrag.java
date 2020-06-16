@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.module.Project;
+import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
 
@@ -33,6 +36,18 @@ public class ProjectDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
+    @BindView(R.id.name_tv)
+    TextView name_tv;
+    @BindView(R.id.company_tv)
+    TextView company_tv;
+    @BindView(R.id.type_tv)
+    TextView type_tv;
+    @BindView(R.id.mianji_tv)
+    TextView mianji_tv;
+
+    @BindView(R.id.photo_iv)
+    RoundImageView photo_iv;
+
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
     @BindView(R.id.vp_content)
@@ -42,6 +57,8 @@ public class ProjectDetailFrag extends BaseFragment {
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏","项目进度"};
+
+    private Project project;
 
     @Override
     public int getFragmentLayoutId() {
@@ -53,7 +70,30 @@ public class ProjectDetailFrag extends BaseFragment {
         title_tv.setText("项目详情");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        photo_iv.setImageResource(R.mipmap.picture);
 
+        if (project!= null){
+            if (!TextUtils.isEmpty(project.getName())){
+                name_tv.setText(project.getName());
+            } else {
+                name_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(project.getSupervisor())){
+                company_tv.setText(project.getSupervisor());
+            } else {
+                company_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(project.getProjectfunction())){
+                type_tv.setText(project.getProjectfunction());
+            } else {
+                type_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                mianji_tv.setText(project.getBuildaera());
+            } else {
+                mianji_tv.setText("");
+            }
+        }
     }
 
     @Override
@@ -61,8 +101,13 @@ public class ProjectDetailFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
 
-        frgs.add(new ProjectDetailListFrag());
-        frgs.add(new GisMapFrag());
+        ProjectDetailListFrag projectDetailListFrag = new ProjectDetailListFrag();
+        GisMapFrag gisMapFrag = new GisMapFrag();
+        projectDetailListFrag.setProject(project);
+        gisMapFrag.setProject(project);
+
+        frgs.add(projectDetailListFrag);
+        frgs.add(gisMapFrag);
         frgs.add(new ProjectDetailProgressFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
@@ -102,5 +147,9 @@ public class ProjectDetailFrag extends BaseFragment {
                 break;
 
         }
+    }
+
+    public void setProject(Project project){
+        this.project = project;
     }
 }

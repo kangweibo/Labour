@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -97,6 +98,11 @@ public class LoginActivity extends AppCompatActivity {
         OkGo.getInstance().cancelTag("request_tag");
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
     public void login() {
         String phone = phone_et.getText().toString();
         String password = password_et.getText().toString();
@@ -127,13 +133,15 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(new Intent(LoginActivity.this,MainActivity.class));
                     finish();
                 } else {
+                    UserCache.getInstance(LoginActivity.this).clear();
                     AppToast.show(LoginActivity.this,jr.getMsg());
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
-                AppToast.show(LoginActivity.this,"登录出错!");
+                Log.d("login in", "onError: " + response.code());
+                AppToast.show(LoginActivity.this,"登录出错!" + response.code());
             }
         });
     }

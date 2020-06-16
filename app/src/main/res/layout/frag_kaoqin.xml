@@ -39,13 +39,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="15dp">
-        <ImageView android:id="@+id/sign_iv"
+<!--        <ImageView android:id="@+id/sign_iv"-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="250dp"-->
+<!--            android:src="@mipmap/kaoqin_sign_icon"-->
+<!--            android:layout_gravity="center"/>-->
+        <TextView
+            android:id="@+id/identified_tip_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:text="请先进行实名认证！"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/container"
             android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:src="@mipmap/kaoqin_sign_icon"
-            android:layout_gravity="center"/>
+            android:layout_height="260dp"
+            android:layout_gravity="center">
+        </FrameLayout>
 
         <TextView
+            android:id="@+id/shot_tip_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_14"

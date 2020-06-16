@@ -1,6 +1,7 @@
 package com.labour.lar.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -215,9 +216,9 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                         idCardInfo.put("idcard",result.getIdNumber().getWords());
                         if(photo_zheng_iv.getDrawable() != null){
                             Bitmap bitmap1 =((BitmapDrawable)photo_zheng_iv.getDrawable()).getBitmap();
-                            idCardInfo.put("idpic1",Base64Bitmap.bitmapToBase64(bitmap1));
+                            idCardInfo.put("idpic1","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap1));
                         }
-                        idCardInfo.put("avatar",photo);
+                        idCardInfo.put("avatar","data:image/png;base64," + photo);
                         idCardInfo.put("name",result.getName().getWords());
                         idCardInfo.put("nation",result.getEthnic().getWords());
                         idCardInfo.put("address",result.getAddress().getWords());
@@ -228,7 +229,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                     if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
                         if(photo_fan_iv.getDrawable() != null) {
                             Bitmap bitmap2 = ((BitmapDrawable) photo_fan_iv.getDrawable()).getBitmap();
-                            idCardInfo.put("idpic2",Base64Bitmap.bitmapToBase64(bitmap2));
+                            idCardInfo.put("idpic2","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap2));
 
                             idCardInfo.put("signDate",result.getSignDate().getWords());
                             idCardInfo.put("expiryDate",result.getExpiryDate().getWords());
@@ -282,10 +283,10 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 if(jr.getSuccess() == 1){
                     JSONObject jo = jr.getData();
                     User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-//                    UserCache userCache = new UserCache(RegistActivity.this);
-//                    userCache.put(ub);
+                    UserCache userCache = UserCache.getInstance(IdentifiedActivity.this);
+                    userCache.put(ub);
 //                    startActivity(new Intent(RegistActivity.this, MainActivity.class));
-//                    finish();
+                    finish();
                 } else {
                     AppToast.show(IdentifiedActivity.this,jr.getMsg());
                 }

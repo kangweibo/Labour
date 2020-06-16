@@ -1,58 +1,54 @@
 package com.labour.lar.fragment;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.baidu.idl.face.platform.FaceStatusEnum;
+import com.baidu.idl.face.platform.ILivenessStrategyCallback;
+import com.baidu.idl.face.platform.ui.FaceLivenessFragment;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
-import com.labour.lar.MainActivity;
 import com.labour.lar.R;
-import com.labour.lar.activity.RegistActivity;
 import com.labour.lar.cache.TokenCache;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserSignCache;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.map.LocationManager;
 import com.labour.lar.module.User;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
-import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.ProgressDialog;
-import com.labour.lar.widget.toast.AppMsg;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -71,6 +67,10 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
     @BindView(R.id.location_tv)
     TextView location_tv;
+    @BindView(R.id.identified_tip_tv)
+    TextView identified_tip_tv;
+    @BindView(R.id.shot_tip_tv)
+    TextView shot_tip_tv;
 
     @BindView(R.id.sign_btn)
     Button sign_btn;
@@ -85,6 +85,9 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
      */
     private int signState;
 
+    // 是否匹配人脸
+    private boolean isFaceMatch = false;
+
     @Override
     public int getFragmentLayoutId() {
         return R.layout.frag_kaoqin;
@@ -94,13 +97,21 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     public void initView() {
         back_iv.setVisibility(View.INVISIBLE);
         title_tv.setText("考勤打卡");
-        Drawable d = getResources().getDrawable(R.mipmap.more_icon);
-        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        right_header_btn.setText("刷新");
+//        Drawable d = getResources().getDrawable(R.mipmap.more_icon);
+//        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // 检查是否实名认证
+        if (!checkIdentified()) {
+            identified_tip_tv.setVisibility(View.VISIBLE);
+            shot_tip_tv.setVisibility(View.GONE);
+            return;
+        }
 
         locationManager = new LocationManager(context,true,this,this);
         if(locationManager.createClientIfNeeded()){
@@ -108,15 +119,17 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         }
 
         loadSignTime();
+        showFaceLiveness();
     }
 
-    @OnClick({R.id.right_header_btn})
+    @OnClick({R.id.right_header_btn, R.id.sign_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.right_header_btn:
-                showMoreDialog();
+                refresh();
                 break;
             case R.id.sign_btn:
+                signInOut();
                 break;
         }
     }
@@ -125,6 +138,14 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     public void onDestroy() {
         super.onDestroy();
         locationManager.release();
+    }
+
+    // 刷新打卡
+    private void refresh(){
+        loadSignTime();
+        showFaceLiveness();
+        location_tv.setText("正在重新定位，请稍后...");
+        locationManager.startLocation();
     }
 
     private void showMoreDialog(){
@@ -170,6 +191,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             if (amapLocation.getErrorCode() == 0) {
                 latLonPoint = new LatLonPoint(amapLocation.getLatitude(), amapLocation.getLongitude());
                 locationManager.getAddress(latLonPoint);
+                checkSignState();
             }else {
                 location_tv.setText("定位失败，请重试！");
             }
@@ -205,7 +227,39 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
     }
 
+    /**
+     * 获取签到时间
+     * 经于伟民确认，早于中午12点，就可以签到，晚于中午12点，就可以签退
+     */
     private void loadSignTime() {
+        try {
+            Calendar cali1 = formatTime("12:00:00");//中午
+
+            Calendar now = Calendar.getInstance();
+            now.setTimeZone(TimeZone.getDefault());
+            if(now.before(cali1)) {
+                signState = 1;
+            } else {
+                signState = 2;
+            }
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+
+        sign_btn.setTag(signState);
+        if(signState == 1){
+            //sign_btn.setEnabled(true);
+            sign_btn.setText("签到");
+        } else if(signState == 2){
+            //sign_btn.setEnabled(true);
+            sign_btn.setText("签退");
+        } else {
+            //sign_btn.setEnabled(false);
+            sign_btn.setText("签到");
+        }
+    }
+
+    private void loadSignTimeEx() {
         final ProgressDialog dialog = ProgressDialog.createDialog(context);
         dialog.show();
 
@@ -334,7 +388,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             AppToast.show(context,"定位信息获取失败，请重新获取！");
             return;
         }
-        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sf2 = new SimpleDateFormat("HH:mm:ss");
         String clockdate = sf1.format(new Date());
         String clockintime = sf2.format(new Date());
@@ -342,7 +396,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         User user =  userCache.get();
         int userId =user.getId();
         Constants.ROLE role = user.getRole();
-        int employee_id = 0;
+        int employee_id = userId;
         int staff_id = 0;
         int manager_id = 0;
         if(role == Constants.ROLE.employee){//工人
@@ -359,9 +413,9 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         param.put("clockdate",clockdate);
         param.put("clockintime",clockintime);
         param.put("clockingeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
-        param.put("employee_id",employee_id+"");//工人id
-        param.put("staff_id",staff_id+"");//作业队成员id
-        param.put("manager_id",manager_id+"");//项目成员id
+//        param.put("employee_id",employee_id+"");//工人id
+//        param.put("staff_id",staff_id+"");//作业队成员id
+//        param.put("manager_id",manager_id+"");//项目成员id
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/clockin";
@@ -377,14 +431,117 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    AppToast.show(context,"操作成功!");
+                    if(signState == 1){
+                        AppToast.show(context,"签到成功!");
+                    } else {
+                        AppToast.show(context,"签退成功!");
+                    }
 
                     Intent intent = new Intent();
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context) ;
                     intent.setAction(Constants.SIGN_CHECK_IN_OUT_RECEIVER_ACTION);
                     intent.putExtra("signState",signState);
                     localBroadcastManager.sendBroadcast(intent) ;
+                } else {
+                    AppToast.show(context,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(context,"操作失败!");
+            }
+        });
+    }
+
+    /**
+     * 检查是否实名认证
+     */
+    private boolean checkIdentified() {
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo != null && userInfo.isIdentified()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void checkSignState() {
+        if (latLonPoint != null && isFaceMatch) {
+            sign_btn.setEnabled(true);
+        } else {
+            sign_btn.setEnabled(false);
+        }
+    }
+
+    // 显示活体检测页面
+    private void showFaceLiveness(){
+        FaceLivenessFragment faceLivenessFragment = new FaceLivenessFragment();
+        faceLivenessFragment.setLivenessStrategyCallback(new ILivenessStrategyCallback() {
+            @Override
+            public void onLivenessCompletion(FaceStatusEnum status, String message, HashMap<String, String> base64ImageMap) {
+                if (status == FaceStatusEnum.OK) {
+                    faceMatch(base64ImageMap);
+                }
+            }
+        });
+
+        FragmentManager fm = this.getChildFragmentManager();
+        FragmentTransaction trs = fm.beginTransaction();
+        trs.replace(R.id.container, faceLivenessFragment);
+        trs.commit();
+    }
+
+    /**
+     * 人脸匹配
+     * @param imageMap 人脸照片
+     */
+    private void faceMatch(HashMap<String, String> imageMap) {
+        Set<Map.Entry<String, String>> sets = imageMap.entrySet();
+
+        String base64Data = null;
+        for (Map.Entry<String, String> entry : sets) {
+            base64Data = entry.getValue();
+        }
+
+        if (TextUtils.isEmpty(base64Data)){
+            return;
+        }
+
+        User user = UserCache.getInstance(getContext()).get();
+        String employee_id = user.getId()+"";
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("img",base64Data);
+        param.put("employee_id",employee_id+"");//工人id
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/face_match";
+
+        ProgressDialog dialog = ProgressDialog.createDialog(context);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    JSONObject result =  jo.getJSONObject("result");
+
+                    if (result != null) {
+                        int score =  result.getInteger("score");
+
+                        if (score > 70){
+                            isFaceMatch = true;
+                            AppToast.show(context,"身份认证成功!");
+                            checkSignState();
+                        } else {
+                            isFaceMatch = false;
+                            AppToast.show(context,"身份认证失败!");
+                        }
+                    }
                 } else {
                     AppToast.show(context,jr.getMsg());
                 }

@@ -16,6 +16,7 @@ import com.labour.lar.activity.ProjectDetailActivity;
 import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.module.Project;
 import com.labour.lar.widget.LoadingView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -40,6 +41,7 @@ public class ProjectDetailListFrag extends BaseFragment {
     TextView noresult_view;
 
     ProjectDetailListAdapter projectAdapter;
+    private Project project;
 
     @Override
     public int getFragmentLayoutId() {
@@ -75,13 +77,13 @@ public class ProjectDetailListFrag extends BaseFragment {
         List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
         for(int i=0;i<10;i++){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = "南苑花园c座";
-            item.field1Content = "南苑花";
-            item.field2 = "南苑花园c座";
-            item.field2Content = "南苑花";
-            item.field3 = "南苑花园c座";
-            item.field3Content = "南苑花园";
-            item.isShowArraw = true;
+            item.field1 = "项目部";
+            item.field1Content = "共500人";
+            item.field2 = "项目经理张三";
+            item.field2Content = "成员18人";
+            item.field3 = "作业队10个";
+            item.field3Content = "班组80个";
+            item.isShowArraw = false;
 
             list.add(item);
         }
@@ -91,8 +93,12 @@ public class ProjectDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(context, TaskTeamDetailActivity.class));
+                //startActivity(new Intent(context, TaskTeamDetailActivity.class));
             }
         });
+    }
+
+    public void setProject(Project project){
+        this.project = project;
     }
 }

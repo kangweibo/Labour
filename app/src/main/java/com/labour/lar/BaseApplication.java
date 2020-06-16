@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDex;
 
+import com.baidu.idl.face.platform.FaceSDKManager;
 import com.labour.lar.keepalive.KeepLive;
 import com.labour.lar.keepalive.config.ForegroundNotification;
 import com.labour.lar.keepalive.config.ForegroundNotificationClickListener;
@@ -83,6 +84,18 @@ public class BaseApplication extends Application {
 
 //        JShareInterface.init(this,platformConfig);
 
+        initLib();
+    }
+
+    /**
+     * 初始化SDK
+     */
+    private void initLib() {
+        // 为了android和ios 区分授权，appId=appname_face_android ,其中appname为申请sdk时的应用名
+        // 应用上下文
+        // 申请License取得的APPID
+        // assets目录下License文件名
+        FaceSDKManager.getInstance().initialize(this, "lw1-face-android", "idl-license.face-android");
     }
 
     public User getUser() {

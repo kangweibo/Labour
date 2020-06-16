@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.labour.lar"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -98,4 +98,5 @@ dependencies {
 
     //ocr识别界面
     implementation project(path: ':ocr_ui')
+    implementation project(path: ':faceplatform-ui')
 }
