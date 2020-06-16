@@ -45,6 +45,7 @@ public class BaseApplication extends Application {
     private static BaseApplication instance;
     private User user;
     private String signState;
+    private boolean isRelogon = false;//是否是重新登录
 
     //static 代码段可以防止内存泄露
     static {
@@ -112,6 +113,14 @@ public class BaseApplication extends Application {
 
     public void setSignState(String signState) {
         this.signState = signState;
+    }
+
+    public boolean isRelogon() {
+        return isRelogon;
+    }
+
+    public void setRelogon(boolean relogon) {
+        isRelogon = relogon;
     }
 
     @Override

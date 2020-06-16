@@ -1,18 +1,22 @@
 package com.labour.lar;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.adapter.FragmentViewPagerAdapter;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.cache.UserLatLonCache;
 import com.labour.lar.cache.UserSignCache;
-import com.labour.lar.fragment.GisMapFrag;
 import com.labour.lar.fragment.KaoqinFrag;
 import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
@@ -20,19 +24,25 @@ import com.labour.lar.fragment.ProjectFrag;
 import com.labour.lar.keepalive.KeepLive;
 import com.labour.lar.keepalive.config.ForegroundNotification;
 import com.labour.lar.keepalive.config.ForegroundNotificationClickListener;
-import com.labour.lar.keepalive.config.IKeepLiveService;
+import com.labour.lar.module.User;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.module.UserLatLon;
 import com.labour.lar.service.KeepLiveService;
 import com.labour.lar.service.LocationHttp;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.ConnectionState;
-import com.labour.lar.service.LocationFenceService;
-import com.labour.lar.service.LocationService;
+import com.labour.lar.version.UpdateService;
+import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.MainScrollViewPager;
+import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.TabBarView;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivity {
@@ -60,17 +70,7 @@ public class MainActivity extends BaseActivity {
         connectionState = new ConnectionState(this);
         connectionState.getCurrentBandwidthQuality();
 
-        frgs.add(new ProjectFrag());
-        frgs.add(new MessageFrag());
-        frgs.add(new MineFrag());
-        frgs.add(new KaoqinFrag());
-
-        fragmentPagerAdapter = new FragmentViewPagerAdapter(fm,mainViewpager,frgs);
-
-        mainViewpager.setCanScroll(false);
-        mainViewpager.setAdapter(fragmentPagerAdapter);
-        mainTabBarView.setViewPager(mainViewpager);
-        mainTabBarView.selectedTab(DEFAULT_SELECT_TAB);
+        initFragment();
 
         //keepAliveManager = new KeepAliveManager(this);
         //keepAliveManager.startKeepAlive();
@@ -98,9 +98,31 @@ public class MainActivity extends BaseActivity {
         daemoThread.start();
     }
 
+    private void initFragment() {
+        frgs.clear();
+        frgs.add(new ProjectFrag());
+        frgs.add(new MessageFrag());
+        frgs.add(new MineFrag());
+        frgs.add(new KaoqinFrag());
+
+        fragmentPagerAdapter = new FragmentViewPagerAdapter(fm,mainViewpager,frgs);
+
+        mainViewpager.setCanScroll(false);
+        mainViewpager.setAdapter(fragmentPagerAdapter);
+        mainTabBarView.setViewPager(mainViewpager);
+        mainTabBarView.selectedTab(DEFAULT_SELECT_TAB);
+
+        // 获取用户信息
+        getUserInfo();
+    }
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 重新加载页面
+        if (BaseApplication.getInstance().isRelogon()){
+            initFragment();
+        }
     }
 
     @Override
@@ -169,5 +191,70 @@ public class MainActivity extends BaseActivity {
             }
 
         }
+    }
+
+    private void getUserInfo() {
+        UserCache userCache = UserCache.getInstance(this);
+        User user = userCache.get();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("dtype", user.getProle());
+        jsonObject.put("userid", user.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/user";
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+                    UserInfo userInfo = dealWithPic(userInfoOrg);
+                    UserInfoCache.getInstance(MainActivity.this).put(userInfo);
+                    checkUserInfo(MainActivity.this, userInfo);
+                } else {
+                    AppToast.show(MainActivity.this,"获取用户信息失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(MainActivity.this,"获取用户信息出错!");
+            }
+        });
+    }
+
+    private UserInfo dealWithPic(UserInfo userInfo) {
+        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
+        String pic = jsonObject.getString("url");
+        userInfo.setPic(pic);
+
+        jsonObject = JSON.parseObject(userInfo.getIdpic1());
+        String Idpic1 = jsonObject.getString("url");
+        userInfo.setIdpic1(Idpic1);
+
+        jsonObject = JSON.parseObject(userInfo.getIdpic2());
+        String Idpic2 = jsonObject.getString("url");
+        userInfo.setIdpic2(Idpic2);
+
+        return userInfo;
+    }
+
+    private void checkUserInfo(final Context context, UserInfo userInfo) {
+        if (userInfo.isIdentified()){
+            return;
+        }
+
+        DialogUtil.showConfirmDialog(context,"提示信息","你还未实名认证，是否立即认证",new DialogUtil.OnDialogEvent<Void>(){
+            @Override
+            public void onPositiveButtonClick(Void t) {
+                startActivity(new Intent(context, IdentifiedActivity.class));
+            }
+        });
     }
 }

@@ -7,13 +7,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.labour.lar.BaseActivity;
+import com.labour.lar.BaseApplication;
 import com.labour.lar.LoginActivity;
 import com.labour.lar.MainActivity;
 import com.labour.lar.R;
 import com.labour.lar.WelcomeActivity;
 import com.labour.lar.cache.GlideCacheUtil;
 import com.labour.lar.cache.UserCache;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.User;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.MCountDownTimer;
 import com.labour.lar.widget.toast.AppToast;
 
@@ -77,11 +80,14 @@ public class SettingActivity extends BaseActivity {
         AppToast.show(this,"缓存清理完成!");
     }
 
-
+    // 退出登录
     public void quit(){
         UserCache userCache = UserCache.getInstance(this);
         userCache.clear();
+        UserInfoCache userInfoCache = UserInfoCache.getInstance(this);
+        userInfoCache.clear();
 
+        BaseApplication.getInstance().setRelogon(true);
         startActivity(new Intent(this, LoginActivity.class));
     }
 }

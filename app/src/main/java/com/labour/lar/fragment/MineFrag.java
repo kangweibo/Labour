@@ -87,7 +87,7 @@ public class MineFrag extends BaseFragment {
             }
         });
 
-        getUserInfo();
+//        getUserInfo();
     }
     @OnClick({R.id.identified_tv})
     public void onClick(View view) {
@@ -98,57 +98,57 @@ public class MineFrag extends BaseFragment {
         }
     }
 
-    private void getUserInfo() {
-        UserCache userCache = UserCache.getInstance(getContext());
-        User user = userCache.get();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("token","063d91b4f57518ff");
-        jsonObject.put("dtype", user.getProle());
-        jsonObject.put("userid", user.getId());
-        String jsonParams =jsonObject.toJSONString();
-
-        String url = Constants.HTTP_BASE + "/api/user";
-        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
-        dialog.show();
-
-        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                dialog.dismiss();
-                AjaxResult jr = new AjaxResult(response.body());
-                if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
-                    UserInfo userInfo = dealWithPic(userInfoOrg);
-                    UserInfoCache.getInstance(getContext()).put(userInfo);
-                    refreshUserInfo();
-                } else {
-                    AppToast.show(getContext(),"获取用户信息失败!");
-                }
-            }
-            @Override
-            public void onError(Response<String> response) {
-                dialog.dismiss();
-                AppToast.show(getContext(),"获取用户信息出错!");
-            }
-        });
-    }
-
-    private UserInfo dealWithPic(UserInfo userInfo) {
-        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
-        String pic = jsonObject.getString("url");
-        userInfo.setPic(pic);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic1());
-        String Idpic1 = jsonObject.getString("url");
-        userInfo.setIdpic1(Idpic1);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic2());
-        String Idpic2 = jsonObject.getString("url");
-        userInfo.setIdpic2(Idpic2);
-
-        return userInfo;
-    }
+//    private void getUserInfo() {
+//        UserCache userCache = UserCache.getInstance(getContext());
+//        User user = userCache.get();
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("token","063d91b4f57518ff");
+//        jsonObject.put("dtype", user.getProle());
+//        jsonObject.put("userid", user.getId());
+//        String jsonParams =jsonObject.toJSONString();
+//
+//        String url = Constants.HTTP_BASE + "/api/user";
+//        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+//        dialog.show();
+//
+//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+//            @Override
+//            public void onSuccess(Response<String> response) {
+//                dialog.dismiss();
+//                AjaxResult jr = new AjaxResult(response.body());
+//                if(jr.getSuccess() == 1){
+//                    JSONObject jo = jr.getData();
+//                    UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+//                    UserInfo userInfo = dealWithPic(userInfoOrg);
+//                    UserInfoCache.getInstance(getContext()).put(userInfo);
+//                    refreshUserInfo();
+//                } else {
+//                    AppToast.show(getContext(),"获取用户信息失败!");
+//                }
+//            }
+//            @Override
+//            public void onError(Response<String> response) {
+//                dialog.dismiss();
+//                AppToast.show(getContext(),"获取用户信息出错!");
+//            }
+//        });
+//    }
+//
+//    private UserInfo dealWithPic(UserInfo userInfo) {
+//        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
+//        String pic = jsonObject.getString("url");
+//        userInfo.setPic(pic);
+//
+//        jsonObject = JSON.parseObject(userInfo.getIdpic1());
+//        String Idpic1 = jsonObject.getString("url");
+//        userInfo.setIdpic1(Idpic1);
+//
+//        jsonObject = JSON.parseObject(userInfo.getIdpic2());
+//        String Idpic2 = jsonObject.getString("url");
+//        userInfo.setIdpic2(Idpic2);
+//
+//        return userInfo;
+//    }
 
     // 刷新用户界面
     private void refreshUserInfo() {

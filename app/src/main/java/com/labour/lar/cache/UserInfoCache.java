@@ -11,7 +11,7 @@ public class UserInfoCache {
 
     private UserInfoCache(Context context){
         this.context = context;
-        this.aCache = ACache.get(context,"user");
+        this.aCache = ACache.get(context,"userinfo");
     }
     public static UserInfoCache getInstance(Context context){
         if(userCache == null){
@@ -33,5 +33,9 @@ public class UserInfoCache {
             user = (UserInfo) aCache.getAsObject("key_userinfo");
         }
         return user;
+    }
+
+    public void clear(){
+        aCache.clear();
     }
 }
