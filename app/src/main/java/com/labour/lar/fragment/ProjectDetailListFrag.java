@@ -83,7 +83,7 @@ public class ProjectDetailListFrag extends BaseFragment {
             item.field2Content = "成员18人";
             item.field3 = "作业队10个";
             item.field3Content = "班组80个";
-            item.isShowArraw = false;
+            item.isShowArraw = true;
 
             list.add(item);
         }

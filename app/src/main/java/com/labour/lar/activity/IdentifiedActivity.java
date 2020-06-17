@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -74,8 +77,16 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     TextView fan_tv;
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
-    @BindView(R.id.idcard_no_tv)
-    TextView idcard_no_tv;
+    @BindView(R.id.take_photo_iv)
+    ImageView take_photo_iv;
+    @BindView(R.id.edt_idcard_name)
+    EditText edt_idcard_name;
+    @BindView(R.id.edt_idcard_gender)
+    EditText edt_idcard_gender;
+    @BindView(R.id.edt_idcard_no)
+    EditText edt_idcard_no;
+    @BindView(R.id.edt_idcard_address)
+    EditText edt_idcard_address;
 
     File file1;
     File file2;
@@ -94,28 +105,29 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
         title_tv.setText("身份验证");
-        initAccessTokenWithAkSk();
+//        initAccessTokenWithAkSk();
         user = UserCache.getInstance(IdentifiedActivity.this).get();
     }
 
-    /**
-     * 用明文ak，sk初始化
-     */
-    private void initAccessTokenWithAkSk() {
-        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
-        baiDuOCR.setAutoCacheToken(true);
-        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
-            @Override
-            public void onResult(AccessToken result) {
-            }
-            @Override
-            public void onError(OCRError error) {
-                error.printStackTrace();
-            }
-        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
-    }
+//    /**
+//     * 用明文ak，sk初始化
+//     */
+//    private void initAccessTokenWithAkSk() {
+//        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
+//        baiDuOCR.setAutoCacheToken(true);
+//        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+//            @Override
+//            public void onResult(AccessToken result) {
+//            }
+//            @Override
+//            public void onError(OCRError error) {
+//                error.printStackTrace();
+//            }
+//        }, getApplicationContext(),  "GNPUuASB8wKIVGkH2xHtQcl4", "GaE6gY29BaFkUvOrtcBMwj54Gi8Z63BT");
+////        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
+//    }
 
-    @OnClick({R.id.back_iv,R.id.photo_zheng_iv,R.id.photo_fan_iv,R.id.submit_btn})
+    @OnClick({R.id.back_iv,R.id.photo_zheng_iv,R.id.photo_fan_iv,R.id.take_photo_iv,R.id.submit_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -134,6 +146,11 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file2.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_BACK);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
+                break;
+            case R.id.take_photo_iv:
+                Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent1.putExtra("android.intent.extras.CAMERA_FACING", 1);//前置摄像头
+                startActivityForResult(intent1,1);
                 break;
             case R.id.submit_btn:
                 save();
@@ -170,6 +187,9 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                         }
                     }
                 }
+            }
+            if (requestCode == 1) {
+                saveCameraImage(data);
             }
         }
     }
@@ -212,12 +232,17 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             Bitmap bitmap = Base64Bitmap.base64ToBitmap(photo);
                             photo_iv.setImageBitmap(bitmap);
                         }
-                        idcard_no_tv.setText("身份证号:"+result.getIdNumber().getWords());
+                        edt_idcard_no.setText(result.getIdNumber().getWords());
                         idCardInfo.put("idcard",result.getIdNumber().getWords());
                         if(photo_zheng_iv.getDrawable() != null){
                             Bitmap bitmap1 =((BitmapDrawable)photo_zheng_iv.getDrawable()).getBitmap();
                             idCardInfo.put("idpic1","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap1));
                         }
+
+                        edt_idcard_name.setText(result.getName().getWords());
+                        edt_idcard_gender.setText(result.getGender().getWords());
+                        edt_idcard_address.setText(result.getAddress().getWords());
+
                         idCardInfo.put("avatar","data:image/png;base64," + photo);
                         idCardInfo.put("name",result.getName().getWords());
                         idCardInfo.put("nation",result.getEthnic().getWords());
@@ -225,6 +250,14 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                         idCardInfo.put("gender",result.getGender().getWords());
                         idCardInfo.put("birthday",result.getBirthday().getWords());
                         idCardInfo.put("identified","true");
+
+                        if (TextUtils.isEmpty(result.getName().getWords())
+                                || TextUtils.isEmpty(result.getGender().getWords())
+                                || TextUtils.isEmpty(result.getIdNumber().getWords())
+                                || TextUtils.isEmpty(result.getAddress().getWords())){
+                            AppToast.show(IdentifiedActivity.this,"身份证正面识别失败，请重新拍摄");
+                            photo_zheng_iv.setImageBitmap(null);
+                        }
                     }
                     if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
                         if(photo_fan_iv.getDrawable() != null) {
@@ -234,6 +267,13 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             idCardInfo.put("signDate",result.getSignDate().getWords());
                             idCardInfo.put("expiryDate",result.getExpiryDate().getWords());
                             idCardInfo.put("issueAuthority",result.getIssueAuthority().getWords());
+                        }
+
+                        if (TextUtils.isEmpty(result.getSignDate().getWords())
+                                || TextUtils.isEmpty(result.getExpiryDate().getWords())
+                                || TextUtils.isEmpty(result.getIssueAuthority().getWords())){
+                            AppToast.show(IdentifiedActivity.this,"身份证反面识别失败，请重新拍摄");
+                            photo_fan_iv.setImageBitmap(null);
                         }
                     }
                     Log.i("idcard", result.toString());
@@ -299,4 +339,71 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         });
     }
 
+    /** 显示图片 **/
+    private void saveCameraImage(Intent data) {
+        Bitmap bmp = (Bitmap) data.getExtras().get("data");// 解析返回的图片成bitmap
+        take_photo_iv.setImageBitmap(bmp);
+
+        AppToast.show(this,"t!");
+    }
+
+    /**
+     * 图片匹配
+     * @param imageMap 照片
+     */
+//    private void faceMatch(HashMap<String, String> imageMap) {
+//        Set<Map.Entry<String, String>> sets = imageMap.entrySet();
+//
+//        String base64Data = null;
+//        for (Map.Entry<String, String> entry : sets) {
+//            base64Data = entry.getValue();
+//        }
+//
+//        if (TextUtils.isEmpty(base64Data)){
+//            return;
+//        }
+//
+//
+//        final Map<String,String> param = new HashMap<>();
+//        param.put("img",base64Data);
+//
+//        String jsonParams = JSON.toJSONString(param);
+//
+//        String url = Constants.HTTP_BASE + "/api/face_match";
+//
+//        ProgressDialog dialog = ProgressDialog.createDialog(this);
+//        dialog.show();
+//
+//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+//            @Override
+//            public void onSuccess(Response<String> response) {
+//                dialog.dismiss();
+//                AjaxResult jr = new AjaxResult(response.body());
+//                if(jr.getSuccess() == 1){
+//                    JSONObject jo = jr.getData();
+//                    JSONObject result =  jo.getJSONObject("result");
+//
+//                    if (result != null) {
+//                        int score =  result.getInteger("score");
+//
+//                        if (score > 70){
+//                            isFaceMatch = true;
+//                            AppToast.show(context,"身份认证成功!");
+//                            checkSignState();
+//                        } else {
+//                            isFaceMatch = false;
+//                            AppToast.show(context,"身份认证失败!");
+//                        }
+//                    }
+//                } else {
+//                    AppToast.show(context,jr.getMsg());
+//                }
+//            }
+//            @Override
+//            public void onError(Response<String> response) {
+//                dialog.dismiss();
+//                AppToast.show(context,"操作失败!");
+//            }
+//        });
+//    }
 }

@@ -7,8 +7,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.activity.IdentifiedActivity;
@@ -250,7 +248,7 @@ public class MainActivity extends BaseActivity {
             return;
         }
 
-        DialogUtil.showConfirmDialog(context,"提示信息","你还未实名认证，是否立即认证",new DialogUtil.OnDialogEvent<Void>(){
+        DialogUtil.showConfirmDialog(context,"提示信息","你还未身份认证，是否去认证",new DialogUtil.OnDialogEvent<Void>(){
             @Override
             public void onPositiveButtonClick(Void t) {
                 startActivity(new Intent(context, IdentifiedActivity.class));

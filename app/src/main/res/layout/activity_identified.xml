@@ -72,26 +72,104 @@
                     android:layout_centerInParent="true"/>
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/photo_iv"
-                android:layout_width="130dp"
-                android:layout_height="150dp"
-                android:background="@mipmap/zhengmian"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:scaleType="fitXY"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone"/>
-
-            <TextView android:id="@+id/idcard_no_tv"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_16"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_centerInParent="true"/>
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/photo_iv"
+                    android:layout_width="130dp"
+                    android:layout_height="150dp"
+                    android:background="@mipmap/zhengmian"
+                    android:layout_margin="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"/>
+                <ImageView
+                    android:id="@+id/take_photo_iv"
+                    android:layout_width="130dp"
+                    android:layout_height="150dp"
+                    android:background="@mipmap/zhengmian"
+                    android:layout_margin="20dp"
+                    android:scaleType="fitXY"
+                    android:visibility="visible"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="真实姓名"/>
+                <EditText android:id="@+id/edt_idcard_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="性&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;别"/>
+                <EditText android:id="@+id/edt_idcard_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="身份证号"/>
+                <EditText android:id="@+id/edt_idcard_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="地&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;址"/>
+                <EditText android:id="@+id/edt_idcard_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>/>
+            </LinearLayout>
 
             <Button android:id="@+id/submit_btn"
                 android:layout_width="match_parent"
@@ -102,10 +180,10 @@
                 android:textSize="@dimen/text_size_16"
                 android:layout_marginRight="@dimen/common_margin_right"
                 android:layout_marginLeft="@dimen/common_margin_left"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="15dp"/>
 
         </LinearLayout>
     </ScrollView>
-
 
 </LinearLayout>

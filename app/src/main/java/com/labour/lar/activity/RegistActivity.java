@@ -1,7 +1,13 @@
 package com.labour.lar.activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -10,6 +16,17 @@ import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.ocr.sdk.OnResultListener;
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.IDCardParams;
+import com.baidu.ocr.ui.camera.CameraActivity;
+import com.bumptech.glide.Glide;
+import com.labour.lar.module.UserInfo;
+import com.labour.lar.ocr.BaiDuIDCardResult;
+import com.labour.lar.ocr.BaiDuOCR;
+import com.labour.lar.util.Base64Bitmap;
+import com.labour.lar.util.Utils;
+import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.circledialog.CircleDialog;
 import com.labour.lar.widget.circledialog.callback.ConfigButton;
 import com.labour.lar.widget.circledialog.callback.ConfigDialog;
@@ -30,6 +47,8 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,6 +123,8 @@ public class RegistActivity extends BaseActivity {
                 }
             }
         });
+
+        showIdentifie(this);
     }
 
     public void cancelCountDownTimer(){
@@ -216,4 +237,75 @@ public class RegistActivity extends BaseActivity {
         });
     }
 
+    private void showIdentifie(Context context) {
+        DialogUtil.showConfirmDialog(context,"提示信息","为了您方便注册，是否进行身份信息识别",new DialogUtil.OnDialogEvent<Void>(){
+            @Override
+            public void onPositiveButtonClick(Void t) {
+                scanIdentifie();
+            }
+        });
+    }
+
+    private static final int REQUEST_CODE_CAMERA = 102;
+    File file1;
+
+    private void scanIdentifie() {
+        file1 = Utils.getSaveFile(this,"idcard_"+new Date().getTime()+".png");
+        Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file1.getAbsolutePath());
+        intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
+        startActivityForResult(intent, REQUEST_CODE_CAMERA);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            if (requestCode == REQUEST_CODE_CAMERA) {
+                if (data != null) {
+                    String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
+                    if (!TextUtils.isEmpty(contentType)) {
+                        if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
+                            recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, file1.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void recIDCard(final String idCardSide, String filePath) {
+        final ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        IDCardParams param = new IDCardParams();
+        param.setImageFile(new File(filePath));
+        // 设置身份证正反面
+        param.setIdCardSide(idCardSide);
+        // 设置方向检测
+        param.setDetectDirection(true);
+        // 设置图像参数压缩质量0-100, 越大图像质量越好但是请求时间越长。 不设置则默认值为20
+        param.setImageQuality(20);
+        param.setDetectDirection(true);
+
+        BaiDuOCR.getInstance(this).recognizeIDCard(param, new OnResultListener<BaiDuIDCardResult>() {
+            @Override
+            public void onResult(BaiDuIDCardResult result) {
+                if (result != null) {
+
+                    if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
+                        name_et.setText(result.getName().getWords());
+                        sex_et.setText(result.getGender().getWords());
+                    }
+                }
+                dialog.dismiss();
+            }
+
+            @Override
+            public void onError(OCRError error) {
+                dialog.dismiss();
+                AppToast.show(RegistActivity.this,error.getMessage());
+            }
+        });
+    }
 }

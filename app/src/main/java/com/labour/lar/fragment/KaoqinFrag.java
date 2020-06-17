@@ -1,7 +1,9 @@
 package com.labour.lar.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -29,6 +32,7 @@ import com.baidu.idl.face.platform.ui.FaceLivenessFragment;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.FaceLivenessExpActivity;
 import com.labour.lar.cache.TokenCache;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
@@ -36,6 +40,7 @@ import com.labour.lar.map.LocationManager;
 import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.Base64Bitmap;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -71,6 +76,8 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     TextView identified_tip_tv;
     @BindView(R.id.shot_tip_tv)
     TextView shot_tip_tv;
+    @BindView(R.id.sign_iv)
+    ImageView sign_iv;
 
     @BindView(R.id.sign_btn)
     Button sign_btn;
@@ -87,6 +94,9 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
     // 是否匹配人脸
     private boolean isFaceMatch = false;
+
+
+    private static final int REQUEST_CODE_FACE = 101;
 
     @Override
     public int getFragmentLayoutId() {
@@ -119,10 +129,10 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         }
 
         loadSignTime();
-        showFaceLiveness();
+        //showFaceLiveness();
     }
 
-    @OnClick({R.id.right_header_btn, R.id.sign_btn})
+    @OnClick({R.id.right_header_btn, R.id.sign_btn, R.id.sign_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.right_header_btn:
@@ -130,6 +140,9 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                 break;
             case R.id.sign_btn:
                 signInOut();
+                break;
+            case R.id.sign_iv:
+                showFaceActivity();
                 break;
         }
     }
@@ -143,7 +156,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     // 刷新打卡
     private void refresh(){
         loadSignTime();
-        showFaceLiveness();
+//        showFaceLiveness();
         location_tv.setText("正在重新定位，请稍后...");
         locationManager.startLocation();
     }
@@ -436,6 +449,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                     } else {
                         AppToast.show(context,"签退成功!");
                     }
+                    sign_iv.setImageResource(R.mipmap.kaoqin_sign_icon);
 
                     Intent intent = new Intent();
                     LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(context) ;
@@ -475,35 +489,59 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     }
 
     // 显示活体检测页面
-    private void showFaceLiveness(){
-        FaceLivenessFragment faceLivenessFragment = new FaceLivenessFragment();
-        faceLivenessFragment.setLivenessStrategyCallback(new ILivenessStrategyCallback() {
-            @Override
-            public void onLivenessCompletion(FaceStatusEnum status, String message, HashMap<String, String> base64ImageMap) {
-                if (status == FaceStatusEnum.OK) {
-                    faceMatch(base64ImageMap);
+//    private void showFaceLiveness(){
+//        FaceLivenessFragment faceLivenessFragment = new FaceLivenessFragment();
+//        faceLivenessFragment.setLivenessStrategyCallback(new ILivenessStrategyCallback() {
+//            @Override
+//            public void onLivenessCompletion(FaceStatusEnum status, String message, HashMap<String, String> base64ImageMap) {
+//                if (status == FaceStatusEnum.OK) {
+//                    Set<Map.Entry<String, String>> sets = base64ImageMap.entrySet();
+//                    String base64Data = null;
+//                    for (Map.Entry<String, String> entry : sets) {
+//                        base64Data = entry.getValue();
+//                    }
+//                    faceMatch(base64Data);
+//                }
+//            }
+//        });
+//
+//        FragmentManager fm = this.getChildFragmentManager();
+//        FragmentTransaction trs = fm.beginTransaction();
+//        trs.replace(R.id.container, faceLivenessFragment);
+//        trs.commit();
+//    }
+
+    // 显示活体检测页面
+    private void showFaceActivity(){
+        Intent intent = new Intent(getContext(), FaceLivenessExpActivity.class);
+        startActivityForResult(intent,REQUEST_CODE_FACE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK){
+            if (requestCode == REQUEST_CODE_FACE) {
+                if (data != null) {
+                    showFaceImage(data);
                 }
             }
-        });
+        }
+    }
 
-        FragmentManager fm = this.getChildFragmentManager();
-        FragmentTransaction trs = fm.beginTransaction();
-        trs.replace(R.id.container, faceLivenessFragment);
-        trs.commit();
+    // 显示图片
+    private void showFaceImage(Intent data) {
+        String base64Data = data.getStringExtra("data");// 解析返回的图片成bitmap
+        Bitmap bmp = Base64Bitmap.base64ToBitmap(base64Data);
+        sign_iv.setImageBitmap(bmp);
+        faceMatch(base64Data);
     }
 
     /**
      * 人脸匹配
-     * @param imageMap 人脸照片
+     * @param base64Data 人脸照片
      */
-    private void faceMatch(HashMap<String, String> imageMap) {
-        Set<Map.Entry<String, String>> sets = imageMap.entrySet();
-
-        String base64Data = null;
-        for (Map.Entry<String, String> entry : sets) {
-            base64Data = entry.getValue();
-        }
-
+    private void faceMatch(String base64Data) {
         if (TextUtils.isEmpty(base64Data)){
             return;
         }

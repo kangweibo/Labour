@@ -39,11 +39,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="15dp">
-<!--        <ImageView android:id="@+id/sign_iv"-->
-<!--            android:layout_width="250dp"-->
-<!--            android:layout_height="250dp"-->
-<!--            android:src="@mipmap/kaoqin_sign_icon"-->
-<!--            android:layout_gravity="center"/>-->
+        <ImageView android:id="@+id/sign_iv"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@mipmap/kaoqin_sign_icon"
+            android:layout_gravity="center"/>
         <TextView
             android:id="@+id/identified_tip_tv"
             android:layout_width="wrap_content"
@@ -59,7 +59,8 @@
             android:id="@+id/container"
             android:layout_width="250dp"
             android:layout_height="260dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:visibility="gone">
         </FrameLayout>
 
         <TextView

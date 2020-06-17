@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 
 import com.baidu.idl.face.platform.FaceSDKManager;
+import com.baidu.ocr.sdk.OnResultListener;
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.AccessToken;
 import com.labour.lar.keepalive.KeepLive;
 import com.labour.lar.keepalive.config.ForegroundNotification;
 import com.labour.lar.keepalive.config.ForegroundNotificationClickListener;
 import com.labour.lar.keepalive.config.IKeepLiveService;
 import com.labour.lar.module.User;
+import com.labour.lar.ocr.BaiDuOCR;
 import com.labour.lar.service.KeepLiveService;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
@@ -86,6 +90,7 @@ public class BaseApplication extends Application {
 //        JShareInterface.init(this,platformConfig);
 
         initLib();
+        initAccessTokenWithAkSk();
     }
 
     /**
@@ -194,4 +199,22 @@ public class BaseApplication extends Application {
 //       }
 //       return null;
 //    }
+
+    /**
+     * 用明文ak，sk初始化
+     */
+    private void initAccessTokenWithAkSk() {
+        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
+        baiDuOCR.setAutoCacheToken(true);
+        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+            @Override
+            public void onResult(AccessToken result) {
+            }
+            @Override
+            public void onError(OCRError error) {
+                error.printStackTrace();
+            }
+ //       }, getApplicationContext(),  "GNPUuASB8wKIVGkH2xHtQcl4", "GaE6gY29BaFkUvOrtcBMwj54Gi8Z63BT");
+        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
+    }
 }

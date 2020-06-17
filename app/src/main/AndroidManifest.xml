@@ -57,9 +57,8 @@
     <application
         android:name="com.labour.lar.BaseApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
@@ -74,56 +73,65 @@
             android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask"/>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask"/>
         <activity
             android:name=".activity.RegistActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".activity.FindPwdActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".activity.ProjectDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".activity.TaskTeamDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".activity.BanZuDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".activity.GongRenDetailActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name="com.labour.lar.widget.ImagePagerActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
             android:name="com.labour.lar.activity.MyInfoActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
             android:name="com.labour.lar.activity.IdentifiedActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
             android:name="com.labour.lar.activity.GeoFenceActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
             android:name="com.labour.lar.activity.SettingActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustUnspecified"></activity>
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.FaceLivenessExpActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+
+        <activity
+            android:name="com.labour.lar.activity.PasswordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
 
         <activity android:name="com.baidu.ocr.ui.camera.CameraActivity"
             android:configChanges="screenSize|orientation"

@@ -506,14 +506,14 @@ public class FaceLivenessActivity extends Activity implements
 
     private void saveImage(HashMap<String, String> imageMap) {
         Set<Map.Entry<String, String>> sets = imageMap.entrySet();
-        Bitmap bmp = null;
-        mImageLayout.removeAllViews();
-        for (Map.Entry<String, String> entry : sets) {
-            bmp = base64ToBitmap(entry.getValue());
-            ImageView iv = new ImageView(this);
-            iv.setImageBitmap(bmp);
-            mImageLayout.addView(iv, new LinearLayout.LayoutParams(300, 300));
-        }
+//        Bitmap bmp = null;
+//        mImageLayout.removeAllViews();
+//        for (Map.Entry<String, String> entry : sets) {
+//            bmp = base64ToBitmap(entry.getValue());
+//            ImageView iv = new ImageView(this);
+//            iv.setImageBitmap(bmp);
+//            mImageLayout.addView(iv, new LinearLayout.LayoutParams(300, 300));
+//        }
     }
 
     private static Bitmap base64ToBitmap(String base64Data) {

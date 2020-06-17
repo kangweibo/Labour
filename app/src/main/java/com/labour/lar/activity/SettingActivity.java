@@ -64,7 +64,7 @@ public class SettingActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.txt_modify:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, PasswordActivity.class));
                 break;
             case R.id.txt_clear:
                 clear();
