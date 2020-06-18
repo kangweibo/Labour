@@ -123,7 +123,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             return;
         }
 
-        locationManager = new LocationManager(context,true,this,this);
+        locationManager = new LocationManager(context,true,1000,this,this);
         if(locationManager.createClientIfNeeded()){
             locationManager.startLocation();
         }

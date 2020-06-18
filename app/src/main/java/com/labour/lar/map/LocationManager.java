@@ -20,6 +20,7 @@ public class LocationManager {
     private AMapLocationListener locationListener;
     private GeocodeSearch.OnGeocodeSearchListener onGeocodeSearchListener;
     private boolean once = false;
+    private long interval = 1000;
 
     private GeocodeSearch geocoderSearch;
 
@@ -29,9 +30,10 @@ public class LocationManager {
      * @param once
      * @param locationListener 定位
      */
-    public LocationManager(Context context, boolean once,AMapLocationListener locationListener) {
+    public LocationManager(Context context, boolean once,long interval,AMapLocationListener locationListener) {
         this.context = context;
         this.once = once;
+        this.interval = interval;
         this.locationListener = locationListener;
     }
 
@@ -42,9 +44,10 @@ public class LocationManager {
      * @param locationListener 定位
      * @param onGeocodeSearchListener 地理反编码查询
      */
-    public LocationManager(Context context, boolean once, AMapLocationListener locationListener, GeocodeSearch.OnGeocodeSearchListener onGeocodeSearchListener ) {
+    public LocationManager(Context context, boolean once, long interval, AMapLocationListener locationListener, GeocodeSearch.OnGeocodeSearchListener onGeocodeSearchListener ) {
         this.context = context;
         this.once = once;
+        this.interval = interval;
         this.locationListener = locationListener;
         this.onGeocodeSearchListener = onGeocodeSearchListener;
     }
@@ -54,7 +57,7 @@ public class LocationManager {
             mlocationClient = new AMapLocationClient(context);
             mLocationOption = new AMapLocationClientOption();
             // 每10秒定位一次
-            mLocationOption.setInterval(1000);
+            mLocationOption.setInterval(interval);
             //获取一次定位结果：
             //该方法默认为false。
             mLocationOption.setOnceLocation(once);
