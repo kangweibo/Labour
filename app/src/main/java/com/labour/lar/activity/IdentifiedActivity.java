@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -94,7 +95,12 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     PermissionManager permissionManager;
     private Map<String,String> idCardInfo = new HashMap<>();
     private User user;
+    private boolean identifiedFront;//正面认证
+    private boolean identifiedBack;//反面认证
+    private boolean isFaceMatch;//人脸与头像是否匹配
 
+    private String bmpIdcardPhoto;
+    private String bmpTakePhoto;
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_identified;
@@ -231,6 +237,11 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             photo_iv.setVisibility(View.VISIBLE);
                             Bitmap bitmap = Base64Bitmap.base64ToBitmap(photo);
                             photo_iv.setImageBitmap(bitmap);
+
+                            idCardInfo.put("avatar","data:image/png;base64," + photo);
+                            bmpIdcardPhoto = idCardInfo.get("avatar");
+
+                            faceMatch();
                         }
                         edt_idcard_no.setText(result.getIdNumber().getWords());
                         idCardInfo.put("idcard",result.getIdNumber().getWords());
@@ -239,24 +250,34 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             idCardInfo.put("idpic1","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap1));
                         }
 
-                        edt_idcard_name.setText(result.getName().getWords());
-                        edt_idcard_gender.setText(result.getGender().getWords());
-                        edt_idcard_address.setText(result.getAddress().getWords());
+                        if (result.getName() != null) {
+                            edt_idcard_name.setText(result.getName().getWords());
+                            idCardInfo.put("name",result.getName().getWords());
+                        }
+                        if (result.getGender() != null) {
+                            edt_idcard_gender.setText(result.getGender().getWords());
+                            idCardInfo.put("gender",result.getGender().getWords());
+                        }
+                        if (result.getAddress() != null) {
+                            edt_idcard_address.setText(result.getAddress().getWords());
+                            idCardInfo.put("address",result.getAddress().getWords());
+                        }
+                        if (result.getEthnic() != null) {
+                            idCardInfo.put("nation",result.getEthnic().getWords());
+                        }
+                        if (result.getBirthday() != null) {
+                            idCardInfo.put("birthday",result.getBirthday().getWords());
+                        }
 
-                        idCardInfo.put("avatar","data:image/png;base64," + photo);
-                        idCardInfo.put("name",result.getName().getWords());
-                        idCardInfo.put("nation",result.getEthnic().getWords());
-                        idCardInfo.put("address",result.getAddress().getWords());
-                        idCardInfo.put("gender",result.getGender().getWords());
-                        idCardInfo.put("birthday",result.getBirthday().getWords());
-                        idCardInfo.put("identified","true");
-
-                        if (TextUtils.isEmpty(result.getName().getWords())
-                                || TextUtils.isEmpty(result.getGender().getWords())
-                                || TextUtils.isEmpty(result.getIdNumber().getWords())
-                                || TextUtils.isEmpty(result.getAddress().getWords())){
+                        if (result.getName() == null ||TextUtils.isEmpty(result.getName().getWords())
+                                || result.getGender() == null || TextUtils.isEmpty(result.getGender().getWords())
+                                || result.getIdNumber() == null || TextUtils.isEmpty(result.getIdNumber().getWords())
+                                || result.getAddress() == null || TextUtils.isEmpty(result.getAddress().getWords())){
                             AppToast.show(IdentifiedActivity.this,"身份证正面识别失败，请重新拍摄");
                             photo_zheng_iv.setImageBitmap(null);
+                            identifiedFront = false;
+                        } else {
+                            identifiedFront = true;
                         }
                     }
                     if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
@@ -264,16 +285,25 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             Bitmap bitmap2 = ((BitmapDrawable) photo_fan_iv.getDrawable()).getBitmap();
                             idCardInfo.put("idpic2","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap2));
 
-                            idCardInfo.put("signDate",result.getSignDate().getWords());
-                            idCardInfo.put("expiryDate",result.getExpiryDate().getWords());
-                            idCardInfo.put("issueAuthority",result.getIssueAuthority().getWords());
+                            if (result.getSignDate() != null) {
+                                idCardInfo.put("signDate", result.getSignDate().getWords());
+                            }
+                            if (result.getExpiryDate() != null) {
+                                idCardInfo.put("expiryDate", result.getExpiryDate().getWords());
+                            }
+                            if (result.getIssueAuthority() != null) {
+                                idCardInfo.put("issueAuthority", result.getIssueAuthority().getWords());
+                            }
                         }
 
-                        if (TextUtils.isEmpty(result.getSignDate().getWords())
-                                || TextUtils.isEmpty(result.getExpiryDate().getWords())
-                                || TextUtils.isEmpty(result.getIssueAuthority().getWords())){
+                        if (result.getSignDate() == null || TextUtils.isEmpty(result.getSignDate().getWords())
+                                || result.getExpiryDate() == null || TextUtils.isEmpty(result.getExpiryDate().getWords())
+                                || result.getIssueAuthority() == null || TextUtils.isEmpty(result.getIssueAuthority().getWords())){
                             AppToast.show(IdentifiedActivity.this,"身份证反面识别失败，请重新拍摄");
                             photo_fan_iv.setImageBitmap(null);
+                            identifiedBack = false;
+                        } else {
+                            identifiedBack = true;
                         }
                     }
                     Log.i("idcard", result.toString());
@@ -295,17 +325,34 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
             AppToast.show(this,Constants.LOGIN_ERROR_TIP);
             return;
         }
-        String idCardNo = idCardInfo.get("idcard");
-        String idpic1 = idCardInfo.get("idpic1");
-        String idpic2 = idCardInfo.get("idpic2");
-        String avatar = idCardInfo.get("avatar");
-        String signDate = idCardInfo.get("signDate");
 
-        if(StringUtils.isBlank(idCardNo) || StringUtils.isBlank(idpic1) || StringUtils.isBlank(idpic2)){
+        if(!identifiedFront){
+            AppToast.show(this,"身份证正面照有误，请重新上传！");
+            return;
+        }
+
+        if(!identifiedBack){
+            AppToast.show(this,"身份证背面照有误，请重新上传！");
+            return;
+        }
+
+        if(!isFaceMatch){
+            AppToast.show(IdentifiedActivity.this,"身份证正面照与本人头像相似度过低!");
+            return;
+        }
+
+        String idCardNo = edt_idcard_no.getText().toString();
+        String name = edt_idcard_name.getText().toString();
+        String gender = edt_idcard_gender.getText().toString();
+        String address = edt_idcard_address.getText().toString();
+        String avatar = idCardInfo.get("avatar");
+
+        if(StringUtils.isBlank(idCardNo) || StringUtils.isBlank(name)
+                || StringUtils.isBlank(gender)|| StringUtils.isBlank(address)){
             AppToast.show(this,"请填写完整信息！");
             return;
         }
-        if(StringUtils.isBlank(avatar)||StringUtils.isBlank(signDate)){
+        if(StringUtils.isBlank(avatar)){
             AppToast.show(this,"照片拍摄不正确！");
             return;
         }
@@ -339,71 +386,68 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         });
     }
 
-    /** 显示图片 **/
+    // 显示图片
     private void saveCameraImage(Intent data) {
-        Bitmap bmp = (Bitmap) data.getExtras().get("data");// 解析返回的图片成bitmap
-        take_photo_iv.setImageBitmap(bmp);
+        Bundle bundle = data.getExtras();
+        if (bundle != null) {
+            Bitmap bmp = (Bitmap) bundle.get("data");// 解析返回的图片成bitmap
+            take_photo_iv.setImageBitmap(bmp);
 
-        AppToast.show(this,"t!");
+            String photo = Base64Bitmap.bitmapToBase64(bmp);
+            bmpTakePhoto = "data:image/png;base64," + photo;
+
+            faceMatch();
+        }
     }
 
     /**
      * 图片匹配
-     * @param imageMap 照片
      */
-//    private void faceMatch(HashMap<String, String> imageMap) {
-//        Set<Map.Entry<String, String>> sets = imageMap.entrySet();
-//
-//        String base64Data = null;
-//        for (Map.Entry<String, String> entry : sets) {
-//            base64Data = entry.getValue();
-//        }
-//
-//        if (TextUtils.isEmpty(base64Data)){
-//            return;
-//        }
-//
-//
-//        final Map<String,String> param = new HashMap<>();
-//        param.put("img",base64Data);
-//
-//        String jsonParams = JSON.toJSONString(param);
-//
-//        String url = Constants.HTTP_BASE + "/api/face_match";
-//
-//        ProgressDialog dialog = ProgressDialog.createDialog(this);
-//        dialog.show();
-//
-//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-//            @Override
-//            public void onSuccess(Response<String> response) {
-//                dialog.dismiss();
-//                AjaxResult jr = new AjaxResult(response.body());
-//                if(jr.getSuccess() == 1){
-//                    JSONObject jo = jr.getData();
-//                    JSONObject result =  jo.getJSONObject("result");
-//
-//                    if (result != null) {
-//                        int score =  result.getInteger("score");
-//
-//                        if (score > 70){
-//                            isFaceMatch = true;
-//                            AppToast.show(context,"身份认证成功!");
-//                            checkSignState();
-//                        } else {
-//                            isFaceMatch = false;
-//                            AppToast.show(context,"身份认证失败!");
-//                        }
-//                    }
-//                } else {
-//                    AppToast.show(context,jr.getMsg());
-//                }
-//            }
-//            @Override
-//            public void onError(Response<String> response) {
-//                dialog.dismiss();
-//                AppToast.show(context,"操作失败!");
-//            }
-//        });
-//    }
+    private void faceMatch() {
+        if (TextUtils.isEmpty(bmpIdcardPhoto) || TextUtils.isEmpty(bmpTakePhoto)){
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("img1",bmpIdcardPhoto);
+        param.put("img2",bmpTakePhoto);
+
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/face_match2";
+
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    JSONObject result =  jo.getJSONObject("result");
+
+                    if (result != null) {
+                        int score =  result.getInteger("score");
+
+                        if (score > 70){
+                            isFaceMatch = true;
+                            AppToast.show(IdentifiedActivity.this,"头像匹配成功!");
+                        } else {
+                            isFaceMatch = false;
+                            AppToast.show(IdentifiedActivity.this,"身份证正面照与本人头像相似度过低!");
+                        }
+                    }
+                } else {
+                    AppToast.show(IdentifiedActivity.this,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(IdentifiedActivity.this,"照片匹配操作失败!");
+            }
+        });
+    }
 }

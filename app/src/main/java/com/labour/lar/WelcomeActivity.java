@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
@@ -46,13 +47,22 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_welcome);
+
         userCache = UserCache.getInstance(this);
         User user = userCache.get();
-        if(user == null){
-            startActivity(new Intent(WelcomeActivity.this,LoginActivity.class));
-        } else {
-            startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
-        }
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(user == null){
+                    startActivity(new Intent(WelcomeActivity.this,LoginActivity.class));
+                } else {
+                    startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
+                }
+            }
+        }, 1500);
+
     }
 
     //是否需要检测后台定位权限，设置为true时，如果用户没有给予后台定位权限会弹窗提示

@@ -89,7 +89,7 @@
                     android:id="@+id/take_photo_iv"
                     android:layout_width="130dp"
                     android:layout_height="150dp"
-                    android:background="@mipmap/zhengmian"
+                    android:background="@mipmap/kaoqin_sign_icon"
                     android:layout_margin="20dp"
                     android:scaleType="fitXY"
                     android:visibility="visible"/>
