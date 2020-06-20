@@ -56,7 +56,7 @@ public class User implements Serializable {
     }
 
     public Constants.ROLE getRole(){
-        if(prole.equals("empoyee")){
+        if(prole.equals("employee")){
             return Constants.ROLE.employee;
         } else if(prole.equals("staff")){
             return Constants.ROLE.staff;

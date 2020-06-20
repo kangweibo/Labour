@@ -2,24 +2,34 @@ package com.labour.lar.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.Polygon;
 import com.amap.api.maps2d.model.PolygonOptions;
+import com.amap.api.maps2d.model.Text;
+import com.amap.api.maps2d.model.TextOptions;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.map.MapGeoFence;
+import com.labour.lar.module.EmpsLocation;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.ProgressDialog;
@@ -28,7 +38,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,6 +61,8 @@ public class GeoFenceActivity extends Activity {
 	Button btn_sign;
 	@BindView(R.id.btn_reset)
 	Button btn_reset;
+	@BindView(R.id.ly_bottom)
+	View ly_bottom;
 
     @BindView(R.id.map)
     MapView mapView;
@@ -59,9 +74,11 @@ public class GeoFenceActivity extends Activity {
 	private MarkerOptions markerOption;
 	private boolean isdrawing;
 	private Point lastPt = new Point();
-	private int state;
+	private int state; // 0：添加； 1：更新；2：查看
 	private String fence_id;
 	private String project_id;
+	private List<MapGeoFence> fences = new ArrayList<>();
+	private List<EmpsLocation> empsLoc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +108,17 @@ public class GeoFenceActivity extends Activity {
 		}
 
 		setDrawMap();
+
+		if (state == 1){ // 更新
+			title_tv.setText("更新围栏");
+			getFence();
+		} else if (state == 2){ // 查看
+			title_tv.setText("查看围栏");
+			right_header_btn.setVisibility(View.INVISIBLE);
+			ly_bottom.setVisibility(View.GONE);
+			getFence();
+			getEmpsLoc();
+		}
 	}
 
 	@OnClick({R.id.btn_reset,R.id.btn_sign,R.id.back_iv,R.id.right_header_btn})
@@ -107,8 +135,8 @@ public class GeoFenceActivity extends Activity {
                 break;
 			case R.id.right_header_btn:
 				if (state == 0) {
-					setFence(project_id, listPts);
-				} else {
+					addFence(project_id, listPts);
+				} else if (state == 1) {
 					updateFence(fence_id, project_id, listPts);
 				}
                 break;
@@ -210,7 +238,8 @@ public class GeoFenceActivity extends Activity {
 		aMap.addMarker(markerOption);
 	}
 
-	public void setFence(String project_id, List<LatLng> pts) {
+	// 添加围栏
+	private void addFence(String project_id, List<LatLng> pts) {
 		if(StringUtils.isBlank(project_id)){
 			return;
 		}
@@ -254,7 +283,8 @@ public class GeoFenceActivity extends Activity {
 		});
 	}
 
-	public void updateFence(String id, String project_id, List<LatLng> pts) {
+	// 更新围栏
+	private void updateFence(String id, String project_id, List<LatLng> pts) {
 		if(StringUtils.isBlank(id) || StringUtils.isBlank(project_id)){
 			return;
 		}
@@ -296,6 +326,166 @@ public class GeoFenceActivity extends Activity {
 				AppToast.show(GeoFenceActivity.this,"围栏设置出错!");
 			}
 		});
+	}
+
+	// 获取围栏
+	private void getFence() {
+		if(StringUtils.isBlank(fence_id)){
+			return;
+		}
+
+		final Map<String,String> param = new HashMap<>();
+		param.put("id",fence_id);
+		String jsonParams = JSON.toJSONString(param);
+
+		String url = Constants.HTTP_BASE + "/api/get_geofence";
+		ProgressDialog dialog = ProgressDialog.createDialog(this);
+		dialog.show();
+
+		OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+			@Override
+			public void onSuccess(Response<String> response) {
+				dialog.dismiss();
+				AjaxResult jr = new AjaxResult(response.body());
+				if(jr.getSuccess() == 1){
+					JSONObject jsonObject = jr.getData();
+					MapGeoFence fence = JSON.parseObject(JSON.toJSONString(jsonObject), MapGeoFence.class);
+					fences.clear();
+					fences.add(fence);
+					refreshMap();
+				} else {
+					AppToast.show(GeoFenceActivity.this,"没有围栏!");
+				}
+			}
+			@Override
+			public void onError(Response<String> response) {
+				dialog.dismiss();
+				AppToast.show(GeoFenceActivity.this,"围栏获取出错!");
+			}
+		});
+	}
+
+	// 获取工人位置
+	private void getEmpsLoc() {
+		if(StringUtils.isBlank(project_id)){
+			return;
+		}
+
+		final Map<String,String> param = new HashMap<>();
+		param.put("id",project_id);
+		//param.put("token","063d91b4f57518ff");
+		String jsonParams = JSON.toJSONString(param);
+
+		String url = Constants.HTTP_BASE + "/api/fence_today_emps";
+		ProgressDialog dialog = ProgressDialog.createDialog(this);
+		dialog.show();
+
+		OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+			@Override
+			public void onSuccess(Response<String> response) {
+				dialog.dismiss();
+				AjaxResult jr = new AjaxResult(response.body());
+				if(jr.getSuccess() == 1){
+					JSONArray jsonArray = jr.getJSONArrayData();
+					empsLoc = JSON.parseArray(JSON.toJSONString(jsonArray), EmpsLocation.class);
+
+					refreshMap();
+				} else {
+					AppToast.show(GeoFenceActivity.this,"获取工人为空");
+				}
+			}
+			@Override
+			public void onError(Response<String> response) {
+				dialog.dismiss();
+				AppToast.show(GeoFenceActivity.this,"获取工人出错!");
+			}
+		});
+	}
+
+	/**
+	 * 刷新地图
+	 */
+	private void refreshMap() {
+		aMap.clear();
+		if (fences != null){
+			for (MapGeoFence fence : fences) {
+				drawPolygon(fence);
+			}
+		}
+
+		if (empsLoc != null){
+			for (EmpsLocation loc : empsLoc) {
+				drawMarkers(loc);
+			}
+		}
+	}
+
+	//绘制多边形
+	public void drawPolygon(MapGeoFence fence){
+		List<LatLng> pts = new ArrayList<>();
+
+		for (MapGeoFence.Points point: fence.points) {
+			try {
+				double lat = Double.parseDouble(point.lat);
+				double lon = Double.parseDouble(point.lon);
+				LatLng pt = new LatLng(lat, lon);
+				pts.add(pt);
+
+			} catch (NumberFormatException e){
+				e.printStackTrace();
+			}
+		}
+
+		if (pts.size() > 2) {
+			Polygon polygon = aMap.addPolygon((new PolygonOptions()).addAll(pts)
+					.strokeWidth(6)
+					.strokeColor(Color.argb(255, 1, 250, 1))
+					.fillColor(Color.argb(10, 1, 1, 1)));
+
+			aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pts.get(0), 16));// 设置指定的可视区域地图
+			aMap.invalidate();//刷新地图
+		}
+	}
+
+	/**
+	 * 绘制工人图标
+	 */
+	private void drawMarkers(EmpsLocation loc) {
+		try {
+			if (loc.todayloc == null){
+				return;
+			}
+
+			double lat = Double.parseDouble(loc.todayloc.lat);
+			double lon = Double.parseDouble(loc.todayloc.lon);
+			LatLng latlng = new LatLng(lat, lon);
+
+			Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.worker_icon);
+			bitmap = Bitmap.createScaledBitmap(bitmap,100,100, true);
+			MarkerOptions markerOptions = new MarkerOptions()
+					.position(latlng)
+					.icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+					.draggable(true);
+
+			if (loc.classteamname != null){
+				markerOptions .title(loc.classteamname);
+			}
+
+			aMap.addMarker(markerOptions);
+
+			//文字显示标注，可以设置显示内容，位置，字体大小颜色，背景色旋转角度,Z值等
+			TextOptions textOptions = new TextOptions().position(latlng)
+					.fontColor(Color.BLACK).fontSize(30)
+					.align(Text.ALIGN_CENTER_HORIZONTAL, Text.ALIGN_CENTER_VERTICAL)
+					.zIndex(1.f).typeface(Typeface.DEFAULT_BOLD);
+
+			if (loc.name != null){
+				textOptions.text(loc.name);
+			}
+			aMap.addText(textOptions);
+		} catch (NumberFormatException e){
+			e.printStackTrace();
+		}
 	}
 
 	/**

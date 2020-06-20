@@ -72,7 +72,7 @@ public class LocationManager {
     }
 
     public void startLocation() {
-        if (mlocationClient != null) {
+        if (mlocationClient != null && !mlocationClient.isStarted()) {
             mlocationClient.startLocation();
         }
     }

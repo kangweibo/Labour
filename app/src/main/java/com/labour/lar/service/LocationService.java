@@ -38,6 +38,8 @@ public class LocationService extends Service implements AMapLocationListener {
 
     private LocationManager locationManager;
     private ArrayBlockingQueue<UserLatLon> arrayBlockingQueue = new ArrayBlockingQueue<UserLatLon>(500);
+    private UserLatLon lastUserLatLon;
+
     private boolean running = false;
     private DaemoConsumerUserLatLon consumerUserLatLon;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -45,7 +47,7 @@ public class LocationService extends Service implements AMapLocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        locationManager = new LocationManager(this,false,15000,this);
+        locationManager = new LocationManager(this,false,15 * 1000,this);
     }
 
     @Nullable
@@ -81,10 +83,10 @@ public class LocationService extends Service implements AMapLocationListener {
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
-        if(!UserSignCache.isSign(this)){//签到后才能提交定位信息
-            Log.i("amap","User sign out!");
-            return;
-        }
+//        if(!UserSignCache.isSign(this)){//签到后才能提交定位信息
+//            Log.i("amap","User sign out!");
+//            return;
+//        }
         Log.i("amap","User sign in........");
         if(amapLocation != null) {
             if (amapLocation.getErrorCode() == 0) {
@@ -110,12 +112,14 @@ public class LocationService extends Service implements AMapLocationListener {
                 userLatLon.setLat(amapLocation.getLatitude()+"");
                 userLatLon.setLon(amapLocation.getLongitude()+"");
 
-                try {
-                    Log.i("amap","Queue: put.........");
-                    arrayBlockingQueue.put(userLatLon);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                lastUserLatLon = userLatLon;
+
+//                try {
+//                    Log.i("amap","Queue: put.........");
+//                    arrayBlockingQueue.put(userLatLon);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             } else {
                 int errorCode = amapLocation.getErrorCode();
                 String errorInfo =amapLocation.getErrorInfo();
@@ -134,18 +138,27 @@ public class LocationService extends Service implements AMapLocationListener {
         public void run() {
             while (running){
                 try {
-                    Log.i("amap","Amap Queue: take.........");
-                    UserLatLon userLatLon = arrayBlockingQueue.take();
+                    Log.i("amaptake","Amap Queue: take.........");
+//                    UserLatLon userLatLon = arrayBlockingQueue.take();
+                    UserLatLon userLatLon = lastUserLatLon;
+                    if (userLatLon == null) {
+                        Thread.sleep(2000);
+                        continue;
+                    }
+
                     LocationHttp.requestSync(userLatLon, new LocationHttp.OnProcessResultListener() {
                         @Override
                         public void onSuccess() {
+                            Log.i("amaptake","Amap Queue: onSuccess");
                         }
 
                         @Override
                         public void onError() {//加入缓存
-                            userLatLonCache.put(userLatLon,UserLatLonCache.LATLON_CACHE_KEY);
+//                            userLatLonCache.put(userLatLon,UserLatLonCache.LATLON_CACHE_KEY);
                         }
                     });
+
+                    Thread.sleep(10 * 60 * 1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

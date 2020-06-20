@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +41,8 @@ import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.Polygon;
 import com.amap.api.maps2d.model.PolygonOptions;
+import com.amap.api.maps2d.model.Text;
+import com.amap.api.maps2d.model.TextOptions;
 import com.labour.lar.Constants;
 import com.labour.lar.LoginActivity;
 import com.labour.lar.MainActivity;
@@ -49,6 +54,7 @@ import com.labour.lar.activity.RegistActivity;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.map.MapGeoFence;
 import com.labour.lar.map.MapUtil;
+import com.labour.lar.module.EmpsLocation;
 import com.labour.lar.module.Project;
 import com.labour.lar.module.User;
 import com.labour.lar.util.AjaxResult;
@@ -103,6 +109,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     private View mRootView;
     private Project project;
     private boolean isCanSet;//能否设置围栏
+
+    private List<MapGeoFence> fences;
+    private List<EmpsLocation> empsLoc;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -197,14 +206,14 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
      */
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getContext(), "你点击了infoWindow窗口" + marker.getTitle(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "你点击了infoWindow窗口" + marker.getTitle(),Toast.LENGTH_SHORT).show();
     }
     /**
      * 对marker标注点点击响应事件
      */
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        Toast.makeText(getContext(), "你点击的是" + marker.getTitle(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "你点击的是" + marker.getTitle(),Toast.LENGTH_SHORT).show();
         return false;
     }
     /**
@@ -244,9 +253,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 //        //drawMarkers();// 添加10个带有系统默认icon的marker
 //    }
 
-//    List<MapGeoFence> fences;
 
-    public void getFence() {
+    // 获取围栏
+    private void getFence() {
         if (project == null) {
             return;
         }
@@ -272,16 +281,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     JSONArray jsonArray = jr.getJSONArrayData();
-                    List<MapGeoFence> fences = JSON.parseArray(JSON.toJSONString(jsonArray), MapGeoFence.class);
+                    fences = JSON.parseArray(JSON.toJSONString(jsonArray), MapGeoFence.class);
 
-                    if (fences != null){
-                        polygonMap.clear();
-                        aMap.clear();
-
-                        for (MapGeoFence fence : fences) {
-                            drawPolygon(fence);
-                        }
-                    }
+                    refreshMap();
                 } else {
                     AppToast.show(getContext(),"没有围栏!");
                 }
@@ -294,16 +296,106 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         });
     }
 
+    // 获取工人位置
+    private void getEmpsLoc() {
+        if (project == null) {
+            return;
+        }
+
+        String project_id = project.getId()+"";
+
+        if(StringUtils.isBlank(project_id)){
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        //param.put("project_id",project_id);
+        param.put("token","063d91b4f57518ff");
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/today_emps_loc";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    empsLoc = JSON.parseArray(JSON.toJSONString(jsonArray), EmpsLocation.class);
+
+                    refreshMap();
+                } else {
+                    AppToast.show(getContext(),"获取工人失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"获取围栏工人出错!");
+            }
+        });
+    }
+
     /**
-     * 绘制系统默认的1种marker背景图片
+     * 刷新地图
      */
-    public void drawMarkers(LatLng latlng) {
-        Marker marker = aMap.addMarker(new MarkerOptions()
-                .position(latlng)
-                .title("好好学习")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                .draggable(true));
-        marker.showInfoWindow();// 设置默认显示一个infowinfow
+    private void refreshMap() {
+        aMap.clear();
+        if (fences != null){
+            for (MapGeoFence fence : fences) {
+                drawPolygon(fence);
+            }
+        }
+
+        if (empsLoc != null){
+            for (EmpsLocation loc : empsLoc) {
+                drawMarkers(loc);
+            }
+        }
+    }
+
+    /**
+     * 绘制工人图标
+     */
+    private void drawMarkers(EmpsLocation loc) {
+        try {
+            if (loc.todayloc == null){
+                return;
+            }
+
+            double lat = Double.parseDouble(loc.todayloc.lat);
+            double lon = Double.parseDouble(loc.todayloc.lon);
+            LatLng latlng = new LatLng(lat, lon);
+
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.worker_icon);
+            bitmap = Bitmap.createScaledBitmap(bitmap,100,100, true);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latlng)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                    .draggable(true);
+
+            if (loc.classteamname != null){
+                markerOptions .title(loc.classteamname);
+            }
+
+            aMap.addMarker(markerOptions);
+
+            //文字显示标注，可以设置显示内容，位置，字体大小颜色，背景色旋转角度,Z值等
+            TextOptions textOptions = new TextOptions().position(latlng)
+                    .fontColor(Color.BLACK).fontSize(30)
+                    .align(Text.ALIGN_CENTER_HORIZONTAL, Text.ALIGN_CENTER_VERTICAL)
+                    .zIndex(1.f).typeface(Typeface.DEFAULT_BOLD);
+
+            if (loc.name != null){
+                textOptions.text(loc.name);
+            }
+            aMap.addText(textOptions);
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+        }
     }
 
     //绘制多边形
@@ -349,6 +441,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         mapView.onResume();
 
         getFence();
+        getEmpsLoc();
     }
 
     @Override
@@ -581,9 +674,14 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     // 查看围栏
     private void seeFence() {
         if (polygonSelect != null){
-            LatLng pt = polygonSelect.getPoints().get(0);
-            aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pt, 16));// 设置指定的可视区域地图
-            aMap.invalidate();//刷新地图
+            MapGeoFence fence = polygonMap.get(polygonSelect);
+            if (fence != null){
+                Intent intent = new Intent(getContext(), GeoFenceActivity.class);
+                intent.putExtra("state", 2);
+                intent.putExtra("fence_id", fence.id+"");
+                intent.putExtra("project_id", fence.project_id+"");
+                startActivity(intent);
+            }
         }
     }
 

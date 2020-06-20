@@ -45,7 +45,7 @@ public class LocationHttp {
             }
             @Override
             public void onError(Response<String> response) {
-                onProcessResultListener.onError();
+//                onProcessResultListener.onError();
             }
         });
     }
