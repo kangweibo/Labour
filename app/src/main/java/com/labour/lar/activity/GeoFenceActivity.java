@@ -365,15 +365,14 @@ public class GeoFenceActivity extends Activity {
 		});
 	}
 
-	// 获取工人位置
+	// 获取围栏内工人位置
 	private void getEmpsLoc() {
-		if(StringUtils.isBlank(project_id)){
+		if(StringUtils.isBlank(fence_id)){
 			return;
 		}
 
 		final Map<String,String> param = new HashMap<>();
-		param.put("id",project_id);
-		//param.put("token","063d91b4f57518ff");
+		param.put("id",fence_id);
 		String jsonParams = JSON.toJSONString(param);
 
 		String url = Constants.HTTP_BASE + "/api/fence_today_emps";

@@ -68,8 +68,8 @@ public class ProjectDetailFrag extends BaseFragment {
     @Override
     public void initView() {
         title_tv.setText("项目详情");
-        Drawable d = getResources().getDrawable(R.mipmap.jiahao);
-        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+//        Drawable d = getResources().getDrawable(R.mipmap.jiahao);
+//        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (project!= null){

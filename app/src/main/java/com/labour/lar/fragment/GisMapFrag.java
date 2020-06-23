@@ -371,7 +371,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
             LatLng latlng = new LatLng(lat, lon);
 
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.mipmap.worker_icon);
-            bitmap = Bitmap.createScaledBitmap(bitmap,100,100, true);
+            bitmap = Bitmap.createScaledBitmap(bitmap,90,90, true);
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latlng)
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
@@ -387,7 +387,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
             TextOptions textOptions = new TextOptions().position(latlng)
                     .fontColor(Color.BLACK).fontSize(30)
                     .align(Text.ALIGN_CENTER_HORIZONTAL, Text.ALIGN_CENTER_VERTICAL)
-                    .zIndex(1.f).typeface(Typeface.DEFAULT_BOLD);
+                    .zIndex(2.f).typeface(Typeface.DEFAULT_BOLD);
 
             if (loc.name != null){
                 textOptions.text(loc.name);

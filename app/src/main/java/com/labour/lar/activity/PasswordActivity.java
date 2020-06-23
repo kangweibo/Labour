@@ -3,11 +3,25 @@ package com.labour.lar.activity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
+import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.module.User;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
+import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -69,39 +83,40 @@ public class PasswordActivity extends BaseActivity {
             return;
         }
 
-//        final Map<String,String> param = new HashMap<>();
-//        param.put("name",name);
-//        param.put("passwd",password);
-//        param.put("gender",sex);
-//        param.put("phone",phone);
-//        param.put("role",role);
-//        String jsonParams = JSON.toJSONString(param);
-//
-//        String url = Constants.HTTP_BASE + "/api/register";
-//        ProgressDialog dialog = ProgressDialog.createDialog(this);
-//        dialog.show();
-//
-//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-//            @Override
-//            public void onSuccess(Response<String> response) {
-//                dialog.dismiss();
-//                AjaxResult jr = new AjaxResult(response.body());
-//                if(jr.getSuccess() == 1){
-//                    JSONObject jo = jr.getData();
-//                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-//                    UserCache userCache = UserCache.getInstance(PasswordActivity.this);
-//                    userCache.put(ub);
-//                    startActivity(new Intent(PasswordActivity.this,MainActivity.class));
-//                    finish();
-//                } else {
-//                    AppToast.show(PasswordActivity.this,jr.getMsg());
-//                }
-//            }
-//            @Override
-//            public void onError(Response<String> response) {
-//                dialog.dismiss();
-//                AppToast.show(PasswordActivity.this,"提交出错!");
-//            }
-//        });
+        UserCache userCache = UserCache.getInstance(PasswordActivity.this);
+        User user = userCache.get();
+
+        if (user == null){
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("id",user.getId()+"");
+        param.put("passwd",new_password);
+        param.put("role",user.getProle());
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/change_passwd";
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(PasswordActivity.this,"密码修改成功");
+                    finish();
+                } else {
+                    AppToast.show(PasswordActivity.this,"密码修改失败");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(PasswordActivity.this,"密码修改出错!");
+            }
+        });
     }
 }

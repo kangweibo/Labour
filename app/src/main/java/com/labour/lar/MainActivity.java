@@ -4,7 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.alibaba.fastjson.JSON;
@@ -15,6 +18,8 @@ import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.cache.UserLatLonCache;
 import com.labour.lar.cache.UserSignCache;
+import com.labour.lar.event.BaseEvent;
+import com.labour.lar.event.EventManager;
 import com.labour.lar.fragment.KaoqinFrag;
 import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
@@ -39,6 +44,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import butterknife.BindView;
@@ -57,6 +65,18 @@ public class MainActivity extends BaseActivity {
 //    private KeepAliveManager keepAliveManager;
     private LocalBroadcastManager localBroadcastManager;
     private CheckInOutBroadcastReceiver checkInOutBroadcastReceiver = new CheckInOutBroadcastReceiver();
+
+    @Override
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        EventManager.register(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventManager.unregister(this);
+    }
 
     @Override
     public int getActivityLayoutId() {
@@ -255,4 +275,18 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(BaseEvent event) {
+        int code = event.getCode();
+        if (code == 1) {
+            int index = event.getPosition();
+            setShowFragment(index);
+        }
+    }
+
+    private void setShowFragment(int index) {
+        mainTabBarView.selectedTab(index);
+    }
+
 }

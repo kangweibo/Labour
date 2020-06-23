@@ -21,7 +21,8 @@
             android:layout_margin="10dp"
             app:type="circle"
             app:borderWidth="1dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:src="@mipmap/worker_icon"/>
 
         <TextView android:id="@+id/name_tv"
             android:layout_width="wrap_content"
