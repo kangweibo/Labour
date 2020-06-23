@@ -4,16 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.labour.lar.BaseAdapter;
 import com.labour.lar.R;
-import com.labour.lar.module.Project;
-import com.labour.lar.widget.RoundImageView;
-
+import com.labour.lar.module.FZMessage;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MessageAdapter extends BaseAdapter<Project, MessageAdapter.ItemHolder> {
+public class MessageAdapter extends BaseAdapter<FZMessage, MessageAdapter.ItemHolder> {
 
     public MessageAdapter(Context mContext) {
         super(mContext);
@@ -28,9 +25,10 @@ public class MessageAdapter extends BaseAdapter<Project, MessageAdapter.ItemHold
     }
 
     @Override
-    protected void fillView(int position, Project item, ItemHolder holder) {
-        //Glide.with(mContext).load(Constants.IMAGE_HTTP_BASE + item.getAvatar()).into(holder.photo_iv);
-
+    protected void fillView(int position, FZMessage item, ItemHolder holder) {
+        holder.txt_title.setText(item.getTitle());
+        holder.txt_content.setText(item.getContent());
+        holder.txt_time.setText(item.getCreated_at());
     }
 
     class ItemHolder {
@@ -38,12 +36,12 @@ public class MessageAdapter extends BaseAdapter<Project, MessageAdapter.ItemHold
             ButterKnife.bind(this, view);
         }
 
-        @BindView(R.id.name_tv)
-        TextView name_tv;
-        @BindView(R.id.company_tv)
-        TextView company_tv;
-        @BindView(R.id.type_tv)
-        TextView type_tv;
+        @BindView(R.id.txt_title)
+        TextView txt_title;
+        @BindView(R.id.txt_content)
+        TextView txt_content;
+        @BindView(R.id.txt_time)
+        TextView txt_time;
 
     }
 }

@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.ProjectAddActivity;
 import com.labour.lar.activity.ProjectDetailActivity;
 import com.labour.lar.adapter.ProjectAdapter;
 import com.labour.lar.cache.UserCache;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class ProjectFrag extends BaseFragment {
 
@@ -114,6 +116,15 @@ public class ProjectFrag extends BaseFragment {
         getProject();
     }
 
+    @OnClick({R.id.right_header_btn})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.right_header_btn:
+                addProject();
+                break;
+        }
+    }
+
     private void getProject() {
         UserCache userCache = UserCache.getInstance(getContext());
         User user = userCache.get();
@@ -147,5 +158,10 @@ public class ProjectFrag extends BaseFragment {
                 AppToast.show(getContext(),"获取项目信息出错!");
             }
         });
+    }
+
+    private void addProject() {
+        Intent intent = new Intent(context, ProjectAddActivity.class);
+        startActivity(intent);
     }
 }

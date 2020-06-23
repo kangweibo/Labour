@@ -1,6 +1,5 @@
 package com.labour.lar.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,19 +7,27 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
+import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.activity.ProjectDetailActivity;
 import com.labour.lar.adapter.MessageAdapter;
-import com.labour.lar.adapter.ProjectAdapter;
-import com.labour.lar.module.Project;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.module.FZMessage;
+import com.labour.lar.module.User;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
+import com.labour.lar.widget.ProgressDialog;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +52,8 @@ public class MessageFrag extends BaseFragment {
     TextView noresult_view;
 
     private MessageAdapter messageAdapter;
+
+    List<FZMessage> messageList = new ArrayList<>();
 
     @Override
     public int getFragmentLayoutId() {
@@ -76,19 +85,55 @@ public class MessageFrag extends BaseFragment {
             }
         });
 
-        //测试
-        List<Project> list = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            list.add(new Project());
-        }
-        messageAdapter.setList(list);
-        messageAdapter.notifyDataSetChanged();
+        messageAdapter.setList(messageList);
 
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                startActivity(new Intent(context, ProjectDetailActivity.class));
-//            }
-//        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //startActivity(new Intent(context, ProjectDetailActivity.class));
+            }
+        });
+
+        getMessages();
+    }
+
+
+    private void getMessages() {
+        UserCache userCache = UserCache.getInstance(getContext());
+        User user = userCache.get();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tag",user.getProle());
+        jsonObject.put("id",user.getId());
+//        jsonObject.put("tag","employee");
+//        jsonObject.put("id","28");
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/get_messages";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    List<FZMessage> msgs = JSON.parseArray(JSON.toJSONString(jsonArray), FZMessage.class);
+
+                    messageList.clear();
+                    messageList.addAll(msgs);
+                    messageAdapter.notifyDataSetChanged();
+                } else {
+                    AppToast.show(getContext(),"获取消息失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"获取消息出错!");
+            }
+        });
     }
 }

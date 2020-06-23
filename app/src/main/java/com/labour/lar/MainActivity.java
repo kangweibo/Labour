@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
         //keepAliveManager.startKeepAlive();
 
         //启动保活服务
-        KeepLive.startWork(getApplication(), KeepLive.RunMode.ROGUE,
+        KeepLive.startWork(getApplication(), KeepLive.RunMode.ENERGY,
                 new ForegroundNotification("劳务管理","劳务管理程序正在运行", R.mipmap.ic_launcher, //定义前台服务的默认样式。即标题、描述和图标
                         //定义前台服务的通知点击事件
                         new ForegroundNotificationClickListener() {
