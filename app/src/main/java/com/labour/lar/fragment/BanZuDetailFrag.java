@@ -15,6 +15,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.module.Classteam;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,8 @@ public class BanZuDetailFrag extends BaseFragment {
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏"};
 
+    private Classteam classteam;
+
     @Override
     public int getFragmentLayoutId() {
         return R.layout.frag_banzu_detail;
@@ -60,8 +63,10 @@ public class BanZuDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
+        BanZuDetailListFrag banZuDetailListFrag = new BanZuDetailListFrag();
+        banZuDetailListFrag.setClassteam(classteam);
 
-        frgs.add(new BanZuDetailListFrag());
+        frgs.add(banZuDetailListFrag);
         frgs.add(new GisMapFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
@@ -101,5 +106,13 @@ public class BanZuDetailFrag extends BaseFragment {
                 break;
 
         }
+    }
+
+    /**
+     * 设置班组
+     * @param classteam
+     */
+    public void setClassteam(Classteam classteam) {
+        this.classteam = classteam;
     }
 }

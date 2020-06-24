@@ -15,6 +15,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.module.Operteam;
 
 import java.util.ArrayList;
 
@@ -43,6 +44,8 @@ public class TaskTeamDetailFrag extends BaseFragment {
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏"};
 
+    private Operteam operteam; //作业队
+
     @Override
     public int getFragmentLayoutId() {
         return R.layout.frag_taskteam_detail;
@@ -61,7 +64,10 @@ public class TaskTeamDetailFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
 
-        frgs.add(new TaskTeamDetailListFrag());
+        TaskTeamDetailListFrag taskTeamDetailListFrag = new TaskTeamDetailListFrag();
+        taskTeamDetailListFrag.setOperteam(operteam);
+
+        frgs.add(taskTeamDetailListFrag);
         frgs.add(new GisMapFrag());
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
@@ -101,5 +107,13 @@ public class TaskTeamDetailFrag extends BaseFragment {
                 break;
 
         }
+    }
+
+    /**
+     * 设置作业队
+     * @param operteam
+     */
+    public void setOperteam(Operteam operteam) {
+        this.operteam = operteam;
     }
 }

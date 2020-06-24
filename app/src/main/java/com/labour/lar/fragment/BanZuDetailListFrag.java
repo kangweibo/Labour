@@ -9,13 +9,24 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
+import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.GongRenDetailActivity;
-import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.module.Classteam;
+import com.labour.lar.module.Employee;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
+import com.labour.lar.widget.ProgressDialog;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -41,6 +52,10 @@ public class BanZuDetailListFrag extends BaseFragment {
     TextView noresult_view;
 
     ProjectDetailListAdapter projectAdapter;
+    private List<Employee> employeeList = new ArrayList<>();
+    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
+
+    private Classteam classteam;
 
     @Override
     public int getFragmentLayoutId() {
@@ -71,29 +86,78 @@ public class BanZuDetailListFrag extends BaseFragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
+        list_refresh.setEnableLoadMore(false);
 
-        //测试
-        List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = "南苑花园c座" + i;
-            item.field1Content = "南苑花";
-            item.field2 = "南苑花园c座";
-            item.field2Content = "南苑花";
-            item.field3 = "南苑花园c座";
-            item.field3Content = "南苑花园";
-            item.isShowArraw = true;
-
-            list.add(item);
-        }
         projectAdapter.setList(list);
-        projectAdapter.notifyDataSetChanged();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(context, GongRenDetailActivity.class));
+                //startActivity(new Intent(context, GongRenDetailActivity.class));
             }
         });
+
+        getEmployees();
+    }
+
+    private void getEmployees() {
+        if (classteam == null){
+            return;
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id",classteam.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/employees";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    List<Employee> classetams = JSON.parseArray(JSON.toJSONString(jsonArray), Employee.class);
+
+                    employeeList.clear();
+                    employeeList.addAll(classetams);
+                    showEmployees();
+                } else {
+                    AppToast.show(getContext(),"获取成员信息失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"获取成员信息出错!");
+            }
+        });
+    }
+
+    private void showEmployees() {
+        list.clear();
+        for(Employee employee : employeeList){
+            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            item.field1 = employee.getName();;
+            item.field1Content = "-";
+            item.field2 = "性别：" + employee.getProlename();;
+            //item.field2Content = "班组80个";
+            item.isShowArraw = false;
+
+            list.add(item);
+        }
+
+        projectAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置班组
+     * @param classteam
+     */
+    public void setClassteam(Classteam classteam) {
+        this.classteam = classteam;
     }
 }

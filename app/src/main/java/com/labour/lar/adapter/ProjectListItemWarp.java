@@ -4,10 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.labour.lar.R;
-import com.labour.lar.widget.RoundImageView;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

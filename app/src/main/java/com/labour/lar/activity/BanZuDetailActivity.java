@@ -1,11 +1,10 @@
 package com.labour.lar.activity;
 
 import android.support.v4.app.FragmentTransaction;
-
 import com.labour.lar.BaseActivity;
 import com.labour.lar.R;
 import com.labour.lar.fragment.BanZuDetailFrag;
-import com.labour.lar.fragment.TaskTeamDetailFrag;
+import com.labour.lar.module.Classteam;
 
 /**
  * 班组
@@ -19,8 +18,12 @@ public class BanZuDetailActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
+        Classteam classteam = (Classteam)getIntent().getSerializableExtra("classteam");
+        BanZuDetailFrag banZuDetailFrag = new BanZuDetailFrag();
+        banZuDetailFrag.setClassteam(classteam);
+
         FragmentTransaction trs = fm.beginTransaction();
-        trs.add(R.id.container,new BanZuDetailFrag());
+        trs.add(R.id.container,banZuDetailFrag);
         trs.commit();
     }
 }

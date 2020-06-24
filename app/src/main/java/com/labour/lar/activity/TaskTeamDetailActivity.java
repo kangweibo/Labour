@@ -6,6 +6,8 @@ import com.labour.lar.BaseActivity;
 import com.labour.lar.R;
 import com.labour.lar.fragment.ProjectDetailFrag;
 import com.labour.lar.fragment.TaskTeamDetailFrag;
+import com.labour.lar.module.Operteam;
+import com.labour.lar.module.Project;
 
 /**
  * 作业队
@@ -19,8 +21,12 @@ public class TaskTeamDetailActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
+        Operteam operteam = (Operteam)getIntent().getSerializableExtra("operteam");
+        TaskTeamDetailFrag taskTeamDetailFrag = new TaskTeamDetailFrag();
+        taskTeamDetailFrag.setOperteam(operteam);
+
         FragmentTransaction trs = fm.beginTransaction();
-        trs.add(R.id.container,new TaskTeamDetailFrag());
+        trs.add(R.id.container,taskTeamDetailFrag);
         trs.commit();
     }
 }
