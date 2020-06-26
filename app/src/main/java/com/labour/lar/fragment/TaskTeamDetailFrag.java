@@ -43,6 +43,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏"};
+    private TaskTeamDetailListFrag taskTeamDetailListFrag;
 
     private Operteam operteam; //作业队
 
@@ -64,7 +65,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
 
-        TaskTeamDetailListFrag taskTeamDetailListFrag = new TaskTeamDetailListFrag();
+        taskTeamDetailListFrag = new TaskTeamDetailListFrag();
         taskTeamDetailListFrag.setOperteam(operteam);
 
         frgs.add(taskTeamDetailListFrag);
@@ -99,13 +100,15 @@ public class TaskTeamDetailFrag extends BaseFragment {
             }
         }
     }
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv,R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 getActivity().finish();
                 break;
-
+            case R.id.right_header_btn:
+                addClassteam();
+                break;
         }
     }
 
@@ -115,5 +118,12 @@ public class TaskTeamDetailFrag extends BaseFragment {
      */
     public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
+    }
+
+    // 添加班组
+    private void addClassteam() {
+        if (taskTeamDetailListFrag != null){
+            taskTeamDetailListFrag.addClassteam();
+        }
     }
 }

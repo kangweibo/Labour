@@ -1,9 +1,11 @@
 package com.labour.lar.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,12 +17,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.BanZuAddActivity;
 import com.labour.lar.activity.BanZuDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
 import com.labour.lar.module.Classteam;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.util.AjaxResult;
+import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -55,7 +59,9 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     private List<Classteam> classteamList = new ArrayList<>();
     private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();;
 
+    private Classteam classteamSelect;
     private Operteam operteam;
+    private BottomSelectDialog dialog;
 
     @Override
     public int getFragmentLayoutId() {
@@ -98,6 +104,15 @@ public class TaskTeamDetailListFrag extends BaseFragment {
                 Intent intent = new Intent(context, BanZuDetailActivity.class);
                 intent.putExtra("classteam", classteam);
                 startActivity(intent);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                classteamSelect = classteamList.get(position);
+                showMoreDialog();
+                return true;
             }
         });
 
@@ -163,5 +178,94 @@ public class TaskTeamDetailListFrag extends BaseFragment {
      */
     public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
+    }
+
+    public void addClassteam() {
+        Intent intent = new Intent(context, BanZuAddActivity.class);
+        intent.putExtra("type", 0);
+        startActivity(intent);
+    }
+
+    private void updateClassteam(Classteam classteam) {
+        Intent intent = new Intent(context, BanZuAddActivity.class);
+        intent.putExtra("type", 1);
+        intent.putExtra("classteam_id", classteam.getId() + "");
+        startActivity(intent);
+    }
+
+    private void deleteClassteam(Classteam classteam) {
+        if (classteam == null){
+            return;
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id",classteam.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/classteam_delete";
+        ProgressDialog dialog = ProgressDialog.createDialog(getActivity());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(getActivity(),"删除班组成功!");
+                    getClassteam();
+                } else {
+                    AppToast.show(getActivity(),"删除班组失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getActivity(),"删除班组出错!");
+            }
+        });
+    }
+
+    private void showMoreDialog(){
+        dialog = new BottomSelectDialog(getActivity(),new BottomSelectDialog.BottomSelectDialogListener() {
+            @Override
+            public int getLayout() {
+                return R.layout.menu_fence;
+            }
+            @Override
+            public void initView(View view) {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int id = v.getId();
+                        if(id == R.id.txt_update){
+                            updateClassteam(classteamSelect);
+                        } else if(id == R.id.txt_delete){
+                            deleteClassteam(classteamSelect);
+                        }
+
+                        dialog.dismiss();
+                    }
+                };
+
+                TextView txt_see = view.findViewById(R.id.txt_see);
+                TextView txt_update = view.findViewById(R.id.txt_update);
+                TextView txt_delete = view.findViewById(R.id.txt_delete);
+                TextView txt_cancel = view.findViewById(R.id.txt_cancel);
+                txt_see.setVisibility(View.GONE);
+                txt_update.setText("更新班组");
+                txt_delete.setText("删除班组");
+
+                txt_update.setOnClickListener(onClickListener);
+                txt_delete.setOnClickListener(onClickListener);
+                txt_cancel.setOnClickListener(onClickListener);
+            }
+            @Override
+            public void onClick(Dialog dialog, int rate) {
+
+            }
+        });
+
+        dialog.showAtLocation(mRootView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
     }
 }

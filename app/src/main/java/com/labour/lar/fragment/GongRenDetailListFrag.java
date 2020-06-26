@@ -1,6 +1,5 @@
 package com.labour.lar.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,9 +10,9 @@ import android.widget.TextView;
 
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
-import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.module.Employee;
 import com.labour.lar.widget.LoadingView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -26,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * 班组
+ * 工人
  */
 public class GongRenDetailListFrag extends BaseFragment {
 
@@ -40,6 +39,8 @@ public class GongRenDetailListFrag extends BaseFragment {
     TextView noresult_view;
 
     ProjectDetailListAdapter projectAdapter;
+
+    private Employee employee;
 
     @Override
     public int getFragmentLayoutId() {
@@ -70,6 +71,7 @@ public class GongRenDetailListFrag extends BaseFragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
+        list_refresh.setEnableLoadMore(false);
 
         //测试
         List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
@@ -94,5 +96,13 @@ public class GongRenDetailListFrag extends BaseFragment {
                 //startActivity(new Intent(context, TaskTeamDetailActivity.class));
             }
         });
+    }
+
+    /**
+     * 设置作业队
+     * @param employee
+     */
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

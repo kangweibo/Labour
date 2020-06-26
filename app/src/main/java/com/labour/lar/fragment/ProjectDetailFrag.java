@@ -11,16 +11,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.module.Project;
 import com.labour.lar.widget.RoundImageView;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -57,6 +54,8 @@ public class ProjectDetailFrag extends BaseFragment {
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏","项目进度"};
+
+    ProjectDetailListFrag projectDetailListFrag;
 
     private Project project;
 
@@ -101,7 +100,7 @@ public class ProjectDetailFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
 
-        ProjectDetailListFrag projectDetailListFrag = new ProjectDetailListFrag();
+        projectDetailListFrag = new ProjectDetailListFrag();
         GisMapFrag gisMapFrag = new GisMapFrag();
         projectDetailListFrag.setProject(project);
         gisMapFrag.setProject(project);
@@ -139,11 +138,14 @@ public class ProjectDetailFrag extends BaseFragment {
             }
         }
     }
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv,R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 getActivity().finish();
+                break;
+            case R.id.right_header_btn:
+                addOperteam();
                 break;
 
         }
@@ -151,5 +153,11 @@ public class ProjectDetailFrag extends BaseFragment {
 
     public void setProject(Project project){
         this.project = project;
+    }
+
+    private void addOperteam() {
+        if (projectDetailListFrag != null){
+            projectDetailListFrag.addOperteam();
+        }
     }
 }

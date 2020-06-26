@@ -15,6 +15,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.module.Employee;
+import com.labour.lar.module.Operteam;
 
 import java.util.ArrayList;
 
@@ -43,6 +45,9 @@ public class GongRenDetailFrag extends BaseFragment {
     FragmentManager fm;
 
     String[] titles  = {"务工资料","考勤记录","发薪记录"};
+
+    private Employee employee;
+
     @Override
     public int getFragmentLayoutId() {
         return R.layout.frag_gongren_detail;
@@ -102,5 +107,13 @@ public class GongRenDetailFrag extends BaseFragment {
                 break;
 
         }
+    }
+
+    /**
+     * 设置作业队
+     * @param employee
+     */
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

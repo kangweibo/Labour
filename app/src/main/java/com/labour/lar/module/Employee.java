@@ -1,9 +1,34 @@
 package com.labour.lar.module;
 
+import java.io.Serializable;
+
 /**
  * 班组成员
  */
-public class Employee {
+public class Employee implements Serializable {
+    private int id;//": 2,
+    private String classteam_id;//":":班组id
+    private String name;//":": "张三",
+    private String phone;//":": "12200030001",
+    private String idcard;//":": "110101161102060468",
+
+    private String email;//":": "111@qq.com",
+    private String status;//":": "1",
+
+    private String pic;// "url": "/uploads/staff/pic/2/temp.png"
+    private String idpic1;//"url": "/uploads/staff/idpic1/2/temp.png"
+    private String idpic2;//"url": "/uploads/staff/idpic2/2/temp.png"
+
+    private int prole_id;//":": 5,
+    private String prole;//":": "staff",
+    private String nation;//":": null,
+    private String birthday;//":": null,
+    private String address;//":": null,
+
+    private boolean identified;//": true,
+    private String prolename;//":": null
+    private String classteamname;//":": 班组名称
+
     public int getId() {
         return id;
     }
@@ -147,28 +172,4 @@ public class Employee {
     public void setClassteamname(String classteamname) {
         this.classteamname = classteamname;
     }
-
-    private int id;//": 2,
-    private String classteam_id;//":":班组id
-    private String name;//":": "张三",
-    private String phone;//":": "12200030001",
-    private String idcard;//":": "110101161102060468",
-
-    private String email;//":": "111@qq.com",
-    private String status;//":": "1",
-
-    private String pic;// "url": "/uploads/staff/pic/2/temp.png"
-    private String idpic1;//"url": "/uploads/staff/idpic1/2/temp.png"
-    private String idpic2;//"url": "/uploads/staff/idpic2/2/temp.png"
-
-    private int prole_id;//":": 5,
-    private String prole;//":": "staff",
-    private String nation;//":": null,
-    private String birthday;//":": null,
-    private String address;//":": null,
-
-    private boolean identified;//": true,
-    private String prolename;//":": null
-    private String classteamname;//":": 班组名称
-
 }

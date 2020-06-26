@@ -96,7 +96,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
+            android:name=".activity.TaskTeamAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
             android:name=".activity.TaskTeamDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".activity.BanZuAddActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
