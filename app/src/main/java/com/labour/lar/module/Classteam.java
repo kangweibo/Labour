@@ -14,6 +14,7 @@ public class Classteam implements Serializable {
     private String updated_at;//": "2020-05-26T01:55:06.000Z",
     private String operteamname;//作业队
     private String ecounts;//2
+    private String employees_num;
 
     public int getId() {
         return id;
@@ -79,4 +80,11 @@ public class Classteam implements Serializable {
         this.ecounts = ecounts;
     }
 
+    public String getEmployees_num() {
+        return employees_num;
+    }
+
+    public void setEmployees_num(String employees_num) {
+        this.employees_num = employees_num;
+    }
 }

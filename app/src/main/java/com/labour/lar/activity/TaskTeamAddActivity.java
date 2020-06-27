@@ -1,7 +1,6 @@
 package com.labour.lar.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,7 +50,7 @@ public class TaskTeamAddActivity extends BaseActivity {
         operteam_id = intent.getStringExtra("operteam_id");
 
         if (type == 0) {
-            title_tv.setText("添加作业队");
+            title_tv.setText("创建作业队");
         } else {
             title_tv.setText("修改作业队");
         }

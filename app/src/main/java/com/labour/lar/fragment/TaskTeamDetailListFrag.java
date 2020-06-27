@@ -103,6 +103,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
 
                 Intent intent = new Intent(context, BanZuDetailActivity.class);
                 intent.putExtra("classteam", classteam);
+                intent.putExtra("project_id", operteam.getProject_id()+"");
                 startActivity(intent);
             }
         });
@@ -158,12 +159,25 @@ public class TaskTeamDetailListFrag extends BaseFragment {
 
     private void showClassteams() {
         list.clear();
+
+//        ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
+//        item0.field1 = "项目部";
+//        item0.field1Content = "共"+ project.getManagers_num() +"人";
+//        item0.field2 = "项目经理："+ "";
+//        item0.field2Content = "成员" + project.getBudget() + "个";
+//        item0.field3 = "作业队："+ project.getOperteams_num() + "个";
+//        item0.field3Content = "班组" + project.getOperteams_num() +"个";
+//        item0.isShowArraw = true;
+//        item0.isShowTwo = true;
+//
+//        list.add(item0);
+
         for(Classteam classteam : classteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = classteam.getName();;
-            item.field1Content = "-";
-            item.field2 = "人数：" + classteam.getEcounts() + "人";;
-            //item.field2Content = "班组80个";
+            item.field1Content = "";
+            item.field2 = "人数：" + classteam.getEmployees_num() + "人";;
+            item.field2Content = "";
             item.isShowArraw = true;
 
             list.add(item);

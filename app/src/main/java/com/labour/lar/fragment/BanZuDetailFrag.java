@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.module.Classteam;
+import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,16 @@ public class BanZuDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
+    @BindView(R.id.name_tv)
+    TextView name_tv;
+    @BindView(R.id.company_tv)
+    TextView company_tv;
+    @BindView(R.id.type_tv)
+    TextView type_tv;
+
+    @BindView(R.id.photo_iv)
+    RoundImageView photo_iv;
+
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
     @BindView(R.id.vp_content)
@@ -44,6 +56,7 @@ public class BanZuDetailFrag extends BaseFragment {
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏"};
 
+    private String project_id;
     private Classteam classteam;
 
     @Override
@@ -57,6 +70,25 @@ public class BanZuDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
+        photo_iv.setImageResource(R.mipmap.picture);
+
+        if (classteam!= null){
+            if (!TextUtils.isEmpty(classteam.getName())){
+                name_tv.setText(classteam.getName());
+            } else {
+                name_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(classteam.getMemo())){
+                company_tv.setText("组长：" + classteam.getMemo());
+            } else {
+                company_tv.setText("组长：");
+            }
+            if (!TextUtils.isEmpty(classteam.getEmployees_num())){
+                type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");
+            } else {
+                type_tv.setText("花名册：0人");
+            }
+        }
     }
 
     @Override
@@ -66,8 +98,11 @@ public class BanZuDetailFrag extends BaseFragment {
         BanZuDetailListFrag banZuDetailListFrag = new BanZuDetailListFrag();
         banZuDetailListFrag.setClassteam(classteam);
 
+        GisMapFrag gisMapFrag = new GisMapFrag();
+        gisMapFrag.setProjectId(project_id);
+
         frgs.add(banZuDetailListFrag);
-        frgs.add(new GisMapFrag());
+        frgs.add(gisMapFrag);
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 
@@ -114,5 +149,9 @@ public class BanZuDetailFrag extends BaseFragment {
      */
     public void setClassteam(Classteam classteam) {
         this.classteam = classteam;
+    }
+
+    public void setProjectId(String project_id){
+        this.project_id = project_id;
     }
 }

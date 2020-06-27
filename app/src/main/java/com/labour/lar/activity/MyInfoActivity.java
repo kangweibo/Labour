@@ -19,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-//import com.labour.lar.widget.circledialog.CircleDialog;
 import com.labour.lar.BaseApplication;
 import com.labour.lar.Constants;
 import com.labour.lar.cache.UserInfoCache;

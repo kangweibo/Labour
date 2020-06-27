@@ -93,7 +93,11 @@ public class BanZuDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                startActivity(new Intent(context, GongRenDetailActivity.class));
+                Employee employee = employeeList.get(position);
+
+                Intent intent = new Intent(context, GongRenDetailActivity.class);
+                intent.putExtra("employee", employee);
+                startActivity(intent);
             }
         });
 
@@ -142,9 +146,9 @@ public class BanZuDetailListFrag extends BaseFragment {
         for(Employee employee : employeeList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = employee.getName();;
-            item.field1Content = "-";
+            item.field1Content = "";
             item.field2 = "状态：" + employee.getStatus();
-            //item.field2Content = "班组80个";
+            item.field2Content = "";
             item.isShowArraw = false;
 
             list.add(item);

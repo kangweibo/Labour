@@ -14,6 +14,8 @@ public class Operteam implements Serializable {
     private String created_at;//:  "2020-05-13T03:02:29.000Z",
     private String updated_at;//:  "2020-05-13T03:02:29.000Z",
     private String projectname;//:  "南花园C座"
+    private String staff_num;//:  成员人数
+    private String classteam_num;//:  班组数
 
     public int getId() {
         return id;
@@ -79,4 +81,19 @@ public class Operteam implements Serializable {
         this.projectname = projectname;
     }
 
+    public String getStaff_num() {
+        return staff_num;
+    }
+
+    public void setStaff_num(String staff_num) {
+        this.staff_num = staff_num;
+    }
+
+    public String getClassteam_num() {
+        return classteam_num;
+    }
+
+    public void setClassteam_num(String classteam_num) {
+        this.classteam_num = classteam_num;
+    }
 }

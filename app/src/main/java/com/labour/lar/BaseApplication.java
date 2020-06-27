@@ -2,20 +2,13 @@ package com.labour.lar;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.multidex.MultiDex;
-
 import com.baidu.idl.face.platform.FaceSDKManager;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
-import com.labour.lar.keepalive.KeepLive;
-import com.labour.lar.keepalive.config.ForegroundNotification;
-import com.labour.lar.keepalive.config.ForegroundNotificationClickListener;
-import com.labour.lar.keepalive.config.IKeepLiveService;
 import com.labour.lar.module.User;
 import com.labour.lar.ocr.BaiDuOCR;
-import com.labour.lar.service.KeepLiveService;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheEntity;
 import com.lzy.okgo.cache.CacheMode;
@@ -33,10 +26,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.crashreport.CrashReport;
-
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-
 import okhttp3.OkHttpClient;
 
 /**

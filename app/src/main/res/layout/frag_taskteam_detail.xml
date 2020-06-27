@@ -58,7 +58,7 @@
                 android:layout_marginTop="3dp"
                 android:text="写字楼" />
 
-            <TextView android:id="@+id/mianji_tv"
+            <TextView android:id="@+id/classteam_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"

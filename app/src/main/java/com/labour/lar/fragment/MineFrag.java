@@ -1,6 +1,8 @@
 package com.labour.lar.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +18,7 @@ import com.labour.lar.R;
 import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.SettingActivity;
+import com.labour.lar.activity.ShowQRCodeActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.event.BaseEvent;
@@ -23,6 +26,9 @@ import com.labour.lar.event.EventManager;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.NoScrollGridView;
 import com.labour.lar.widget.RoundImageView;
+import com.yzq.zxinglibrary.android.CaptureActivity;
+import com.yzq.zxinglibrary.encode.CodeCreator;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -76,7 +82,7 @@ public class MineFrag extends BaseFragment {
                 } else if(position == 1){
                     showProjectFrag();
                 } else if(position == 3){
-                    showMessageFrag();
+                    addClassteam();
                 } else if(position == 4){
                     startActivity(new Intent(context, SettingActivity.class));
                 }
@@ -128,5 +134,43 @@ public class MineFrag extends BaseFragment {
         event.setCode(1);
         event.setPosition(1);
         EventManager.post(event);
+    }
+
+    private void addClassteam() {
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo == null) {
+            return;
+        }
+
+        String prole = userInfo.getProle();
+        showQRCode();
+
+        if (prole.equals("")){
+            showQRCode();
+        } else if (prole.equals("1")) {
+            showScan();
+        }
+    }
+
+    int REQUEST_CODE = 123;
+    private void showScan() {
+        Intent intent = new Intent(getContext(), CaptureActivity.class);
+//        ZxingConfig config = new ZxingConfig();
+//        config.setPlayBeep(true);//是否播放扫描声音 默认为true
+//        config.setShake(true);//是否震动  默认为true
+//        config.setDecodeBarCode(true);//是否扫描条形码 默认为true
+//        config.setReactColor(R.color.colorAccent);//设置扫描框四个角的颜色 默认为白色
+//        config.setFrameLineColor(R.color.colorAccent);//设置扫描框边框颜色 默认无色
+//        config.setScanLineColor(R.color.colorAccent);//设置扫描线的颜色 默认白色
+//        config.setFullScreenScan(false);//是否全屏扫描  默认为true  设为false则只会在扫描框中扫描
+//        intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    private void showQRCode() {
+        String content = "123456";
+        Intent intent = new Intent(getContext(), ShowQRCodeActivity.class);
+        intent.putExtra("content", content);
+        startActivity(intent);
     }
 }

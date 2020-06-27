@@ -20,10 +20,10 @@ import com.labour.lar.activity.TaskTeamAddActivity;
 import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.module.Manager;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.Project;
 import com.labour.lar.util.AjaxResult;
-import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
@@ -52,6 +52,7 @@ public class ProjectDetailListFrag extends BaseFragment {
 
     private ProjectDetailListAdapter projectAdapter;
     private Project project;
+    private List<Manager> managerList = new ArrayList<>();
     private List<Operteam> operteamList = new ArrayList<>();
     private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();;
     private Operteam operteamSelect;
@@ -87,6 +88,7 @@ public class ProjectDetailListFrag extends BaseFragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
+        list_refresh.setEnableRefresh(false);
         list_refresh.setEnableLoadMore(false);
 
         projectAdapter.setList(list);
@@ -94,11 +96,14 @@ public class ProjectDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Operteam operteam = operteamList.get(position);
+                if (position == 0) {
 
-                Intent intent = new Intent(context, TaskTeamDetailActivity.class);
-                intent.putExtra("operteam", operteam);
-                startActivity(intent);
+                } else{
+                    Operteam operteam = operteamList.get(position-1);
+                    Intent intent = new Intent(context, TaskTeamDetailActivity.class);
+                    intent.putExtra("operteam", operteam);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -111,6 +116,7 @@ public class ProjectDetailListFrag extends BaseFragment {
             }
         });
 
+        getManagers();
         getOperteam();
     }
 
@@ -118,6 +124,38 @@ public class ProjectDetailListFrag extends BaseFragment {
         this.project = project;
     }
 
+    private void getManagers() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id",project.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/managers";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    List<Manager> managers = JSON.parseArray(JSON.toJSONString(jsonArray), Manager.class);
+
+                    managerList.clear();
+                    managerList.addAll(managers);
+                    showOperteams();
+                } else {
+                    AppToast.show(getContext(),"获取项目部信息失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"获取项目部信息出错!");
+            }
+        });
+    }
     private void getOperteam() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",project.getId());
@@ -153,12 +191,25 @@ public class ProjectDetailListFrag extends BaseFragment {
 
     private void showOperteams() {
         list.clear();
+
+        ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
+        item0.field1 = "项目部";
+        item0.field1Content = "共"+ project.getManagers_num() +"人";
+        item0.field2 = "项目经理："+ "";
+        item0.field2Content = "成员" + project.getBudget() + "个";
+        item0.field3 = "作业队："+ project.getOperteams_num() + "个";
+        item0.field3Content = "班组" + project.getOperteams_num() +"个";
+        item0.isShowArraw = true;
+        item0.isShowTwo = true;
+
+        list.add(item0);
+
         for(Operteam operteam : operteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = operteam.getName();;
             item.field1Content = "-";
-            item.field2 = "人数："+"30"+"人";
-            item.field2Content = "班组80个";
+            item.field2 = "人数："+ operteam.getStaff_num() +"人";
+            item.field2Content = "班组" + operteam.getClassteam_num() +"个";
             item.isShowArraw = true;
 
             list.add(item);

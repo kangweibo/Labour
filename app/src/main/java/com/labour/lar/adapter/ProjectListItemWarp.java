@@ -27,6 +27,17 @@ public class ProjectListItemWarp {
         itemHolder.field3_content_tv.setText(item.field3Content);
         itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
     }
+    public static void showOneOrTwo(ItemHolder itemHolder,ListItem item){
+        itemHolder.field1_tv.setText(item.field1);
+        itemHolder.field1_content_tv.setText(item.field1Content);
+        itemHolder.field2_tv.setText(item.field2);
+        itemHolder.field2_content_tv.setText(item.field2Content);
+        itemHolder.field3_tv.setText(item.field3);
+        itemHolder.field3_content_tv.setText(item.field3Content);
+        itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
+        itemHolder.field3_rl.setVisibility(item.isShowTwo?View.VISIBLE:View.GONE);
+    }
+
     public static class ListItem {
         public String field1;
         public String field1Content;
@@ -36,8 +47,10 @@ public class ProjectListItemWarp {
         public String field3Content;
 
         public boolean isShowArraw;
+        public boolean isShowTwo;
         public int type;
     }
+
     public static class ItemHolder {
         public ItemHolder(View view){
             ButterKnife.bind(this, view);

@@ -103,7 +103,7 @@ public class ProjectDetailFrag extends BaseFragment {
         projectDetailListFrag = new ProjectDetailListFrag();
         GisMapFrag gisMapFrag = new GisMapFrag();
         projectDetailListFrag.setProject(project);
-        gisMapFrag.setProject(project);
+        gisMapFrag.setProjectId(project.getId()+"");
 
         frgs.add(projectDetailListFrag);
         frgs.add(gisMapFrag);

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,7 +17,7 @@ import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.module.Employee;
-import com.labour.lar.module.Operteam;
+import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 班组
+ * 工人
  */
 public class GongRenDetailFrag extends BaseFragment {
 
@@ -34,6 +35,19 @@ public class GongRenDetailFrag extends BaseFragment {
     TextView back_iv;
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
+
+    @BindView(R.id.name_tv)
+    TextView name_tv;
+    @BindView(R.id.number_tv)
+    TextView number_tv;
+    @BindView(R.id.type_tv)
+    TextView type_tv;
+    @BindView(R.id.classteam_tv)
+    TextView classteam_tv;
+    @BindView(R.id.state_tv)
+    TextView state_tv;
+    @BindView(R.id.photo_iv)
+    RoundImageView photo_iv;
 
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
@@ -58,7 +72,37 @@ public class GongRenDetailFrag extends BaseFragment {
         title_tv.setText("劳务工人");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        right_header_btn.setVisibility(View.INVISIBLE);
 
+        photo_iv.setImageResource(R.mipmap.picture);
+
+        if (employee!= null){
+            if (!TextUtils.isEmpty(employee.getName())){
+                name_tv.setText(employee.getName());
+            } else {
+                name_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(employee.getPhone())){
+                number_tv.setText("工号：" + employee.getPhone());
+            } else {
+                number_tv.setText("工号：未知");
+            }
+//            if (!TextUtils.isEmpty(employee.getStaff_num())){
+//                type_tv.setText("工种：" + operteam.getStaff_num() + "人");
+//            } else {
+                type_tv.setText("工种：未知");
+//            }
+            if (!TextUtils.isEmpty(employee.getClassteamname())){
+                classteam_tv.setText("班组：" + employee.getClassteamname());
+            } else {
+                classteam_tv.setText("班组：未知");
+            }
+            if (!TextUtils.isEmpty(employee.getStatus())){
+                state_tv.setText("状态：" + employee.getStatus());
+            } else {
+                state_tv.setText("状态：未知");
+            }
+        }
     }
 
     @Override
@@ -110,7 +154,7 @@ public class GongRenDetailFrag extends BaseFragment {
     }
 
     /**
-     * 设置作业队
+     * 设置工人
      * @param employee
      */
     public void setEmployee(Employee employee) {

@@ -22,21 +22,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.amap.api.fence.GeoFenceClient;
-import com.amap.api.location.DPoint;
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.AMapException;
-import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
-import com.amap.api.maps2d.model.LatLngBounds;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.Polygon;
@@ -44,16 +38,10 @@ import com.amap.api.maps2d.model.PolygonOptions;
 import com.amap.api.maps2d.model.Text;
 import com.amap.api.maps2d.model.TextOptions;
 import com.labour.lar.Constants;
-import com.labour.lar.LoginActivity;
-import com.labour.lar.MainActivity;
 import com.labour.lar.R;
-import com.labour.lar.activity.FindPwdActivity;
 import com.labour.lar.activity.GeoFenceActivity;
-import com.labour.lar.activity.ProjectDetailActivity;
-import com.labour.lar.activity.RegistActivity;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.map.MapGeoFence;
-import com.labour.lar.map.MapUtil;
 import com.labour.lar.module.EmpsLocation;
 import com.labour.lar.module.Project;
 import com.labour.lar.module.User;
@@ -68,7 +56,6 @@ import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,26 +75,20 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     protected Unbinder unbinder;
 
     private AMap aMap;
-//    private AMapLocationClient mlocationClient;
-//    private AMapLocationClientOption mLocationOption;
-//    private static final int STROKE_COLOR = Color.argb(180, 3, 145, 255);
-//    private static final int FILL_COLOR = Color.argb(10, 0, 0, 180);
-//    private static final int NO_STROKE_COLOR = Color.argb(0, 0, 0, 0);
-//    private static final int NO_FILL_COLOR = Color.argb(0, 0, 0, 0);
 
     //实时定位
     private LocalBroadcastManager localBroadcastManager;
     private MapLocationReceiver mapLocationReceiver = new MapLocationReceiver();
 
     //地理围栏
-//    private AMapGeoFence mAMapGeoFence;
     private Point lastPt = new Point();;
     private Map<Polygon, MapGeoFence> polygonMap = new HashMap<>();
     private Polygon polygonSelect;
 
     private BottomSelectDialog dialog;
     private View mRootView;
-    private Project project;
+//    private Project project;
+    private String project_id;
     private boolean isCanSet;//能否设置围栏
 
     private List<MapGeoFence> fences;
@@ -172,24 +153,6 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         }
     }
 
-   /* private void setupLocationStyle(){
-        // 自定义系统定位蓝点
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        // 自定义定位蓝点图标
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.location_marker));//gps_point
-        // 自定义精度范围的圆形边框颜色
-        myLocationStyle.strokeColor(NO_STROKE_COLOR);
-        //自定义精度范围的圆形边框宽度
-        myLocationStyle.strokeWidth(1.0f);
-        // 设置圆形的填充颜色
-        myLocationStyle.radiusFillColor(NO_FILL_COLOR);
-        //设置定位频次方法，单位：毫秒，默认值：1000毫秒，如果传小于1000的任何值将按照1000计算。该方法只会作用在会执行连续定位的工作模式上。
-        myLocationStyle.interval(1000 * 30);
-        // 将自定义的 myLocationStyle 对象添加到地图上
-        aMap.setMyLocationStyle(myLocationStyle);
-    }*/
-
     /**
      * 监听amap地图加载成功事件回调
      */
@@ -216,52 +179,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         //Toast.makeText(getContext(), "你点击的是" + marker.getTitle(),Toast.LENGTH_SHORT).show();
         return false;
     }
-    /**
-     * 在地图上添加marker
-     */
-//    private void addMarkersToMap() {
-//
-//
-//
-////        aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
-////                .position(Constants.CHENGDU).title("成都市")
-////                .snippet("成都市:30.679879, 104.064855").draggable(true));
-//
-//        MarkerOptions markerOption = new MarkerOptions();
-//        markerOption.position(Constants.XIAN);
-//        markerOption.title("西安市").snippet("西安市：34.341568, 108.940174");
-//        markerOption.draggable(true);
-//        markerOption.icon(BitmapDescriptorFactory
-//                .fromResource(R.drawable.arrow));
-//        marker2 = aMap.addMarker(markerOption);
-//        marker2.showInfoWindow();
-//        // marker旋转90度
-//        marker2.setRotateAngle(90);
-//
-//        // 动画效果
-//        ArrayList<BitmapDescriptor> giflist = new ArrayList<BitmapDescriptor>();
-//        giflist.add(BitmapDescriptorFactory
-//                .defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-//        giflist.add(BitmapDescriptorFactory
-//                .defaultMarker(BitmapDescriptorFactory.HUE_RED));
-//        giflist.add(BitmapDescriptorFactory
-//                .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-//        aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
-//                .position(Constants.ZHENGZHOU).title("郑州市").icons(giflist)
-//                .draggable(true).period(10));
-//
-//        //drawMarkers();// 添加10个带有系统默认icon的marker
-//    }
-
 
     // 获取围栏
     private void getFence() {
-        if (project == null) {
-            return;
-        }
-
-        String project_id = project.getId()+"";
-
         if(StringUtils.isBlank(project_id)){
             return;
         }
@@ -298,12 +218,6 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 
     // 获取工人位置
     private void getEmpsLoc() {
-        if (project == null) {
-            return;
-        }
-
-        String project_id = project.getId()+"";
-
         if(StringUtils.isBlank(project_id)){
             return;
         }
@@ -457,82 +371,6 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         localBroadcastManager.unregisterReceiver(mapLocationReceiver);
     }
 
-
-    /* *//**
-     * 定位成功后回调函数
-     *//*
-    @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
-                Log.e("amap", "onMyLocationChange 定位成功， lat: " + amapLocation.getLatitude() + " lon: " + amapLocation.getLongitude());
-                int errorCode = amapLocation.getErrorCode();
-                String errorInfo =amapLocation.getErrorInfo();
-                // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
-                int locationType = amapLocation.getLocationType();
-                *//*
-                errorCode
-                errorInfo
-                locationType
-                *//*
-                Log.e("amap", "定位信息， code: " + errorCode + " errorInfo: " + errorInfo + " locationType: " + locationType );
-                //mLocationErrText.setVisibility(View.GONE);
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
-
-                //测试
-                //清空地图上所有已经标注的marker
-                if (aMap != null) {
-                    aMap.clear();
-                }
-                LatLng latlng = new LatLng(amapLocation.getLatitude(),amapLocation.getLongitude());
-                drawMarkers(latlng);
-            } else {
-                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
-                Log.e("amap",errText);
-                //mLocationErrText.setVisibility(View.VISIBLE);
-                //mLocationErrText.setText(errText);
-            }
-        }
-    }
-
-    *//**
-     * 激活定位
-     *//*
-    @Override
-    public void activate(OnLocationChangedListener listener) {
-        mListener = listener;
-        if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(getContext());
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位监听
-            mlocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            //设置定位参数
-            mlocationClient.setLocationOption(mLocationOption);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
-        }
-    }
-
-    *//**
-     * 停止定位
-     *//*
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
-    }*/
-
     public class MapLocationReceiver extends BroadcastReceiver {
 
         @Override
@@ -663,10 +501,10 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 
     // 设置围栏
     private void setFence() {
-        if (project != null) {
+        if (project_id != null) {
             Intent intent = new Intent(getContext(), GeoFenceActivity.class);
             intent.putExtra("state", 0);
-            intent.putExtra("project_id", project.getId() + "");
+            intent.putExtra("project_id", project_id);
             startActivity(intent);
         }
     }
@@ -742,7 +580,11 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         });
     }
 
-    public void setProject(Project project){
-        this.project = project;
+//    public void setProject(Project project){
+//        this.project = project;
+//    }
+
+    public void setProjectId(String project_id){
+        this.project_id = project_id;
     }
 }

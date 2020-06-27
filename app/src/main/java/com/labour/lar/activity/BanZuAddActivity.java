@@ -1,11 +1,9 @@
 package com.labour.lar.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.alibaba.fastjson.JSON;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
@@ -17,12 +15,9 @@ import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -35,8 +30,6 @@ public class BanZuAddActivity extends BaseActivity {
 
     @BindView(R.id.edt_name)
     EditText edt_name;
-    @BindView(R.id.edt_duty)
-    EditText edt_duty;
     @BindView(R.id.edt_memo)
     EditText edt_memo;
 
@@ -55,7 +48,7 @@ public class BanZuAddActivity extends BaseActivity {
         classteam_id = intent.getStringExtra("classteam_id");
 
         if (type == 0) {
-            title_tv.setText("添加班组");
+            title_tv.setText("创建班组");
         } else {
             title_tv.setText("修改班组");
         }
@@ -83,11 +76,9 @@ public class BanZuAddActivity extends BaseActivity {
 
     private void addClassteam() {
         String name = edt_name.getText().toString();
-        String duty = edt_duty.getText().toString();
         String memo = edt_memo.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty)
-                || StringUtils.isBlank(memo)){
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(memo)){
             AppToast.show(this,"请填写完整班组信息！");
             return;
         }
@@ -95,7 +86,6 @@ public class BanZuAddActivity extends BaseActivity {
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
         param.put("name",name);
-        param.put("duty",duty);
         param.put("memo",memo);
         String jsonParams = JSON.toJSONString(param);
 
@@ -125,11 +115,9 @@ public class BanZuAddActivity extends BaseActivity {
 
     private void updateClassteam() {
         String name = edt_name.getText().toString();
-        String duty = edt_duty.getText().toString();
         String memo = edt_memo.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty)
-                || StringUtils.isBlank(memo)){
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(memo)){
             AppToast.show(this,"请填写完整班组信息！");
             return;
         }
@@ -143,7 +131,6 @@ public class BanZuAddActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
         param.put("id",classteam_id);
         param.put("name",name);
-        param.put("duty",duty);
         param.put("memo",memo);
         String jsonParams = JSON.toJSONString(param);
 

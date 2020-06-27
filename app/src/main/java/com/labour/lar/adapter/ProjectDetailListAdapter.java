@@ -29,7 +29,7 @@ public class ProjectDetailListAdapter extends BaseAdapter<ProjectListItemWarp.Li
 
     @Override
     protected void fillView(int position, ProjectListItemWarp.ListItem item, ProjectListItemWarp.ItemHolder holder) {
-        ProjectListItemWarp.showOne(holder,item);
+        ProjectListItemWarp.showOneOrTwo(holder,item);
 
     }
 }

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,17 @@ public class TaskTeamDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
+    @BindView(R.id.name_tv)
+    TextView name_tv;
+    @BindView(R.id.company_tv)
+    TextView company_tv;
+    @BindView(R.id.type_tv)
+    TextView type_tv;
+    @BindView(R.id.classteam_tv)
+    TextView classteam_tv;
+    @BindView(R.id.photo_iv)
+    RoundImageView photo_iv;
+
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
@@ -58,6 +71,30 @@ public class TaskTeamDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
+        photo_iv.setImageResource(R.mipmap.picture);
+
+        if (operteam!= null){
+            if (!TextUtils.isEmpty(operteam.getName())){
+                name_tv.setText(operteam.getName());
+            } else {
+                name_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(operteam.getMemo())){
+                company_tv.setText("队长：" + operteam.getMemo());
+            } else {
+                company_tv.setText("队长：");
+            }
+            if (!TextUtils.isEmpty(operteam.getStaff_num())){
+                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
+            } else {
+                type_tv.setText("花名册：0人");
+            }
+            if (!TextUtils.isEmpty(operteam.getClassteam_num())){
+                classteam_tv.setText("班组：" + operteam.getClassteam_num() + "个");
+            } else {
+                classteam_tv.setText("班组：0个");
+            }
+        }
     }
 
     @Override
@@ -68,8 +105,11 @@ public class TaskTeamDetailFrag extends BaseFragment {
         taskTeamDetailListFrag = new TaskTeamDetailListFrag();
         taskTeamDetailListFrag.setOperteam(operteam);
 
+        GisMapFrag gisMapFrag = new GisMapFrag();
+        gisMapFrag.setProjectId(operteam.getProject_id()+"");
+
         frgs.add(taskTeamDetailListFrag);
-        frgs.add(new GisMapFrag());
+        frgs.add(gisMapFrag);
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 
