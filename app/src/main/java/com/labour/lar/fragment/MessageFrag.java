@@ -1,5 +1,7 @@
 package com.labour.lar.fragment;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.MessageAddActivity;
 import com.labour.lar.adapter.MessageAdapter;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.FZMessage;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MessageFrag extends BaseFragment {
 
@@ -64,6 +68,9 @@ public class MessageFrag extends BaseFragment {
     public void initView() {
         back_iv.setVisibility(View.INVISIBLE);
         title_tv.setText("消息");
+        Drawable d = getResources().getDrawable(R.mipmap.jiahao);
+        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
         messageAdapter = new MessageAdapter(getContext());
@@ -97,6 +104,15 @@ public class MessageFrag extends BaseFragment {
         getMessages();
     }
 
+    @OnClick({R.id.right_header_btn})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.right_header_btn:
+                addMessage();
+                break;
+
+        }
+    }
 
     private void getMessages() {
         UserCache userCache = UserCache.getInstance(getContext());
@@ -135,5 +151,10 @@ public class MessageFrag extends BaseFragment {
                 AppToast.show(getContext(),"获取消息出错!");
             }
         });
+    }
+
+    private void addMessage() {
+        Intent intent = new Intent(context, MessageAddActivity.class);
+        startActivity(intent);
     }
 }

@@ -140,6 +140,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
+            android:name="com.labour.lar.activity.MessageAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
             android:name="com.labour.lar.activity.FaceLivenessExpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>

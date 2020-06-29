@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ProjectDetailListFrag extends BaseFragment {
 
     @BindView(R.id.list_refresh)
@@ -110,8 +112,12 @@ public class ProjectDetailListFrag extends BaseFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                operteamSelect = operteamList.get(position);
-                showMoreDialog();
+                if (position == 0) {
+
+                } else {
+                    operteamSelect = operteamList.get(position-1);
+                    showMoreDialog();
+                }
                 return true;
             }
         });
@@ -221,14 +227,15 @@ public class ProjectDetailListFrag extends BaseFragment {
     public void addOperteam() {
         Intent intent = new Intent(context, TaskTeamAddActivity.class);
         intent.putExtra("type", 0);
-        startActivity(intent);
+        intent.putExtra("project_id", project.getId()+"");
+        startActivityForResult(intent, Constants.RELOAD);
     }
 
     private void updateOperteam(Operteam operteam) {
         Intent intent = new Intent(context, TaskTeamAddActivity.class);
         intent.putExtra("type", 1);
         intent.putExtra("operteam_id", operteam.getId() + "");
-        startActivity(intent);
+        startActivityForResult(intent, Constants.RELOAD);
     }
 
     private void deleteOperteam(Operteam operteam) {
@@ -237,6 +244,7 @@ public class ProjectDetailListFrag extends BaseFragment {
         }
 
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
         jsonObject.put("id",operteam.getId());
         String jsonParams =jsonObject.toJSONString();
 
@@ -305,5 +313,12 @@ public class ProjectDetailListFrag extends BaseFragment {
         });
 
         dialog.showAtLocation(mRootView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 重新加载数据
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            getOperteam();
+        }
     }
 }

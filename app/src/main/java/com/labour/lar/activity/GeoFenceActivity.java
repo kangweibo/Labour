@@ -270,6 +270,7 @@ public class GeoFenceActivity extends Activity {
 				AjaxResult jr = new AjaxResult(response.body());
 				if(jr.getSuccess() == 1){
 					AppToast.show(GeoFenceActivity.this,"设置围栏成功!");
+					setResult(RESULT_OK, getIntent());
 					finish();
 				} else {
 					AppToast.show(GeoFenceActivity.this,"设置围栏失败!");
@@ -314,16 +315,17 @@ public class GeoFenceActivity extends Activity {
 				dialog.dismiss();
 				AjaxResult jr = new AjaxResult(response.body());
 				if(jr.getSuccess() == 1){
-					AppToast.show(GeoFenceActivity.this,"设置围栏成功!");
+					AppToast.show(GeoFenceActivity.this,"更新围栏成功!");
+					setResult(RESULT_OK, getIntent());
 					finish();
 				} else {
-					AppToast.show(GeoFenceActivity.this,"设置围栏失败!");
+					AppToast.show(GeoFenceActivity.this,"更新围栏失败!");
 				}
 			}
 			@Override
 			public void onError(Response<String> response) {
 				dialog.dismiss();
-				AppToast.show(GeoFenceActivity.this,"围栏设置出错!");
+				AppToast.show(GeoFenceActivity.this,"更新围栏出错!");
 			}
 		});
 	}

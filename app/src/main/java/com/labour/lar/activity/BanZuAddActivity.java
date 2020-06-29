@@ -35,6 +35,7 @@ public class BanZuAddActivity extends BaseActivity {
 
     private int type;// 0：添加；1：更新
     private String classteam_id;
+    private String operteam_id;
 
     @Override
     public int getActivityLayoutId() {
@@ -46,6 +47,7 @@ public class BanZuAddActivity extends BaseActivity {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
         classteam_id = intent.getStringExtra("classteam_id");
+        operteam_id = intent.getStringExtra("operteam_id");
 
         if (type == 0) {
             title_tv.setText("创建班组");
@@ -83,10 +85,16 @@ public class BanZuAddActivity extends BaseActivity {
             return;
         }
 
+        if(StringUtils.isBlank(operteam_id)){
+            AppToast.show(this,"作业队id为空！");
+            return;
+        }
+
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
         param.put("name",name);
         param.put("memo",memo);
+        param.put("operteam_id",operteam_id);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/classteam_new";
@@ -100,6 +108,7 @@ public class BanZuAddActivity extends BaseActivity {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     AppToast.show(BanZuAddActivity.this,"班组创建成功");
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
                     AppToast.show(BanZuAddActivity.this,"班组创建失败");
@@ -145,6 +154,7 @@ public class BanZuAddActivity extends BaseActivity {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     AppToast.show(BanZuAddActivity.this,"班组修改成功");
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
                     AppToast.show(BanZuAddActivity.this,"班组修改失败");

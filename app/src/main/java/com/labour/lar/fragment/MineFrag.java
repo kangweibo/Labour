@@ -1,8 +1,6 @@
 package com.labour.lar.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
 import com.labour.lar.BaseApplication;
 import com.labour.lar.BaseFragment;
@@ -20,19 +19,31 @@ import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.event.BaseEvent;
 import com.labour.lar.event.EventManager;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.NoScrollGridView;
+import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.RoundImageView;
+import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 import com.yzq.zxinglibrary.android.CaptureActivity;
-import com.yzq.zxinglibrary.encode.CodeCreator;
+import com.yzq.zxinglibrary.common.Constant;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MineFrag extends BaseFragment {
+
+    private int REQUEST_CODE = 123;
 
     @BindView(R.id.title_tv)
     TextView title_tv;
@@ -82,7 +93,7 @@ public class MineFrag extends BaseFragment {
                 } else if(position == 1){
                     showProjectFrag();
                 } else if(position == 3){
-                    addClassteam();
+                    showClassteam();
                 } else if(position == 4){
                     startActivity(new Intent(context, SettingActivity.class));
                 }
@@ -136,23 +147,22 @@ public class MineFrag extends BaseFragment {
         EventManager.post(event);
     }
 
-    private void addClassteam() {
+    private void showClassteam() {
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo == null) {
             return;
         }
 
         String prole = userInfo.getProle();
-        showQRCode();
 
-        if (prole.equals("")){
+        if (prole.equals("classteam_manager")){
             showQRCode();
-        } else if (prole.equals("1")) {
+        } else if (prole.equals("employee")) {
             showScan();
         }
     }
 
-    int REQUEST_CODE = 123;
+
     private void showScan() {
         Intent intent = new Intent(getContext(), CaptureActivity.class);
 //        ZxingConfig config = new ZxingConfig();
@@ -172,5 +182,52 @@ public class MineFrag extends BaseFragment {
         Intent intent = new Intent(getContext(), ShowQRCodeActivity.class);
         intent.putExtra("content", content);
         startActivity(intent);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 扫描二维码/条码回传
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+
+                String content = data.getStringExtra(Constant.CODED_CONTENT);
+                AppToast.show(getContext(),"扫描结果为：" + content);
+            }
+        }
+    }
+
+    // 工人加入班组
+    private void addClassteam(String classteam_id) {
+        UserCache userCache = UserCache.getInstance(getContext());
+        User user = userCache.get();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("prole",user.getProle());
+        jsonObject.put("userid",user.getId());
+        jsonObject.put("classteam_id",classteam_id);
+
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/join_classteam";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+
+                    AppToast.show(getContext(),"加入班组成功!");
+                } else {
+                    AppToast.show(getContext(),"加入班组失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"加入班组出错!");
+            }
+        });
     }
 }

@@ -40,4 +40,6 @@ public interface Constants {
     public static final String LOGIN_ERROR_TIP = "请登录！";
     //role
     public static enum ROLE {employee,staff,manager}
+
+    public static final int RELOAD = 12;
 }

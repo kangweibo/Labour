@@ -37,6 +37,7 @@ public class TaskTeamAddActivity extends BaseActivity {
 
     private int type;// 0：添加；1：更新
     private String operteam_id;
+    private String project_id;
 
     @Override
     public int getActivityLayoutId() {
@@ -48,6 +49,7 @@ public class TaskTeamAddActivity extends BaseActivity {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
         operteam_id = intent.getStringExtra("operteam_id");
+        project_id = intent.getStringExtra("project_id");
 
         if (type == 0) {
             title_tv.setText("创建作业队");
@@ -87,8 +89,14 @@ public class TaskTeamAddActivity extends BaseActivity {
             return;
         }
 
+        if(StringUtils.isBlank(project_id)){
+            AppToast.show(this,"项目id为空！");
+            return;
+        }
+
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
+        param.put("project_id",project_id);
         param.put("name",name);
         param.put("duty",duty);
         param.put("memo",memo);
@@ -105,6 +113,7 @@ public class TaskTeamAddActivity extends BaseActivity {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     AppToast.show(TaskTeamAddActivity.this,"作业队创建成功");
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
                     AppToast.show(TaskTeamAddActivity.this,"作业队创建失败");
@@ -153,6 +162,7 @@ public class TaskTeamAddActivity extends BaseActivity {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     AppToast.show(TaskTeamAddActivity.this,"作业队修改成功");
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
                     AppToast.show(TaskTeamAddActivity.this,"作业队修改失败");

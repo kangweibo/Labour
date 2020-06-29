@@ -17,7 +17,7 @@ public class MineGridViewAdapter extends BaseAdapter {
             R.mipmap.seting_icon,R.mipmap.help_icon
     };
 
-    private  String [] strs = {"个人信息","工程项目","考勤报表","消息通知","设置","帮助"
+    private  String [] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助"
     };
 
     public MineGridViewAdapter(Context context) {

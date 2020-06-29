@@ -56,7 +56,7 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
     @BindView(R.id.name_et)
-    EditText name_et;
+    TextView name_et;
     @BindView(R.id.sex_et)
     TextView sex_et;
     @BindView(R.id.phone_et)

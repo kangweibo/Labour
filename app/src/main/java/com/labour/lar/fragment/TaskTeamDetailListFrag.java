@@ -1,6 +1,7 @@
 package com.labour.lar.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -40,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 作业队
@@ -197,14 +200,15 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     public void addClassteam() {
         Intent intent = new Intent(context, BanZuAddActivity.class);
         intent.putExtra("type", 0);
-        startActivity(intent);
+        intent.putExtra("operteam_id", operteam.getId() + "");
+        startActivityForResult(intent, Constants.RELOAD);
     }
 
     private void updateClassteam(Classteam classteam) {
         Intent intent = new Intent(context, BanZuAddActivity.class);
         intent.putExtra("type", 1);
         intent.putExtra("classteam_id", classteam.getId() + "");
-        startActivity(intent);
+        startActivityForResult(intent, Constants.RELOAD);
     }
 
     private void deleteClassteam(Classteam classteam) {
@@ -213,7 +217,8 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         }
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id",classteam.getId());
+        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("classteam_id",classteam.getId());
         String jsonParams =jsonObject.toJSONString();
 
         String url = Constants.HTTP_BASE + "/api/classteam_delete";
@@ -281,5 +286,12 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         });
 
         dialog.showAtLocation(mRootView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 重新加载数据
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            getClassteam();
+        }
     }
 }

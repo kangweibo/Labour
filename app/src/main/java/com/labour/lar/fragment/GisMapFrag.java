@@ -64,6 +64,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+
 public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnInfoWindowClickListener {
 
     @BindView(R.id.map)
@@ -129,6 +131,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
                 btn_set.setVisibility(View.INVISIBLE);
             }
         }
+
+        getFence();
+        getEmpsLoc();
     }
 
     /**
@@ -353,9 +358,6 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     public void onResume() {
         super.onResume();
         mapView.onResume();
-
-        getFence();
-        getEmpsLoc();
     }
 
     @Override
@@ -505,7 +507,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
             Intent intent = new Intent(getContext(), GeoFenceActivity.class);
             intent.putExtra("state", 0);
             intent.putExtra("project_id", project_id);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.RELOAD);
         }
     }
 
@@ -532,7 +534,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
                 intent.putExtra("state", 1);
                 intent.putExtra("fence_id", fence.id+"");
                 intent.putExtra("project_id", fence.project_id+"");
-                startActivity(intent);
+                startActivityForResult(intent, Constants.RELOAD);
             }
         }
     }
@@ -586,5 +588,12 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 
     public void setProjectId(String project_id){
         this.project_id = project_id;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 重新加载数据
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            getFence();
+        }
     }
 }
