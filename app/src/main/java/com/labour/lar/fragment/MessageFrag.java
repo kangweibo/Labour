@@ -82,7 +82,7 @@ public class MessageFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                getMessages();
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -135,6 +135,8 @@ public class MessageFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
+
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<FZMessage> msgs = JSON.parseArray(JSON.toJSONString(jsonArray), FZMessage.class);
 

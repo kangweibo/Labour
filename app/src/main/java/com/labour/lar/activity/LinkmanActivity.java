@@ -2,20 +2,17 @@ package com.labour.lar.activity;
 
 import android.content.Intent;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.SimpleTreeAdapter;
-import com.labour.lar.cache.UserCache;
-import com.labour.lar.module.Employee;
-import com.labour.lar.module.User;
+import com.labour.lar.module.Linkman;
 import com.labour.lar.util.AjaxResult;
-import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
@@ -41,12 +38,14 @@ public class LinkmanActivity extends BaseActivity {
 
     @BindView(R.id.lv_tree)
     ListView lv_tree;
-    @BindView(R.id.edt_content)
-    EditText edt_content;
-    @BindView(R.id.edt_memo)
-    EditText edt_memo;
+    @BindView(R.id.right_header_btn)
+    TextView right_header_btn;
 
     private String project_id;
+
+    private List<Node> mlist = new ArrayList<>();
+    private SimpleTreeAdapter mAdapter;
+    private int mNodeId = 0;
 
     @Override
     public int getActivityLayoutId() {
@@ -59,42 +58,39 @@ public class LinkmanActivity extends BaseActivity {
         project_id = intent.getStringExtra("project_id");
 
         title_tv.setText("联系人");
+        right_header_btn.setText("确定");
 
-        List<Node> mlist = new ArrayList<>();
-        SimpleTreeAdapter mAdapter = new SimpleTreeAdapter(lv_tree, this,
+        mAdapter = new SimpleTreeAdapter(lv_tree, this,
                 mlist, 1,R.mipmap.tree_ex,R.mipmap.tree_ec);
 
         lv_tree.setAdapter(mAdapter);
 
-        mlist.add(new Node("223","0","我也是添加的root节点",new Employee()));
-        mAdapter.addData(0,mlist);
+        getOrgTree();
     }
 
-    @OnClick({R.id.back_iv,R.id.btn_submit})
+    @OnClick({R.id.back_iv,R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
-            case R.id.btn_submit:
-                //sendMessage();
+            case R.id.right_header_btn:
+                submit();
                 break;
         }
     }
 
 
     private void getOrgTree() {
-        if(StringUtils.isBlank(project_id) ){
-            AppToast.show(this,"项目ID为空！");
-            return;
-        }
-
-        UserCache userCache = UserCache.getInstance(this);
-        User user = userCache.get();
+//        if(StringUtils.isBlank(project_id) ){
+//            AppToast.show(this,"项目ID为空！");
+//            return;
+//        }
 
         final Map<String,String> param = new HashMap<>();
 
-        param.put("id",project_id);
+        //param.put("id",project_id);
+        param.put("id","1");
         param.put("token","063d91b4f57518ff");
 
         String jsonParams = JSON.toJSONString(param);
@@ -109,17 +105,103 @@ public class LinkmanActivity extends BaseActivity {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    AppToast.show(LinkmanActivity.this,"消息发送成功");
-                    finish();
+                    JSONObject jo = jr.getData();
+                    Linkman linkman = JSON.parseObject(JSON.toJSONString(jo), Linkman.class);
+                    initData(linkman);
                 } else {
-                    AppToast.show(LinkmanActivity.this,"消息发送失败");
+                    AppToast.show(LinkmanActivity.this,"组织架构获取失败");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
-                AppToast.show(LinkmanActivity.this,"消息发送出错!");
+                AppToast.show(LinkmanActivity.this,"组织架构获取出错!");
             }
         });
+    }
+
+    // 初始化数据
+    private void initData(Linkman linkman) {
+        addLinkmanId(linkman, 0);
+
+        mAdapter.addData(0,mlist);
+    }
+
+    // 添加节点id，父节点id
+    private void addLinkmanId(Linkman linkman, int pid) {
+        int nodeId = mNodeId++;
+        linkman.setNodeId(nodeId);
+        linkman.setPid(pid);
+
+        String name = linkman.getName();
+        if (name == null){
+            name = "";
+        }
+
+        Node<Integer, Linkman> node = new Node(nodeId, pid, name, linkman);
+        mlist.add(node);
+
+        List<Linkman> managers = linkman.getManagers();
+
+        if (managers != null) {
+            for (Linkman man : managers) {
+                addLinkmanId(man, nodeId);
+            }
+        }
+
+        List<Linkman> operteams = linkman.getOperteams();
+
+        if (operteams != null) {
+            for (Linkman man : operteams) {
+                addLinkmanId(man, nodeId);
+            }
+        }
+
+        List<Linkman> staffs = linkman.getStaffs();
+
+        if (staffs != null) {
+            for (Linkman man : staffs) {
+                addLinkmanId(man, nodeId);
+            }
+        }
+
+        List<Linkman> classteams = linkman.getClassteams();
+
+        if (classteams != null) {
+            for (Linkman man : classteams) {
+                addLinkmanId(man, nodeId);
+            }
+        }
+
+        List<Linkman> employees = linkman.getEmployees();
+
+        if (employees != null) {
+            for (Linkman man : employees) {
+                addLinkmanId(man, nodeId);
+            }
+        }
+    }
+
+    // 确定
+    private void submit() {
+        Linkman linkman = null;
+
+        final List<Node> allNodes = mAdapter.getAllNodes();
+        for (int i = 0; i < allNodes.size(); i++) {
+            Node node = allNodes.get(i);
+            if (node.isChecked()) {
+                linkman = (Linkman)node.bean;
+                break;
+            }
+        }
+
+        if (linkman != null) {
+            Intent intent = getIntent();
+            intent.putExtra("linkman", linkman);
+            setResult(RESULT_OK, intent);
+            this.finish();
+        } else {
+            AppToast.show(this,"未选择接收方");
+        }
     }
 }
