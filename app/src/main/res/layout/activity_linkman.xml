@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_header"/>
+
+    <ListView
+        android:id="@+id/lv_tree"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#aaa"
+        android:dividerHeight="1px"/>
+
+<!--    <Button android:id="@+id/btn_submit"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="45dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:background="@drawable/selector_button"-->
+<!--        android:text="确认"-->
+<!--        android:textSize="@dimen/text_size_16"-->
+<!--        android:layout_marginRight="@dimen/common_margin_right"-->
+<!--        android:layout_marginLeft="@dimen/common_margin_left"-->
+<!--        android:layout_marginTop="25dp"/>-->
+
+</LinearLayout>
