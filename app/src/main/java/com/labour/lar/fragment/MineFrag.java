@@ -85,6 +85,7 @@ public class MineFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mineGridViewAdapter = new MineGridViewAdapter(context);
+        mineGridViewAdapter.setStrings(getStrings());
         main_gridview.setAdapter(mineGridViewAdapter);
         main_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -148,6 +149,27 @@ public class MineFrag extends BaseFragment {
         EventManager.post(event);
     }
 
+    private String[] getStrings() {
+        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助"};
+
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo == null) {
+            return strs;
+        }
+
+        String prole = userInfo.getProle();
+
+        if (prole.equals("classteam_manager") || prole.equals("employee")){
+            strs[3] = "加入班组";
+        } else if (prole.equals("operteam_manager") || prole.equals("staff")){
+            strs[3] = "加入作业队";
+        } else if (prole.equals("project_manager") || prole.equals("manager")){
+            strs[3] = "加入项目部";
+        }
+
+        return strs;
+    }
+
     private void showClassteam() {
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo == null) {
@@ -159,7 +181,7 @@ public class MineFrag extends BaseFragment {
         if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
                 || prole.equals("project_manager")){
             showQRCode(prole);
-        } else if (prole.equals("employee")) {
+        } else {
             showScan();
         }
     }

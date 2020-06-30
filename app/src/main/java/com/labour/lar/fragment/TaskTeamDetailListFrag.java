@@ -86,7 +86,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                getClassteam();
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -142,6 +142,8 @@ public class TaskTeamDetailListFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
+
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<Classteam> classetams = JSON.parseArray(JSON.toJSONString(jsonArray), Classteam.class);
 
@@ -149,12 +151,14 @@ public class TaskTeamDetailListFrag extends BaseFragment {
                     classteamList.addAll(classetams);
                     showClassteams();
                 } else {
+                    list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取班组信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
+                list_refresh.finishRefresh(false);
                 AppToast.show(getContext(),"获取班组信息出错!");
             }
         });

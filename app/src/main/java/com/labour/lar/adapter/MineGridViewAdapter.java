@@ -61,4 +61,8 @@ public class MineGridViewAdapter extends BaseAdapter {
         ImageView imageView;
         TextView textView;
     }
+
+    public void setStrings(String[] strs) {
+        this.strs = strs;
+    }
 }

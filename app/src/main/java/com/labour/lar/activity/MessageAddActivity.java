@@ -132,7 +132,7 @@ public class MessageAddActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Constants.RELOAD) {
-                Linkman linkman = (Linkman)getIntent().getSerializableExtra("linkman");
+                Linkman linkman = (Linkman)data.getSerializableExtra("linkman");
 
                 if (linkman != null) {
                     edt_linkman.setText(linkman.getName());

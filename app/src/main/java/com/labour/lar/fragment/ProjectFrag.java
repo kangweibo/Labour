@@ -3,6 +3,7 @@ package com.labour.lar.fragment;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -59,6 +60,8 @@ public class ProjectFrag extends BaseFragment {
 
     ProjectAdapter projectAdapter;
     List<Project> projectList = new ArrayList<>();
+    Handler handler;
+
 
     @Override
     public int getFragmentLayoutId() {
@@ -84,7 +87,7 @@ public class ProjectFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                getProject();
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -94,13 +97,7 @@ public class ProjectFrag extends BaseFragment {
             }
         });
 
-        //测试
-//        List<Project> list = new ArrayList<>();
-//        for(int i=0;i<10;i++){
-//            list.add(new Project());
-//        }
         projectAdapter.setList(projectList);
-//        projectAdapter.notifyDataSetChanged();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -113,7 +110,13 @@ public class ProjectFrag extends BaseFragment {
             }
         });
 
-        getProject();
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getProject();
+            }
+        },800);
     }
 
     @OnClick({R.id.right_header_btn})
@@ -142,6 +145,8 @@ public class ProjectFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
+
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<Project> projects = JSON.parseArray(JSON.toJSONString(jsonArray), Project.class);
 
@@ -149,12 +154,14 @@ public class ProjectFrag extends BaseFragment {
                     projectList.addAll(projects);
                     projectAdapter.notifyDataSetChanged();
                 } else {
+                    list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取项目信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
+                list_refresh.finishRefresh(false);
                 AppToast.show(getContext(),"获取项目信息出错!");
             }
         });
