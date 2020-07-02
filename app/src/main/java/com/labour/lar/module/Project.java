@@ -16,8 +16,9 @@ public class Project implements Serializable {
     private String created_at;//: "2020-05-13T01:36:29.000Z",
     private String updated_at;//: "2020-05-13T01:36:29.000Z",
     private String entname;//: "方正通信建设有限公司"
-    private String managers_num;//成员人数
-    private String operteams_num;//作业队数量
+    private String manager_num;//成员人数
+    private String operteam_num;//作业队数量
+    private String all_num;//项目总人数
 
     public int getId() {
         return id;
@@ -115,19 +116,27 @@ public class Project implements Serializable {
         this.entname = entname;
     }
 
-    public String getManagers_num() {
-        return managers_num;
+    public String getManager_num() {
+        return manager_num;
     }
 
-    public void setManagers_num(String managers_num) {
-        this.managers_num = managers_num;
+    public void setManager_num(String manager_num) {
+        this.manager_num = manager_num;
     }
 
-    public String getOperteams_num() {
-        return operteams_num;
+    public String getOperteam_num() {
+        return operteam_num;
     }
 
-    public void setOperteams_num(String operteams_num) {
-        this.operteams_num = operteams_num;
+    public void setOperteam_num(String operteam_num) {
+        this.operteam_num = operteam_num;
+    }
+
+    public String getAll_num() {
+        return all_num;
+    }
+
+    public void setAll_num(String all_num) {
+        this.all_num = all_num;
     }
 }

@@ -81,9 +81,8 @@ public class ProjectDetailListFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getManagers();
+                //getManagers();
                 getOperteam();
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -92,7 +91,7 @@ public class ProjectDetailListFrag extends BaseFragment {
                 refreshlayout.finishLoadMore(2000/*,false*/);//传入false表示加载失败
             }
         });
-        list_refresh.setEnableRefresh(false);
+        //list_refresh.setEnableRefresh(false);
         list_refresh.setEnableLoadMore(false);
 
         projectAdapter.setList(list);
@@ -147,6 +146,8 @@ public class ProjectDetailListFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
+
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<Manager> managers = JSON.parseArray(JSON.toJSONString(jsonArray), Manager.class);
 
@@ -154,12 +155,14 @@ public class ProjectDetailListFrag extends BaseFragment {
                     managerList.addAll(managers);
                     showOperteams();
                 } else {
+                    list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取项目部信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
+                list_refresh.finishRefresh(false);
                 AppToast.show(getContext(),"获取项目部信息出错!");
             }
         });
@@ -179,6 +182,8 @@ public class ProjectDetailListFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
+
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<Operteam> operteams = JSON.parseArray(JSON.toJSONString(jsonArray), Operteam.class);
 
@@ -186,11 +191,13 @@ public class ProjectDetailListFrag extends BaseFragment {
                     operteamList.addAll(operteams);
                     showOperteams();
                 } else {
+                    list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取作业队信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
+                list_refresh.finishRefresh(false);
                 dialog.dismiss();
                 AppToast.show(getContext(),"获取作业队信息出错!");
             }
@@ -202,11 +209,11 @@ public class ProjectDetailListFrag extends BaseFragment {
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
         item0.field1 = "项目部";
-        item0.field1Content = "共"+ project.getManagers_num() +"人";
+        item0.field1Content = "";
         item0.field2 = "项目经理："+ "";
-        item0.field2Content = "成员" + project.getBudget() + "个";
-        item0.field3 = "作业队："+ project.getOperteams_num() + "个";
-        item0.field3Content = "班组" + project.getOperteams_num() +"个";
+        item0.field2Content = "成员" + project.getManager_num() + "个";
+        item0.field3 = "作业队："+ project.getOperteam_num() + "个";
+        item0.field3Content = "共"+ project.getAll_num() +"人";
         item0.isShowArraw = true;
         item0.isShowTwo = true;
 
@@ -215,8 +222,8 @@ public class ProjectDetailListFrag extends BaseFragment {
         for(Operteam operteam : operteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = operteam.getName();;
-            item.field1Content = "-";
-            item.field2 = "人数："+ operteam.getStaff_num() +"人";
+            item.field1Content = "";
+            item.field2 = "人数："+ operteam.getAll_num() +"人";
             item.field2Content = "班组" + operteam.getClassteam_num() +"个";
             item.isShowArraw = true;
 

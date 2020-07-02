@@ -77,7 +77,7 @@ public class BanZuDetailListFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                refreshlayout.finishRefresh(2000/*,false*/);//传入false表示刷新失败
+                getEmployees();
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -123,6 +123,7 @@ public class BanZuDetailListFrag extends BaseFragment {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    list_refresh.finishRefresh(true);
                     JSONArray jsonArray = jr.getJSONArrayData();
                     List<Employee> classetams = JSON.parseArray(JSON.toJSONString(jsonArray), Employee.class);
 
@@ -130,12 +131,14 @@ public class BanZuDetailListFrag extends BaseFragment {
                     employeeList.addAll(classetams);
                     showEmployees();
                 } else {
+                    list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取成员信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
+                list_refresh.finishRefresh(false);
                 AppToast.show(getContext(),"获取成员信息出错!");
             }
         });

@@ -6,6 +6,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
@@ -122,16 +123,17 @@ public class LinkmanActivity extends BaseActivity {
 
     // 初始化数据
     private void initData(Linkman linkman) {
-        addLinkmanId(linkman, 0);
+        addLinkmanId(linkman, 0, "project");
 
         mAdapter.addData(0,mlist);
     }
 
     // 添加节点id，父节点id
-    private void addLinkmanId(Linkman linkman, int pid) {
+    private void addLinkmanId(Linkman linkman, int pid, String totag) {
         int nodeId = mNodeId++;
         linkman.setNodeId(nodeId);
         linkman.setPid(pid);
+        linkman.setTotag(totag);
 
         String name = linkman.getName();
         if (name == null){
@@ -141,67 +143,102 @@ public class LinkmanActivity extends BaseActivity {
         Node<Integer, Linkman> node = new Node(nodeId, pid, name, linkman);
         mlist.add(node);
 
-        List<Linkman> managers = linkman.getManagers();
-
-        if (managers != null) {
-            for (Linkman man : managers) {
-                addLinkmanId(man, nodeId);
-            }
-        }
+//        List<Linkman> managers = linkman.getManagers();
+//
+//        if (managers != null) {
+//            for (Linkman man : managers) {
+//                addLinkmanId(man, nodeId, "manager");
+//            }
+//        }
 
         List<Linkman> operteams = linkman.getOperteams();
 
         if (operteams != null) {
             for (Linkman man : operteams) {
-                addLinkmanId(man, nodeId);
+                addLinkmanId(man, nodeId,"operteam");
             }
         }
 
-        List<Linkman> staffs = linkman.getStaffs();
-
-        if (staffs != null) {
-            for (Linkman man : staffs) {
-                addLinkmanId(man, nodeId);
-            }
-        }
+//        List<Linkman> staffs = linkman.getStaffs();
+//
+//        if (staffs != null) {
+//            for (Linkman man : staffs) {
+//                addLinkmanId(man, nodeId,"staff");
+//            }
+//        }
 
         List<Linkman> classteams = linkman.getClassteams();
 
         if (classteams != null) {
             for (Linkman man : classteams) {
-                addLinkmanId(man, nodeId);
+                addLinkmanId(man, nodeId,"classteam");
             }
         }
 
-        List<Linkman> employees = linkman.getEmployees();
-
-        if (employees != null) {
-            for (Linkman man : employees) {
-                addLinkmanId(man, nodeId);
-            }
-        }
+//        List<Linkman> employees = linkman.getEmployees();
+//
+//        if (employees != null) {
+//            for (Linkman man : employees) {
+//                addLinkmanId(man, nodeId,"employee");
+//            }
+//        }
     }
 
     // 确定
     private void submit() {
-        Linkman linkman = null;
+        ArrayList<Linkman> linkmans = new ArrayList<>();
 
         final List<Node> allNodes = mAdapter.getAllNodes();
+
+        // 如果本节点被选中，则子节点不再被选中
         for (int i = 0; i < allNodes.size(); i++) {
             Node node = allNodes.get(i);
             if (node.isChecked()) {
-                linkman = (Linkman)node.bean;
-                break;
+                setChildChecked(node,false);
             }
         }
 
-        if (linkman != null) {
+        for (int i = 0; i < allNodes.size(); i++) {
+            Node node = allNodes.get(i);
+            if (node.isChecked()) {
+                linkmans.add((Linkman)node.bean);
+            }
+        }
+
+        if (!linkmans.isEmpty()) {
+            String json = linkmansToJson(linkmans);
+
             Intent intent = getIntent();
-            intent.putExtra("linkman", linkman);
+            intent.putExtra("linkman", json);
             setResult(RESULT_OK, intent);
             this.finish();
         } else {
             AppToast.show(this,"未选择接收方");
         }
+    }
+
+    // 设置子节点选中状态
+    private <T,B>void setChildChecked(Node<T,B> node,boolean checked){
+        if(!node.isLeaf()){
+            for (Node childrenNode : node.getChildren()) {
+                childrenNode.setChecked(checked);
+                setChildChecked(childrenNode, checked);
+            }
+        }
+    }
+
+    private String linkmansToJson(ArrayList<Linkman> linkmans){
+        JSONArray jsonArray = new JSONArray();
+
+        for (Linkman linkman : linkmans) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("totag", linkman.getTotag());
+            jsonObject.put("toid", linkman.getId());
+            jsonObject.put("name", linkman.getName());
+
+            jsonArray.add(jsonObject);
+        }
+
+        return jsonArray.toJSONString();
     }
 }

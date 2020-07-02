@@ -7,6 +7,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
@@ -44,6 +46,8 @@ public class MessageAddActivity extends BaseActivity {
 
     private String project_id;
 
+    private JSONArray jsonArray;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_message_add;
@@ -64,7 +68,7 @@ public class MessageAddActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_submit:
-                sendMessage();
+                submit();
                 break;
             case R.id.edt_linkman:
                 addLinkman();
@@ -72,17 +76,31 @@ public class MessageAddActivity extends BaseActivity {
         }
     }
 
-    private void sendMessage() {
+    private void submit() {
         String title = edt_name.getText().toString();
         String content = edt_content.getText().toString();
-        String linkman = edt_linkman.getText().toString();
+        String link = edt_linkman.getText().toString();
 
-        if(StringUtils.isBlank(title) || StringUtils.isBlank(content)
-                || StringUtils.isBlank(linkman)){
-            AppToast.show(this,"请填写完整信息！");
+        if (StringUtils.isBlank(title) || StringUtils.isBlank(content)
+                || StringUtils.isBlank(link)) {
+            AppToast.show(this, "请填写完整信息！");
             return;
         }
 
+        if (jsonArray == null){
+            return;
+        }
+
+        for (int i=0; i<jsonArray.size(); i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String totag = jsonObject.getString("totag");
+            String toid = jsonObject.getString("toid");
+
+            sendMessage(title, content, totag, toid);
+        }
+    }
+
+    private void sendMessage(String title, String content, String totag, String toid) {
         UserCache userCache = UserCache.getInstance(this);
         User user = userCache.get();
 
@@ -92,8 +110,8 @@ public class MessageAddActivity extends BaseActivity {
         param.put("content",content);
         param.put("fromtag",user.getProle());
         param.put("fromid",user.getId()+"");
-        param.put("totag","");
-        param.put("toid","");
+        param.put("totag",totag);
+        param.put("toid",toid);
 
         String jsonParams = JSON.toJSONString(param);
 
@@ -132,11 +150,20 @@ public class MessageAddActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == Constants.RELOAD) {
-                Linkman linkman = (Linkman)data.getSerializableExtra("linkman");
+                String json = data.getStringExtra("linkman");
+                jsonArray = JSON.parseArray(json);
 
-                if (linkman != null) {
-                    edt_linkman.setText(linkman.getName());
+                StringBuilder sb = new StringBuilder();
+                for (int i=0; i<jsonArray.size(); i++){
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    sb.append(jsonObject.getString("name"));
+
+                    if (i < jsonArray.size()-1){
+                        sb.append("\n");
+                    }
                 }
+
+                edt_linkman.setText(sb);
             }
         }
     }

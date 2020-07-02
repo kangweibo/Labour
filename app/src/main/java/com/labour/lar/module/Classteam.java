@@ -13,8 +13,9 @@ public class Classteam implements Serializable {
     private String created_at;//": "2020-05-26T01:55:06.000Z",
     private String updated_at;//": "2020-05-26T01:55:06.000Z",
     private String operteamname;//作业队
-    private String ecounts;//2
-    private String employees_num;
+    private String staff_num;//作业队成员数
+    private String classteam_num;//作业队班组数
+    private String all_num;//作业队总人数
 
     public int getId() {
         return id;
@@ -72,19 +73,27 @@ public class Classteam implements Serializable {
         this.operteamname = operteamname;
     }
 
-    public String getEcounts() {
-        return ecounts;
+    public String getStaff_num() {
+        return staff_num;
     }
 
-    public void setEcounts(String ecounts) {
-        this.ecounts = ecounts;
+    public void setStaff_num(String staff_num) {
+        this.staff_num = staff_num;
     }
 
-    public String getEmployees_num() {
-        return employees_num;
+    public String getClassteam_num() {
+        return classteam_num;
     }
 
-    public void setEmployees_num(String employees_num) {
-        this.employees_num = employees_num;
+    public void setClassteam_num(String classteam_num) {
+        this.classteam_num = classteam_num;
+    }
+
+    public String getAll_num() {
+        return all_num;
+    }
+
+    public void setAll_num(String all_num) {
+        this.all_num = all_num;
     }
 }

@@ -183,7 +183,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = classteam.getName();;
             item.field1Content = "";
-            item.field2 = "人数：" + classteam.getEmployees_num() + "人";;
+            item.field2 = "人数：" + classteam.getAll_num() + "人";;
             item.field2Content = "";
             item.isShowArraw = true;
 

@@ -84,8 +84,8 @@ public class TaskTeamDetailFrag extends BaseFragment {
             } else {
                 company_tv.setText("队长：");
             }
-            if (!TextUtils.isEmpty(operteam.getStaff_num())){
-                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
+            if (!TextUtils.isEmpty(operteam.getAll_num())){
+                type_tv.setText("花名册：" + operteam.getAll_num() + "人");
             } else {
                 type_tv.setText("花名册：0人");
             }

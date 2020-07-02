@@ -12,6 +12,7 @@ public class Linkman implements Serializable {
     private String name;//: "测试项目",
     private String phone;//: "测试项目",
     private int level;//: 1,
+    private String totag;//: "project/manager/operteam/staff/classteam/employee
 
     private List<Linkman> managers;
     private List<Linkman> operteams;
@@ -105,5 +106,13 @@ public class Linkman implements Serializable {
 
     public void setEmployees(List<Linkman> employees) {
         this.employees = employees;
+    }
+
+    public String getTotag() {
+        return totag;
+    }
+
+    public void setTotag(String totag) {
+        this.totag = totag;
     }
 }

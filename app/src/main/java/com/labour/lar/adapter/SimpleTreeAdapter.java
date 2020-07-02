@@ -75,5 +75,37 @@ public class SimpleTreeAdapter extends TreeListViewAdapter
         TextView label;
     }
 
+    @Override
+    protected void setChecked(Node node, boolean checked) {
+        node.setChecked(checked);
+        setChildChecked(node, checked);
+        if(node.getParent()!=null) {
+            setParentChecked(node.getParent(), checked);
+        }
+        notifyDataSetChanged();
+    }
+
+    private void setParentChecked(Node node,boolean checked){
+        if(!checked){
+            node.setChecked(checked);
+            if(node.getParent()!=null)
+                setParentChecked(node.getParent(), checked);
+        }else{
+            List<Node> childrens = node.getChildren();
+            boolean isChecked = true;
+            for (Node children : childrens) {
+                if(!children.isChecked()){
+                    isChecked = false;
+                    break;
+                }
+            }
+            //如果所有自节点都被选中 父节点也选中
+            if(isChecked){
+                node.setChecked(checked);
+            }
+            if(node.getParent()!=null)
+                setParentChecked(node.getParent(), checked);
+        }
+    }
 }
 
