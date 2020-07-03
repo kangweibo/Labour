@@ -16,7 +16,8 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
-import com.labour.lar.module.Employee;
+import com.labour.lar.module.Operteam;
+import com.labour.lar.module.Project;
 import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
@@ -25,9 +26,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 工人
+ * 队部
  */
-public class GongRenDetailFrag extends BaseFragment {
+public class StaffDetailFrag extends BaseFragment {
 
     @BindView(R.id.title_tv)
     TextView title_tv;
@@ -38,12 +39,11 @@ public class GongRenDetailFrag extends BaseFragment {
 
     @BindView(R.id.name_tv)
     TextView name_tv;
-    @BindView(R.id.number_tv)
-    TextView number_tv;
-    @BindView(R.id.classteam_tv)
-    TextView classteam_tv;
-    @BindView(R.id.state_tv)
-    TextView state_tv;
+    @BindView(R.id.company_tv)
+    TextView company_tv;
+    @BindView(R.id.type_tv)
+    TextView type_tv;
+
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
 
@@ -55,46 +55,36 @@ public class GongRenDetailFrag extends BaseFragment {
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
+    String[] titles  = {"人员管理","地图围栏"};
 
-    String[] titles  = {"务工资料","考勤记录","发薪记录"};
-
-    private Employee employee;
+    private Operteam operteam;
 
     @Override
     public int getFragmentLayoutId() {
-        return R.layout.frag_gongren_detail;
+        return R.layout.frag_banzu_detail;
     }
 
     @Override
     public void initView() {
-        title_tv.setText("劳务工人");
+        title_tv.setText("队部");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
-        right_header_btn.setVisibility(View.INVISIBLE);
 
         photo_iv.setImageResource(R.mipmap.picture);
 
-        if (employee!= null){
-            if (!TextUtils.isEmpty(employee.getName())){
-                name_tv.setText(employee.getName());
+        if (operteam!= null){
+            if (!TextUtils.isEmpty(operteam.getName())){
+                name_tv.setText("队长：" + operteam.getName());
             } else {
-                name_tv.setText("");
+                name_tv.setText("队长：");
             }
-            if (!TextUtils.isEmpty(employee.getPhone())){
-                number_tv.setText("手机号：" + employee.getPhone());
+            if (!TextUtils.isEmpty(operteam.getStaff_num())){
+                company_tv.setText("花名册：" + operteam.getStaff_num() + "人");
             } else {
-                number_tv.setText("手机号：未知");
+                company_tv.setText("花名册：0人");
             }
-            if (!TextUtils.isEmpty(employee.getClassteamname())){
-                classteam_tv.setText("班组：" + employee.getClassteamname());
-            } else {
-                classteam_tv.setText("班组：未知");
-            }
-            if (!TextUtils.isEmpty(employee.getStatus())){
-                state_tv.setText("状态：" + employee.getStatus());
-            } else {
-                state_tv.setText("状态：未知");
-            }
+
+            type_tv.setText("");
         }
     }
 
@@ -102,16 +92,22 @@ public class GongRenDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
+        StaffDetailListFrag detailListFrag = new StaffDetailListFrag();
+        detailListFrag.setOperteam(operteam);
 
-        frgs.add(new GongRenDetailListFrag());
-        frgs.add(new GongRenDetailListFrag());
-        frgs.add(new GongRenDetailListFrag());
+//        GisMapFrag gisMapFrag = new GisMapFrag();
+//        gisMapFrag.setProjectId(project_id);
+
+        frgs.add(detailListFrag);
+//        frgs.add(gisMapFrag);
         fragmentPagerAdapter = new MyFragmentPagerAdapter(fm,titles,frgs);
         vpContent.setAdapter(fragmentPagerAdapter);
 
         pstsIndicator.setIndicatorColor(getResources().getColor(R.color.common_blue));
         pstsIndicator.setDividerColor(getResources().getColor(R.color.transparent));
         pstsIndicator.setViewPager(vpContent);
+        pstsIndicator.setVisibility(View.GONE);
+
         vpContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -147,10 +143,10 @@ public class GongRenDetailFrag extends BaseFragment {
     }
 
     /**
-     * 设置工人
-     * @param employee
+     * 设置作业队
+     * @param operteam
      */
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setOperteam(Operteam operteam) {
+        this.operteam = operteam;
     }
 }

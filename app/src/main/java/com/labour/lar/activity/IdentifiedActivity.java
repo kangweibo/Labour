@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -393,7 +394,14 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
             Bitmap bmp = (Bitmap) bundle.get("data");// 解析返回的图片成bitmap
             take_photo_iv.setImageBitmap(bmp);
 
-            String photo = Base64Bitmap.bitmapToBase64(bmp);
+            Matrix matrix = new Matrix();
+            matrix.setScale(0.5f, 0.5f);
+            Bitmap bm = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
+                    bmp.getHeight(), matrix, true);
+
+            Log.d("saveCameraImage", "saveCameraImage: "+ bmp.getByteCount());
+            Log.d("saveCameraImage", "saveCameraImage: "+ bm.getByteCount());
+            String photo = Base64Bitmap.bitmapToBase64(bm);
             bmpTakePhoto = "data:image/png;base64," + photo;
 
             faceMatch();

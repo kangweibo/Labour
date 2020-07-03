@@ -152,7 +152,7 @@ public class BanZuDetailListFrag extends BaseFragment {
             item.field1Content = "";
             item.field2 = "状态：" + employee.getStatus();
             item.field2Content = "";
-            item.isShowArraw = false;
+            item.isShowArraw = true;
 
             list.add(item);
         }

@@ -35,7 +35,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"
                 android:layout_marginTop="15dp"
-                android:text="南苑花园c座"
+                android:text="名字"
                 android:textStyle="bold"
                 android:layout_toLeftOf="@id/state_tv"
                 android:singleLine="true"
@@ -48,22 +48,15 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_14"
                 android:layout_marginTop="3dp"
-                android:text="方正通信" />
+                android:text="手机号" />
 
-            <TextView android:id="@+id/type_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14"
-                android:layout_marginTop="3dp"
-                android:text="写字楼" />
             <TextView android:id="@+id/classteam_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_14"
                 android:layout_marginTop="3dp"
-                android:text="方正通信" />
+                android:text="班组" />
 
             <TextView android:id="@+id/state_tv"
                 android:layout_width="wrap_content"
@@ -71,7 +64,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_14"
                 android:layout_marginTop="3dp"
-                android:text="写字楼" />
+                android:text="状态" />
         </LinearLayout>
 
     </LinearLayout>

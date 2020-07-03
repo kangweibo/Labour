@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.ManagerDetailActivity;
 import com.labour.lar.activity.TaskTeamAddActivity;
 import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
@@ -100,7 +101,9 @@ public class ProjectDetailListFrag extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-
+                    Intent intent = new Intent(context, ManagerDetailActivity.class);
+                    intent.putExtra("project", project);
+                    startActivity(intent);
                 } else{
                     Operteam operteam = operteamList.get(position-1);
                     Intent intent = new Intent(context, TaskTeamDetailActivity.class);

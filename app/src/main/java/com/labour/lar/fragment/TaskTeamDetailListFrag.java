@@ -1,7 +1,6 @@
 package com.labour.lar.fragment;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +19,7 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.BanZuAddActivity;
 import com.labour.lar.activity.BanZuDetailActivity;
+import com.labour.lar.activity.StaffDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
 import com.labour.lar.module.Classteam;
@@ -102,12 +102,18 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Classteam classteam = classteamList.get(position);
+                if (position == 0) {
+                    Intent intent = new Intent(context, StaffDetailActivity.class);
+                    intent.putExtra("operteam", operteam);
+                    startActivity(intent);
+                } else {
+                    Classteam classteam = classteamList.get(position-1);
 
-                Intent intent = new Intent(context, BanZuDetailActivity.class);
-                intent.putExtra("classteam", classteam);
-                intent.putExtra("project_id", operteam.getProject_id()+"");
-                startActivity(intent);
+                    Intent intent = new Intent(context, BanZuDetailActivity.class);
+                    intent.putExtra("classteam", classteam);
+                    intent.putExtra("project_id", operteam.getProject_id() + "");
+                    startActivity(intent);
+                }
             }
         });
 
@@ -167,17 +173,14 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     private void showClassteams() {
         list.clear();
 
-//        ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
-//        item0.field1 = "项目部";
-//        item0.field1Content = "共"+ project.getManagers_num() +"人";
-//        item0.field2 = "项目经理："+ "";
-//        item0.field2Content = "成员" + project.getBudget() + "个";
-//        item0.field3 = "作业队："+ project.getOperteams_num() + "个";
-//        item0.field3Content = "班组" + project.getOperteams_num() +"个";
-//        item0.isShowArraw = true;
-//        item0.isShowTwo = true;
-//
-//        list.add(item0);
+        ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
+        item0.field1 = "队部";
+        item0.field1Content = "";
+        item0.field2 = "成员" + operteam.getStaff_num() + "个";
+        item0.field2Content =  "班组" + operteam.getClassteam_num() +"个";
+        item0.isShowArraw = true;
+
+        list.add(item0);
 
         for(Classteam classteam : classteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();

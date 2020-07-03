@@ -1,9 +1,7 @@
 package com.labour.lar.fragment;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -17,12 +15,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.activity.ProjectAddActivity;
-import com.labour.lar.activity.ProjectDetailActivity;
-import com.labour.lar.adapter.ProjectAdapter;
-import com.labour.lar.cache.UserCache;
+import com.labour.lar.activity.GongRenDetailActivity;
+import com.labour.lar.adapter.ProjectDetailListAdapter;
+import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.module.Employee;
 import com.labour.lar.module.Project;
-import com.labour.lar.module.User;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
@@ -34,20 +31,16 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 
-public class ProjectFrag extends BaseFragment {
-
-    @BindView(R.id.title_tv)
-    TextView title_tv;
-    @BindView(R.id.back_iv)
-    TextView back_iv;
-    @BindView(R.id.right_header_btn)
-    TextView right_header_btn;
+/**
+ * 项目部
+ */
+public class ManagerDetailListFrag extends BaseFragment {
 
     @BindView(R.id.list_refresh)
     SmartRefreshLayout list_refresh;
@@ -58,26 +51,23 @@ public class ProjectFrag extends BaseFragment {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectAdapter projectAdapter;
-    List<Project> projectList = new ArrayList<>();
-    Handler handler;
+    ProjectDetailListAdapter projectAdapter;
+    private List<Employee> employeeList = new ArrayList<>();
+    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
 
+    private Project project;
 
     @Override
     public int getFragmentLayoutId() {
-        return R.layout.frag_project;
+        return R.layout.frag_project_detail_list;
     }
 
     @Override
     public void initView() {
-        back_iv.setVisibility(View.INVISIBLE);
-        title_tv.setText("项目");
-        Drawable d = getResources().getDrawable(R.mipmap.jiahao);
-        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectAdapter(getContext());
+        projectAdapter = new ProjectDetailListAdapter(getContext());
         listView.setAdapter(projectAdapter);
     }
 
@@ -87,7 +77,7 @@ public class ProjectFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getProject();
+                getEmployees();
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -98,45 +88,32 @@ public class ProjectFrag extends BaseFragment {
         });
         list_refresh.setEnableLoadMore(false);
 
-        projectAdapter.setList(projectList);
+        projectAdapter.setList(list);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Project project = projectList.get(position);
+                Employee employee = employeeList.get(position);
 
-                Intent intent = new Intent(context, ProjectDetailActivity.class);
-                intent.putExtra("project", project);
+                Intent intent = new Intent(context, GongRenDetailActivity.class);
+                intent.putExtra("employee", employee);
                 startActivity(intent);
             }
         });
 
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getProject();
-            }
-        },800);
+        getEmployees();
     }
 
-    @OnClick({R.id.right_header_btn})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.right_header_btn:
-                addProject();
-                break;
+    private void getEmployees() {
+        if (project == null){
+            return;
         }
-    }
 
-    private void getProject() {
-        UserCache userCache = UserCache.getInstance(getContext());
-        User user = userCache.get();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("id",project.getId());
         String jsonParams =jsonObject.toJSONString();
 
-        String url = Constants.HTTP_BASE + "/api/projects";
+        String url = Constants.HTTP_BASE + "/api/managers";
         ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
         dialog.show();
 
@@ -147,29 +124,47 @@ public class ProjectFrag extends BaseFragment {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     list_refresh.finishRefresh(true);
-
                     JSONArray jsonArray = jr.getJSONArrayData();
-                    List<Project> projects = JSON.parseArray(JSON.toJSONString(jsonArray), Project.class);
+                    List<Employee> classetams = JSON.parseArray(JSON.toJSONString(jsonArray), Employee.class);
 
-                    projectList.clear();
-                    projectList.addAll(projects);
-                    projectAdapter.notifyDataSetChanged();
+                    employeeList.clear();
+                    employeeList.addAll(classetams);
+                    showEmployees();
                 } else {
                     list_refresh.finishRefresh(false);
-                    AppToast.show(getContext(),"获取项目信息失败!");
+                    AppToast.show(getContext(),"获取成员信息失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 list_refresh.finishRefresh(false);
-                AppToast.show(getContext(),"获取项目信息出错!");
+                AppToast.show(getContext(),"获取成员信息出错!");
             }
         });
     }
 
-    private void addProject() {
-        Intent intent = new Intent(context, ProjectAddActivity.class);
-        startActivity(intent);
+    private void showEmployees() {
+        list.clear();
+        for(Employee employee : employeeList){
+            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            item.field1 = employee.getName();;
+            item.field1Content = "";
+            item.field2 = "状态：" + employee.getStatus();
+            item.field2Content = "";
+            item.isShowArraw = true;
+
+            list.add(item);
+        }
+
+        projectAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 设置项目
+     * @param project
+     */
+    public void setProject(Project project) {
+        this.project = project;
     }
 }
