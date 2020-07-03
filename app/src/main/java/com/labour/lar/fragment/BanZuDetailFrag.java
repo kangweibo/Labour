@@ -83,8 +83,8 @@ public class BanZuDetailFrag extends BaseFragment {
             } else {
                 company_tv.setText("组长：");
             }
-            if (!TextUtils.isEmpty(classteam.getAll_num())){
-                type_tv.setText("花名册：" + classteam.getAll_num() + "人");
+            if (!TextUtils.isEmpty(classteam.getEmployees_num())){
+                type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");
             } else {
                 type_tv.setText("花名册：0人");
             }

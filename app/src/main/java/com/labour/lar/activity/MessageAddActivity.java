@@ -13,7 +13,6 @@ import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.module.Linkman;
 import com.labour.lar.module.User;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
@@ -157,12 +156,12 @@ public class MessageAddActivity extends BaseActivity {
                 for (int i=0; i<jsonArray.size(); i++){
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     sb.append(jsonObject.getString("name"));
-
-                    if (i < jsonArray.size()-1){
-                        sb.append("\n");
-                    }
+                    break;
                 }
 
+                sb.append("等");
+                sb.append(jsonArray.size());
+                sb.append("个接收方");
                 edt_linkman.setText(sb);
             }
         }

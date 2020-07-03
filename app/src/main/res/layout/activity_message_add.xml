@@ -89,7 +89,10 @@
             android:visibility="gone"/>
         <TextView android:id="@+id/edt_linkman"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:maxLines="3"
+            android:scrollbars="vertical"
             android:gravity="center_vertical"
             android:textColor="@color/black"
             android:hint="请选择接收方"

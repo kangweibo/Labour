@@ -161,41 +161,41 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         locationManager.startLocation();
     }
 
-    private void showMoreDialog(){
-         dialog = new BottomSelectDialog(context,new BottomSelectDialog.BottomSelectDialogListener() {
-            @Override
-            public int getLayout() {
-                return R.layout.menu_kaoqin;
-            }
-            @Override
-            public void initView(View view) {
-                View.OnClickListener onClickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int id = v.getId();
-                        if(id == R.id.refresh_btn){
-                            location_tv.setText("正在重新定位，请稍后...");
-                            locationManager.startLocation();
-                        } else if(id == R.id.refresh_sign_btn){
-                            loadSignTime();
-                        }
-
-                        dialog.dismiss();
-                    }
-                };
-
-                View refresh_btn = view.findViewById(R.id.refresh_btn);
-                View refresh_sign_btn = view.findViewById(R.id.refresh_sign_btn);
-                refresh_btn.setOnClickListener(onClickListener);
-                refresh_sign_btn.setOnClickListener(onClickListener);
-            }
-            @Override
-            public void onClick(Dialog dialog, int rate) {
-
-            }
-        });
-        dialog.showAtLocation(mRootView,Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-    }
+//    private void showMoreDialog(){
+//         dialog = new BottomSelectDialog(context,new BottomSelectDialog.BottomSelectDialogListener() {
+//            @Override
+//            public int getLayout() {
+//                return R.layout.menu_kaoqin;
+//            }
+//            @Override
+//            public void initView(View view) {
+//                View.OnClickListener onClickListener = new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        int id = v.getId();
+//                        if(id == R.id.refresh_btn){
+//                            location_tv.setText("正在重新定位，请稍后...");
+//                            locationManager.startLocation();
+//                        } else if(id == R.id.refresh_sign_btn){
+//                            loadSignTime();
+//                        }
+//
+//                        dialog.dismiss();
+//                    }
+//                };
+//
+//                View refresh_btn = view.findViewById(R.id.refresh_btn);
+//                View refresh_sign_btn = view.findViewById(R.id.refresh_sign_btn);
+//                refresh_btn.setOnClickListener(onClickListener);
+//                refresh_sign_btn.setOnClickListener(onClickListener);
+//            }
+//            @Override
+//            public void onClick(Dialog dialog, int rate) {
+//
+//            }
+//        });
+//        dialog.showAtLocation(mRootView,Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+//    }
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
