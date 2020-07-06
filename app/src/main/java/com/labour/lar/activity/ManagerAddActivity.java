@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import com.labour.lar.R;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.util.Utils;
+import com.labour.lar.widget.BottomListDialog;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
@@ -26,8 +28,10 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -49,8 +53,8 @@ public class ManagerAddActivity extends BaseActivity {
     EditText edt_phone;
     @BindView(R.id.edt_password)
     EditText edt_password;
-    @BindView(R.id.edt_prole)
-    EditText edt_prole;
+    @BindView(R.id.txt_prole)
+    TextView txt_prole;
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
     @BindView(R.id.take_photo_iv)
@@ -64,6 +68,9 @@ public class ManagerAddActivity extends BaseActivity {
     private File file1;
     private File file2;
     private static final int REQUEST_CODE_CAMERA = 102;
+
+    private List<String> proles = new ArrayList<>();
+    private Map<String, String> prolesMap = new HashMap<>();
 
     @Override
     public int getActivityLayoutId() {
@@ -83,9 +90,11 @@ public class ManagerAddActivity extends BaseActivity {
         } else {
             title_tv.setText("添加成员");
         }
+
+        initData();
     }
 
-    @OnClick({R.id.back_iv,R.id.take_photo_iv,R.id.btn_submit})
+    @OnClick({R.id.back_iv,R.id.take_photo_iv,R.id.txt_prole,R.id.btn_submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -104,6 +113,9 @@ public class ManagerAddActivity extends BaseActivity {
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file2.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_BANK_CARD);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
+                break;
+            case R.id.txt_prole:
+                showMoreDialog();
                 break;
             case R.id.btn_submit:
                 submit();
@@ -179,16 +191,45 @@ public class ManagerAddActivity extends BaseActivity {
         }
     }
 
+    private void initData() {
+        proles.add("项目经理");
+        proles.add("项目成员");
+        proles.add("项目定额员");
+
+        prolesMap.put("项目经理", "");
+        prolesMap.put("项目成员", "");
+        prolesMap.put("项目定额员", "");
+    }
+
+    private void showMoreDialog(){
+        BottomListDialog dialog = new BottomListDialog(this, "请选择角色", proles,
+                new BottomListDialog.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String prole = proles.get(position);
+                txt_prole.setText(prole);
+            }
+        });
+
+        dialog.showAtLocation(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
     private void addPerson() {
         String name = edt_name.getText().toString();
         String duty = edt_duty.getText().toString();
         String phone = edt_phone.getText().toString();
         String passwd = edt_password.getText().toString();
-        String prole = edt_prole.getText().toString();
+        String prole = txt_prole.getText().toString();
+        String realProle = prolesMap.get(prole);
 
         if(StringUtils.isBlank(name) || StringUtils.isBlank(duty) || StringUtils.isBlank(phone)
                 || StringUtils.isBlank(passwd) || StringUtils.isBlank(prole)){
             AppToast.show(this,"请填写完整人员信息！");
+            return;
+        }
+
+        if(StringUtils.isBlank(realProle)){
+            AppToast.show(this,"角色出错！");
             return;
         }
 
@@ -204,7 +245,7 @@ public class ManagerAddActivity extends BaseActivity {
         param.put("duty",duty);
         param.put("phone",phone);
         param.put("passwd",passwd);
-        param.put("prole",prole);
+        param.put("prole",realProle);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/manager_new";
