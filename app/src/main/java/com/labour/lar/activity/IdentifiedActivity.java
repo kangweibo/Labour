@@ -1,39 +1,28 @@
 package com.labour.lar.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
-import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
-import com.labour.lar.MainActivity;
 import com.labour.lar.R;
-import com.labour.lar.cache.ACache;
-import com.labour.lar.cache.GlideCacheUtil;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.User;
 import com.labour.lar.ocr.BaiDuIDCardResult;
@@ -50,11 +39,9 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.io.File;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -240,7 +227,7 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                             photo_iv.setImageBitmap(bitmap);
 
                             idCardInfo.put("avatar","data:image/png;base64," + photo);
-                            bmpIdcardPhoto = idCardInfo.get("avatar");
+                            bmpIdcardPhoto = photo;
 
                             faceMatch();
                         }
@@ -308,7 +295,6 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                         }
                     }
                     Log.i("idcard", result.toString());
-                    //AppToast.show(IdentifiedActivity.this, result.toString());
                 }
                 dialog.dismiss();
             }
@@ -373,16 +359,16 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                     User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
                     UserCache userCache = UserCache.getInstance(IdentifiedActivity.this);
                     userCache.put(ub);
-//                    startActivity(new Intent(RegistActivity.this, MainActivity.class));
+                    AppToast.show(IdentifiedActivity.this,"身份认证成功!");
                     finish();
                 } else {
-                    AppToast.show(IdentifiedActivity.this,jr.getMsg());
+                    AppToast.show(IdentifiedActivity.this,"身份认证失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
-                AppToast.show(IdentifiedActivity.this,"提交出错!");
+                AppToast.show(IdentifiedActivity.this,"身份认证出错!");
             }
         });
     }
@@ -393,18 +379,31 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         if (bundle != null) {
             Bitmap bmp = (Bitmap) bundle.get("data");// 解析返回的图片成bitmap
             take_photo_iv.setImageBitmap(bmp);
+            int maxSize = 102400;
 
-            Matrix matrix = new Matrix();
-            matrix.setScale(0.5f, 0.5f);
-            Bitmap bm = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
-                    bmp.getHeight(), matrix, true);
+            if (bmp != null) {
+                Log.d("saveCameraImage", "getHeight: " + bmp.getHeight() + " getWidth: " + bmp.getWidth());
+                Log.d("saveCameraImage", "saveCameraImage: " + bmp.getByteCount());
 
-            Log.d("saveCameraImage", "saveCameraImage: "+ bmp.getByteCount());
-            Log.d("saveCameraImage", "saveCameraImage: "+ bm.getByteCount());
-            String photo = Base64Bitmap.bitmapToBase64(bm);
-            bmpTakePhoto = "data:image/png;base64," + photo;
+                int size = bmp.getByteCount();
 
-            faceMatch();
+                if (size > maxSize){
+                    double scale = Math.sqrt(maxSize * 1.0 / size);
+
+                    Matrix matrix = new Matrix();
+                    matrix.setScale((float) scale, (float) scale);
+                    bmp = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(),
+                            bmp.getHeight(), matrix, true);
+                }
+
+                Log.d("saveCameraImage", "getHeight: " + bmp.getHeight() + " getWidth: " + bmp.getWidth());
+                Log.d("saveCameraImage", "saveCameraImage: " + bmp.getByteCount());
+
+                String photo = Base64Bitmap.bitmapToBase64(bmp);
+                bmpTakePhoto = photo;
+
+                faceMatch();
+            }
         }
     }
 

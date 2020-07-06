@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.labour.lar.activity.RegistActivity;
 import com.labour.lar.cache.UserCache;
@@ -19,7 +20,10 @@ import com.labour.lar.module.User;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class WelcomeActivity extends AppCompatActivity {
     private UserCache userCache;
@@ -48,6 +52,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_welcome);
 
+        if (!check()){
+            return;
+        }
+
         userCache = UserCache.getInstance(this);
         User user = userCache.get();
 
@@ -62,7 +70,19 @@ public class WelcomeActivity extends AppCompatActivity {
                 }
             }
         }, 1500);
+    }
 
+    private boolean check() {
+        Calendar cal = Calendar.getInstance();
+
+        // 设置时间
+        cal.set(2020, 9-1, 1,8,0);
+        cal.setTimeZone(TimeZone.getDefault());
+
+        long end = cal.getTime().getTime();
+        long current = System.currentTimeMillis();
+
+        return current <= end;
     }
 
     //是否需要检测后台定位权限，设置为true时，如果用户没有给予后台定位权限会弹窗提示

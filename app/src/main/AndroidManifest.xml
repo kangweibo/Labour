@@ -144,6 +144,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
+            android:name="com.labour.lar.activity.ManagerAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.BankcardAddActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
             android:name="com.labour.lar.activity.LinkmanActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>

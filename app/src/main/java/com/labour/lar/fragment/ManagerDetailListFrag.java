@@ -16,6 +16,7 @@ import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.GongRenDetailActivity;
+import com.labour.lar.activity.ManagerAddActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
 import com.labour.lar.module.Employee;
@@ -166,5 +167,12 @@ public class ManagerDetailListFrag extends BaseFragment {
      */
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    public void addManager() {
+        Intent intent = new Intent(context, ManagerAddActivity.class);
+        //intent.putExtra("type", 1);
+        //intent.putExtra("classteam_id", classteam.getId() + "");
+        startActivityForResult(intent, Constants.RELOAD);
     }
 }

@@ -48,10 +48,11 @@ public class ManagerDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
+    private ManagerDetailListFrag detailListFrag;
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
-    FragmentManager fm;
-    String[] titles  = {"人员管理","地图围栏"};
+    private FragmentManager fm;
+    private String[] titles  = {"人员管理","地图围栏"};
 
     private Project project;
 
@@ -87,7 +88,7 @@ public class ManagerDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
-        ManagerDetailListFrag detailListFrag = new ManagerDetailListFrag();
+        detailListFrag = new ManagerDetailListFrag();
         detailListFrag.setProject(project);
 
 //        GisMapFrag gisMapFrag = new GisMapFrag();
@@ -127,11 +128,14 @@ public class ManagerDetailFrag extends BaseFragment {
             }
         }
     }
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv, R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 getActivity().finish();
+                break;
+            case R.id.right_header_btn:
+                addManager();
                 break;
 
         }
@@ -143,5 +147,9 @@ public class ManagerDetailFrag extends BaseFragment {
      */
     public void setProject(Project project) {
         this.project = project;
+    }
+
+    private void addManager() {
+        detailListFrag.addManager();
     }
 }

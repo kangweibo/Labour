@@ -102,4 +102,7 @@ dependencies {
 
     // 扫码
     implementation 'com.github.yuzhiqiang1993:zxing:2.2.5'
+
+    // 树形列表
+    implementation 'com.github.zhangke3016:MultilevelTreeList:1.0.2'
 }

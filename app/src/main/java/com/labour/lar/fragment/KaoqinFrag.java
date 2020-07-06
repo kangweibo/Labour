@@ -68,8 +68,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    BottomSelectDialog dialog;
-
     @BindView(R.id.location_tv)
     TextView location_tv;
     @BindView(R.id.identified_tip_tv)
@@ -120,7 +118,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         if (!checkIdentified()) {
             identified_tip_tv.setVisibility(View.VISIBLE);
             shot_tip_tv.setVisibility(View.GONE);
-            return;
+//            return;
         }
 
         locationManager = new LocationManager(context,true,1000,this,this);
@@ -160,42 +158,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         location_tv.setText("正在重新定位，请稍后...");
         locationManager.startLocation();
     }
-
-//    private void showMoreDialog(){
-//         dialog = new BottomSelectDialog(context,new BottomSelectDialog.BottomSelectDialogListener() {
-//            @Override
-//            public int getLayout() {
-//                return R.layout.menu_kaoqin;
-//            }
-//            @Override
-//            public void initView(View view) {
-//                View.OnClickListener onClickListener = new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        int id = v.getId();
-//                        if(id == R.id.refresh_btn){
-//                            location_tv.setText("正在重新定位，请稍后...");
-//                            locationManager.startLocation();
-//                        } else if(id == R.id.refresh_sign_btn){
-//                            loadSignTime();
-//                        }
-//
-//                        dialog.dismiss();
-//                    }
-//                };
-//
-//                View refresh_btn = view.findViewById(R.id.refresh_btn);
-//                View refresh_sign_btn = view.findViewById(R.id.refresh_sign_btn);
-//                refresh_btn.setOnClickListener(onClickListener);
-//                refresh_sign_btn.setOnClickListener(onClickListener);
-//            }
-//            @Override
-//            public void onClick(Dialog dialog, int rate) {
-//
-//            }
-//        });
-//        dialog.showAtLocation(mRootView,Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
-//    }
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
@@ -311,7 +273,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             }
         });
     }
-
 
     //获取签到时间
     public void getTime(int id,OnLoadTimeListener loadTimeCallback) {
@@ -513,8 +474,12 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
     // 显示活体检测页面
     private void showFaceActivity(){
-        Intent intent = new Intent(getContext(), FaceLivenessExpActivity.class);
-        startActivityForResult(intent,REQUEST_CODE_FACE);
+        if (checkIdentified()) {
+            Intent intent = new Intent(getContext(), FaceLivenessExpActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_FACE);
+        } else {
+            AppToast.show(context,"请先进行实名认证!");
+        }
     }
 
     @Override

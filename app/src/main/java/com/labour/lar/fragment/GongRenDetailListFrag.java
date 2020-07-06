@@ -83,7 +83,7 @@ public class GongRenDetailListFrag extends BaseFragment {
             item.field2Content = "南苑花";
             item.field3 = "南苑花园c座";
             item.field3Content = "南苑花园";
-            item.isShowArraw = true;
+            item.isShowArraw = false;
 
             list.add(item);
         }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_header"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/star_icon"
+                android:drawablePadding="4dp"
+                android:text="银行卡正面"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:layout_centerInParent="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/photo_iv"
+                    android:layout_width="160dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/bankcard_big"
+                    android:layout_margin="20dp"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/take_photo_iv"
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="20dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/camera_icon"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="银行卡号"/>
+                <EditText android:id="@+id/edt_bankcard_num"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:hint="请填写银行卡号"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text="开&#160;&#160;户&#160;&#160;行"/>
+                <EditText android:id="@+id/edt_bankname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:hint="请填写开户行"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:text=""/>/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+        </LinearLayout>
+
+        <Button android:id="@+id/btn_submit"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textColor="@color/white"
+            android:background="@drawable/selector_button"
+            android:text="提交"
+            android:textSize="@dimen/text_size_16"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/common_margin_right"
+            android:layout_marginLeft="@dimen/common_margin_left"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"/>
+    </RelativeLayout>
+</LinearLayout>
