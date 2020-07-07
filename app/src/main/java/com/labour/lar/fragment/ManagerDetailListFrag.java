@@ -1,9 +1,11 @@
 package com.labour.lar.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,6 +24,7 @@ import com.labour.lar.adapter.ProjectListItemWarp;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.Project;
 import com.labour.lar.util.AjaxResult;
+import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -37,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 项目部
@@ -57,6 +62,8 @@ public class ManagerDetailListFrag extends BaseFragment {
     private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
 
     private Project project;
+    private Employee employeeSelect;
+    private BottomSelectDialog dialog;
 
     @Override
     public int getFragmentLayoutId() {
@@ -99,6 +106,15 @@ public class ManagerDetailListFrag extends BaseFragment {
                 Intent intent = new Intent(context, GongRenDetailActivity.class);
                 intent.putExtra("employee", employee);
                 startActivity(intent);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                employeeSelect = employeeList.get(position);
+                showMoreDialog();
+                return true;
             }
         });
 
@@ -169,10 +185,109 @@ public class ManagerDetailListFrag extends BaseFragment {
         this.project = project;
     }
 
-    public void addManager() {
+    private void showMoreDialog(){
+        dialog = new BottomSelectDialog(getActivity(),new BottomSelectDialog.BottomSelectDialogListener() {
+            @Override
+            public int getLayout() {
+                return R.layout.menu_fence;
+            }
+            @Override
+            public void initView(View view) {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int id = v.getId();
+                        if(id == R.id.txt_update){
+                            updatePerson(employeeSelect);
+                        } else if(id == R.id.txt_delete){
+                            deletePerson(employeeSelect);
+                        }
+
+                        dialog.dismiss();
+                    }
+                };
+
+                TextView txt_see = view.findViewById(R.id.txt_see);
+                TextView txt_update = view.findViewById(R.id.txt_update);
+                TextView txt_delete = view.findViewById(R.id.txt_delete);
+                TextView txt_cancel = view.findViewById(R.id.txt_cancel);
+                txt_see.setVisibility(View.GONE);
+                txt_update.setText("更新项目成员");
+                txt_delete.setText("删除项目成员");
+
+                txt_update.setOnClickListener(onClickListener);
+                txt_delete.setOnClickListener(onClickListener);
+                txt_cancel.setOnClickListener(onClickListener);
+            }
+            @Override
+            public void onClick(Dialog dialog, int rate) {
+
+            }
+        });
+
+        dialog.showAtLocation(mRootView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    public void addPerson() {
         Intent intent = new Intent(context, ManagerAddActivity.class);
-        //intent.putExtra("type", 1);
-        //intent.putExtra("classteam_id", classteam.getId() + "");
+        intent.putExtra("type", 0);
+        intent.putExtra("state", 0);
+        intent.putExtra("project_id", project.getId()+"");
         startActivityForResult(intent, Constants.RELOAD);
+    }
+
+    public void updatePerson(Employee person) {
+        if (person == null){
+            return;
+        }
+
+        String manager_id = person.getId()+"";
+        Intent intent = new Intent(context, ManagerAddActivity.class);
+        intent.putExtra("type", 0);
+        intent.putExtra("state", 1);
+        intent.putExtra("project_id", project.getId()+"");
+        intent.putExtra("manager_id", manager_id);
+        startActivityForResult(intent, Constants.RELOAD);
+    }
+
+    public void deletePerson(Employee person) {
+        if (person == null){
+            return;
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("manager_id",person.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/manager_delete";
+        ProgressDialog dialog = ProgressDialog.createDialog(getActivity());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(getActivity(),"删除项目成员成功!");
+                    getEmployees();
+                } else {
+                    AppToast.show(getActivity(),"删除项目成员失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getActivity(),"删除项目成员出错!");
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 重新加载数据
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            getEmployees();
+        }
     }
 }

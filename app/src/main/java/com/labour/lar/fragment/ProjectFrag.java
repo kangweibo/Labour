@@ -117,7 +117,7 @@ public class ProjectFrag extends BaseFragment {
             public void run() {
                 getProject();
             }
-        },800);
+        },1000);
     }
 
     @OnClick({R.id.right_header_btn})

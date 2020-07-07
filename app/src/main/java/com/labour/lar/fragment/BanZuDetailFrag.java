@@ -51,6 +51,7 @@ public class BanZuDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
+    private BanZuDetailListFrag banZuDetailListFrag;
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
@@ -95,7 +96,7 @@ public class BanZuDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
-        BanZuDetailListFrag banZuDetailListFrag = new BanZuDetailListFrag();
+        banZuDetailListFrag = new BanZuDetailListFrag();
         banZuDetailListFrag.setClassteam(classteam);
 
         GisMapFrag gisMapFrag = new GisMapFrag();
@@ -133,13 +134,15 @@ public class BanZuDetailFrag extends BaseFragment {
             }
         }
     }
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv, R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 getActivity().finish();
                 break;
-
+            case R.id.right_header_btn:
+                addPerson();
+                break;
         }
     }
 
@@ -153,5 +156,9 @@ public class BanZuDetailFrag extends BaseFragment {
 
     public void setProjectId(String project_id){
         this.project_id = project_id;
+    }
+
+    public void addPerson() {
+        banZuDetailListFrag.addPerson();
     }
 }

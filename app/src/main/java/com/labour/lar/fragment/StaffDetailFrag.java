@@ -52,6 +52,7 @@ public class StaffDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
+    private StaffDetailListFrag detailListFrag;
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
@@ -92,7 +93,7 @@ public class StaffDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
-        StaffDetailListFrag detailListFrag = new StaffDetailListFrag();
+        detailListFrag = new StaffDetailListFrag();
         detailListFrag.setOperteam(operteam);
 
 //        GisMapFrag gisMapFrag = new GisMapFrag();
@@ -132,11 +133,14 @@ public class StaffDetailFrag extends BaseFragment {
             }
         }
     }
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv, R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 getActivity().finish();
+                break;
+            case R.id.right_header_btn:
+                addPerson();
                 break;
 
         }
@@ -148,5 +152,9 @@ public class StaffDetailFrag extends BaseFragment {
      */
     public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
+    }
+
+    public void addPerson() {
+        detailListFrag.addPerson();
     }
 }

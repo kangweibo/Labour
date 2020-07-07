@@ -47,7 +47,7 @@ public class LocationService extends Service implements AMapLocationListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        locationManager = new LocationManager(this,false,15 * 1000,this);
+        locationManager = new LocationManager(this,false,120 * 1000,this);
     }
 
     @Nullable

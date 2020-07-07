@@ -60,10 +60,15 @@ public class ManagerAddActivity extends BaseActivity {
     @BindView(R.id.take_photo_iv)
     ImageView take_photo_iv;
 
-    private int type;// 0：添加；1：更新
+    private int type;// 0：项目；1：作业队；2：班组
+    private int state;// 0：添加；1：修改
     private String classteam_id;
     private String operteam_id;
     private String project_id;
+
+    private String employee_id;
+    private String staff_id;
+    private String manager_id;
 
     private File file1;
     private File file2;
@@ -81,15 +86,31 @@ public class ManagerAddActivity extends BaseActivity {
     public void afterInitLayout() {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
+        state = intent.getIntExtra("state", 0);
         classteam_id = intent.getStringExtra("classteam_id");
         operteam_id = intent.getStringExtra("operteam_id");
         project_id = intent.getStringExtra("project_id");
+        employee_id = intent.getStringExtra("employee_id");
+        staff_id = intent.getStringExtra("staff_id");
+        manager_id = intent.getStringExtra("manager_id");
+
+        String strState, strType;
+        if (state == 0) {
+            strState = "添加";
+        } else {
+            strState = "修改";
+        }
 
         if (type == 0) {
-            title_tv.setText("添加成员");
+            strType = "项目成员";
+        } else if (type == 1){
+            strType = "作业队成员";
+            title_tv.setText("添加作业队成员");
         } else {
-            title_tv.setText("添加成员");
+            strType = "班组成员";
         }
+
+        title_tv.setText(strState + strType);
 
         initData();
     }
@@ -186,19 +207,37 @@ public class ManagerAddActivity extends BaseActivity {
 //    }
 
     private void submit() {
-        if (type == 0){
+        if (state == 0) {
             addPerson();
+        } else {
+            updatePerson();
         }
     }
 
     private void initData() {
-        proles.add("项目经理");
-        proles.add("项目成员");
-        proles.add("项目定额员");
+        if (type == 0) {
+            proles.add("项目经理");
+            proles.add("项目成员");
+            proles.add("项目定额员");
 
-        prolesMap.put("项目经理", "");
-        prolesMap.put("项目成员", "");
-        prolesMap.put("项目定额员", "");
+            prolesMap.put("项目经理", "project_manager");
+            prolesMap.put("项目成员", "manager");
+            prolesMap.put("项目定额员", "project_quota");
+        } else if (type == 1){
+            proles.add("作业队长");
+            proles.add("作业队成员");
+            proles.add("作业队定额员");
+
+            prolesMap.put("作业队长", "operteam_manager");
+            prolesMap.put("作业队成员", "staff");
+            prolesMap.put("作业队定额员", "operteam_quota");
+        } else {
+            proles.add("班组长");
+            proles.add("工人");
+
+            prolesMap.put("班组长", "classteam_manager");
+            prolesMap.put("工人", "employee");
+        }
     }
 
     private void showMoreDialog(){
@@ -233,22 +272,29 @@ public class ManagerAddActivity extends BaseActivity {
             return;
         }
 
-        if(StringUtils.isBlank(operteam_id)){
-            AppToast.show(this,"作业队id为空！");
-            return;
-        }
-
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
-        param.put("project_id",project_id);
         param.put("name",name);
         param.put("duty",duty);
         param.put("phone",phone);
         param.put("passwd",passwd);
         param.put("prole",realProle);
+
+        String api;
+        if (type == 0){
+            api = "/api/manager_new";
+            param.put("project_id",project_id);
+        } else if (type == 1){
+            api = "/api/staff_new";
+            param.put("operteam_id",operteam_id);
+        } else {
+            api = "/api/employee_new";
+            param.put("classteam_id",classteam_id);
+        }
+
         String jsonParams = JSON.toJSONString(param);
 
-        String url = Constants.HTTP_BASE + "/api/manager_new";
+        String url = Constants.HTTP_BASE + api;
         ProgressDialog dialog = ProgressDialog.createDialog(this);
         dialog.show();
 
@@ -269,6 +315,75 @@ public class ManagerAddActivity extends BaseActivity {
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(ManagerAddActivity.this,"人员录入出错!");
+            }
+        });
+    }
+
+    private void updatePerson() {
+        String name = edt_name.getText().toString();
+        String duty = edt_duty.getText().toString();
+        String phone = edt_phone.getText().toString();
+        String passwd = edt_password.getText().toString();
+        String prole = txt_prole.getText().toString();
+        String realProle = prolesMap.get(prole);
+
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty) || StringUtils.isBlank(phone)
+                || StringUtils.isBlank(passwd) || StringUtils.isBlank(prole)){
+            AppToast.show(this,"请填写完整人员信息！");
+            return;
+        }
+
+        if(StringUtils.isBlank(realProle)){
+            AppToast.show(this,"角色出错！");
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("token","063d91b4f57518ff");
+        param.put("name",name);
+        param.put("duty",duty);
+        param.put("phone",phone);
+        param.put("passwd",passwd);
+        param.put("prole",realProle);
+
+        String api;
+        if (type == 0){
+            api = "/api/manager_update";
+            param.put("project_id",project_id);
+            param.put("manager_id",manager_id);
+        } else if (type == 1){
+            api = "/api/staff_update";
+            param.put("operteam_id",operteam_id);
+            param.put("staff_id",staff_id);
+        } else {
+            api = "/api/employee_update";
+            param.put("classteam_id",classteam_id);
+            param.put("employee_id",employee_id);
+        }
+
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + api;
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(ManagerAddActivity.this,"人员修改成功");
+                    setResult(RESULT_OK, getIntent());
+                    finish();
+                } else {
+                    AppToast.show(ManagerAddActivity.this,"人员修改失败");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(ManagerAddActivity.this,"人员修改出错!");
             }
         });
     }

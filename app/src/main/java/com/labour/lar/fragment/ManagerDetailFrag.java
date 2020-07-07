@@ -135,7 +135,7 @@ public class ManagerDetailFrag extends BaseFragment {
                 getActivity().finish();
                 break;
             case R.id.right_header_btn:
-                addManager();
+                addPerson();
                 break;
 
         }
@@ -149,7 +149,7 @@ public class ManagerDetailFrag extends BaseFragment {
         this.project = project;
     }
 
-    private void addManager() {
-        detailListFrag.addManager();
+    private void addPerson() {
+        detailListFrag.addPerson();
     }
 }
