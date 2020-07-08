@@ -15,14 +15,16 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 班组
+ * 项目部
  */
 public class ManagerDetailFrag extends BaseFragment {
 
@@ -81,6 +83,19 @@ public class ManagerDetailFrag extends BaseFragment {
                 company_tv.setText("花名册：0人");
             }
             type_tv.setText("");
+        }
+
+        right_header_btn.setVisibility(View.INVISIBLE);
+
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo != null) {
+            String prole = userInfo.getProle();
+
+            if (prole != null){
+                if (prole.equals("project_manager") || prole.equals("project_quota")){
+                    right_header_btn.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 

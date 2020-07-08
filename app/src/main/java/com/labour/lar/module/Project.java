@@ -19,6 +19,7 @@ public class Project implements Serializable {
     private String manager_num;//成员人数
     private String operteam_num;//作业队数量
     private String all_num;//项目总人数
+    private String pm;//项目经理名称
 
     public int getId() {
         return id;
@@ -138,5 +139,13 @@ public class Project implements Serializable {
 
     public void setAll_num(String all_num) {
         this.all_num = all_num;
+    }
+
+    public String getPm() {
+        return pm;
+    }
+
+    public void setPm(String pm) {
+        this.pm = pm;
     }
 }

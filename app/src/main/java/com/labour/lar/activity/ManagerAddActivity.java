@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.cache.UserInfoCache;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.util.Utils;
@@ -215,25 +217,42 @@ public class ManagerAddActivity extends BaseActivity {
     }
 
     private void initData() {
+        UserInfo userInfo = UserInfoCache.getInstance(this).get();
+        if (userInfo == null) {
+            return;
+        }
+
+        String prole = userInfo.getProle();
+
+        if (prole == null){
+            return;
+        }
+
         if (type == 0) {
             proles.add("项目经理");
-            proles.add("项目成员");
             proles.add("项目定额员");
+            proles.add("项目成员");
 
             prolesMap.put("项目经理", "project_manager");
-            prolesMap.put("项目成员", "manager");
             prolesMap.put("项目定额员", "project_quota");
+            prolesMap.put("项目成员", "manager");
         } else if (type == 1){
-            proles.add("作业队长");
-            proles.add("作业队成员");
-            proles.add("作业队定额员");
+            if (prole.equals("project_manager") || prole.equals("project_quota")){
+                proles.add("作业队长");
+                proles.add("作业队定额员");
+            } else {
+                proles.add("作业队成员");
+            }
 
             prolesMap.put("作业队长", "operteam_manager");
-            prolesMap.put("作业队成员", "staff");
             prolesMap.put("作业队定额员", "operteam_quota");
+            prolesMap.put("作业队成员", "staff");
         } else {
-            proles.add("班组长");
-            proles.add("工人");
+            if (prole.equals("project_manager") || prole.equals("project_quota")){
+                proles.add("班组长");
+            } else {
+                proles.add("工人");
+            }
 
             prolesMap.put("班组长", "classteam_manager");
             prolesMap.put("工人", "employee");

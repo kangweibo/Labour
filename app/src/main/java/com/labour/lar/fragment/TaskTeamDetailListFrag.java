@@ -22,8 +22,10 @@ import com.labour.lar.activity.BanZuDetailActivity;
 import com.labour.lar.activity.StaffDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
@@ -120,8 +122,24 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                classteamSelect = classteamList.get(position);
-                showMoreDialog();
+                if (position == 0) {
+                    Intent intent = new Intent(context, StaffDetailActivity.class);
+                    intent.putExtra("operteam", operteam);
+                    startActivity(intent);
+                } else {
+                    classteamSelect = classteamList.get(position-1);
+
+                    UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+                    if (userInfo != null) {
+                        String prole = userInfo.getProle();
+
+                        if (prole != null) {
+                            if (prole.equals("operteam_manager") || prole.equals("operteam_quota")) {
+                                showMoreDialog();
+                            }
+                        }
+                    }
+                }
                 return true;
             }
         });

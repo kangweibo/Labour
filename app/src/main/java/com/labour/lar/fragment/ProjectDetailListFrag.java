@@ -21,9 +21,11 @@ import com.labour.lar.activity.TaskTeamAddActivity;
 import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Manager;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
@@ -120,7 +122,16 @@ public class ProjectDetailListFrag extends BaseFragment {
 
                 } else {
                     operteamSelect = operteamList.get(position-1);
-                    showMoreDialog();
+                    UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+                    if (userInfo != null) {
+                        String prole = userInfo.getProle();
+
+                        if (prole != null){
+                            if (prole.equals("project_manager") || prole.equals("project_quota")){
+                                showMoreDialog();
+                            }
+                        }
+                    }
                 }
                 return true;
             }
@@ -213,7 +224,7 @@ public class ProjectDetailListFrag extends BaseFragment {
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
         item0.field1 = "项目部";
         item0.field1Content = "";
-        item0.field2 = "项目经理："+ "";
+        item0.field2 = "项目经理："+ project.getPm();
         item0.field2Content = "成员" + project.getManager_num() + "个";
         item0.field3 = "作业队："+ project.getOperteam_num() + "个";
         item0.field3Content = "共"+ project.getAll_num() +"人";

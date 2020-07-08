@@ -21,8 +21,10 @@ import com.labour.lar.activity.GongRenDetailActivity;
 import com.labour.lar.activity.ManagerAddActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
@@ -113,7 +115,23 @@ public class StaffDetailListFrag extends BaseFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 employeeSelect = employeeList.get(position);
-                showMoreDialog();
+
+                UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+                if (userInfo != null) {
+                    String prole = userInfo.getProle();
+                    String personProle = employeeSelect.getProle();
+
+                    if (prole != null && personProle != null){
+                        if ((prole.equals("project_manager") || prole.equals("project_quota"))
+                            && (personProle.equals("operteam_manager") || personProle.equals("operteam_quota"))){
+                            showMoreDialog();
+                        } else if ((prole.equals("operteam_manager") || prole.equals("operteam_quota"))
+                                && personProle.equals("staff")) {
+                            showMoreDialog();
+                        }
+                    }
+                }
+
                 return true;
             }
         });

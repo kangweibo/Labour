@@ -17,6 +17,7 @@ public class Operteam implements Serializable {
     private String staff_num;//:  成员人数
     private String classteam_num;//:  班组数
     private String all_num;//项目总人数
+    private String pm;//作业队长名称
 
     public int getId() {
         return id;
@@ -104,5 +105,13 @@ public class Operteam implements Serializable {
 
     public void setAll_num(String all_num) {
         this.all_num = all_num;
+    }
+
+    public String getPm() {
+        return pm;
+    }
+
+    public void setPm(String pm) {
+        this.pm = pm;
     }
 }

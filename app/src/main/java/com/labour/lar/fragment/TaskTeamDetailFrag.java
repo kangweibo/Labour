@@ -16,7 +16,9 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
 
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
                 name_tv.setText("");
             }
             if (!TextUtils.isEmpty(operteam.getMemo())){
-                company_tv.setText("队长：" + operteam.getMemo());
+                company_tv.setText("队长：" + operteam.getPm());
             } else {
                 company_tv.setText("队长：");
             }
@@ -93,6 +95,19 @@ public class TaskTeamDetailFrag extends BaseFragment {
                 classteam_tv.setText("班组：" + operteam.getClassteam_num() + "个");
             } else {
                 classteam_tv.setText("班组：0个");
+            }
+        }
+
+        right_header_btn.setVisibility(View.INVISIBLE);
+
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo != null) {
+            String prole = userInfo.getProle();
+
+            if (prole != null){
+                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                    right_header_btn.setVisibility(View.VISIBLE);
+                }
             }
         }
     }

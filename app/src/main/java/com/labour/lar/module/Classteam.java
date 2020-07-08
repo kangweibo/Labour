@@ -15,6 +15,7 @@ public class Classteam implements Serializable {
     private String operteamname;//作业队
     private String employees_num;//班工人数量
     private String ecounts;//班组总人数
+    private String pm;//班组长名称
 
     public int getId() {
         return id;
@@ -86,5 +87,13 @@ public class Classteam implements Serializable {
 
     public void setEcounts(String ecounts) {
         this.ecounts = ecounts;
+    }
+
+    public String getPm() {
+        return pm;
+    }
+
+    public void setPm(String pm) {
+        this.pm = pm;
     }
 }
