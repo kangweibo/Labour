@@ -20,6 +20,7 @@ import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
+import com.labour.lar.activity.TrainActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
@@ -101,6 +102,8 @@ public class MineFrag extends BaseFragment {
                     startActivity(new Intent(context, SettingActivity.class));
                 } else if(position == 6){
                     startActivity(new Intent(context, BankcardAddActivity.class));
+                } else if(position == 7){
+                    startActivity(new Intent(context, TrainActivity.class));
                 }
             }
         });
@@ -153,7 +156,7 @@ public class MineFrag extends BaseFragment {
     }
 
     private String[] getStrings() {
-        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理"};
+        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理","岗前安全培训"};
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo == null) {

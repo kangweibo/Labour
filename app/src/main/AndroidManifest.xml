@@ -164,6 +164,22 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
+            android:name="com.labour.lar.activity.TrainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.TrainExamActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.TrainResultActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.TrainTestActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
             android:name="com.labour.lar.activity.FaceLivenessExpActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
