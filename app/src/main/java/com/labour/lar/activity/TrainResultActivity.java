@@ -21,15 +21,13 @@ import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 培训
+ * 培训成绩
  */
 public class TrainResultActivity extends BaseActivity {
 
@@ -48,6 +46,8 @@ public class TrainResultActivity extends BaseActivity {
     private List<Exam> examList = new ArrayList<>();
     private List<ExamResult> examresultList = new ArrayList<>();
 
+    private ExamResult examResult;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_train;
@@ -55,11 +55,7 @@ public class TrainResultActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
-//        Intent intent = getIntent();
-//        type = intent.getIntExtra("type", 0);
-//        classteam_id = intent.getStringExtra("classteam_id");
-//        operteam_id = intent.getStringExtra("operteam_id");
-
+        examResult = (ExamResult)getIntent().getSerializableExtra("examResult");
         title_tv.setText("添加银行卡");
     }
 

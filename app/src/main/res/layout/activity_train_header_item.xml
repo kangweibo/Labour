@@ -23,10 +23,4 @@
             android:text="考试"
             android:layout_gravity="center_vertical"/>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/iv_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_grey"/>
 </LinearLayout>

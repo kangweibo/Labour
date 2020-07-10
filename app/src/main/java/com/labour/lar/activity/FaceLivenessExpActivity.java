@@ -57,8 +57,8 @@ public class FaceLivenessExpActivity extends FaceLivenessActivity {
         // SDK初始化已经设置完默认参数（推荐参数），您也根据实际需求进行数值调整
         List<LivenessTypeEnum> livenessList = new ArrayList<LivenessTypeEnum>();
         livenessList.add(LivenessTypeEnum.Eye);
-        livenessList.add(LivenessTypeEnum.HeadLeft);
-        livenessList.add(LivenessTypeEnum.HeadRight);
+//        livenessList.add(LivenessTypeEnum.HeadLeft);
+//        livenessList.add(LivenessTypeEnum.HeadRight);
         livenessList.add(LivenessTypeEnum.Mouth);
         config.setLivenessTypeList(livenessList);
         config.setLivenessRandom(false);

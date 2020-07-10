@@ -18,9 +18,9 @@
                 android:id="@+id/listView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@color/line"
-                android:childDivider="@color/black"
-                android:dividerHeight="2dp"
+                android:divider="@color/line_grey"
+                android:childDivider="@color/line_grey"
+                android:dividerHeight="1dp"
                 android:overScrollMode="never" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

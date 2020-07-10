@@ -99,7 +99,7 @@ public abstract class BaseExpandableAdapter<GI,I,GH,H>  extends BaseExpandableLi
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     /**

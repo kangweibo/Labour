@@ -1,5 +1,6 @@
 package com.labour.lar.activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -98,6 +99,16 @@ public class TrainActivity extends BaseActivity {
         listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                if (groupPosition == 0) {
+                    startLearn(childPosition);
+                } else if (groupPosition == 1){
+                    Exam exam = examList.get(childPosition);
+                    startExam(exam);
+                } else if (groupPosition == 2){
+                    ExamResult examResult = examresultList.get(childPosition);
+                    startResult(examResult);
+                }
+
                 return false;
             }
         });
@@ -132,7 +143,7 @@ public class TrainActivity extends BaseActivity {
             TrainAdapter.ListItem listItem = new TrainAdapter.ListItem();
             listItem.field1 = "培训";
 
-            if (i == 1){
+            if (i == 0){
                 listItem.field2 = "判断题";
             } else {
                 listItem.field2 = "单选题";
@@ -143,7 +154,7 @@ public class TrainActivity extends BaseActivity {
             listItem.field5 = null;
             listItem.field6 = null;
             listItem.field7 = null;
-            listItem.arraw = "测试";
+            listItem.arraw = "练习";
             listItem.resId = R.mipmap.train_icon;
             itemList0.add(listItem);
         }
@@ -158,7 +169,7 @@ public class TrainActivity extends BaseActivity {
             listItem.field5 = null;
             listItem.field6 = exam.getTitle();
             listItem.field7 = null;
-            listItem.arraw = "测试";
+            listItem.arraw = "练习";
             listItem.resId = R.mipmap.exam_icon;
             itemList1.add(listItem);
         }
@@ -284,5 +295,27 @@ public class TrainActivity extends BaseActivity {
                 AppToast.show(TrainActivity.this,"获取成绩信息出错!");
             }
         });
+    }
+
+    private void startLearn(int type) {
+        if (type == 0) {
+            Intent intent = new Intent(this, TrainLearn1Activity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, TrainLearn2Activity.class);
+            startActivity(intent);
+        }
+    }
+
+    private void startExam(Exam exam) {
+        Intent intent = new Intent(this, TrainExamActivity.class);
+        intent.putExtra("exam", exam);
+        startActivity(intent);
+    }
+
+    private void startResult(ExamResult examResult) {
+        Intent intent = new Intent(this, TrainResultActivity.class);
+        intent.putExtra("examResult", examResult);
+        startActivity(intent);
     }
 }

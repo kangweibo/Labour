@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView android:id="@+id/txt_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/content"
+        android:textSize="@dimen/text_size_14"
+        android:layout_marginTop="3dp"
+        android:text="问题" />
+
+    <LinearLayout
+        android:id="@+id/ly_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView android:id="@+id/txt_option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/content"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginTop="3dp"
+            android:text="选项1" />
+
+        <TextView android:id="@+id/txt_option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/content"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginTop="3dp"
+            android:text="选项1" />
+
+        <TextView android:id="@+id/txt_option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/content"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginTop="3dp"
+            android:text="选项1" />
+
+        <TextView android:id="@+id/txt_option4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/content"
+            android:textSize="@dimen/text_size_14"
+            android:layout_marginTop="3dp"
+            android:text="选项1" />
+
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp">
+
+        <RadioGroup
+            android:id="@+id/rg_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:visibility="gone">
+            <RadioButton
+                android:id="@+id/radio1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="A" />
+            <RadioButton
+                android:id="@+id/radio2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="B" />
+            <RadioButton
+                android:id="@+id/radio3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C" />
+        </RadioGroup>
+        <TextView
+            android:id="@+id/txt_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/rg_options"
+            android:layout_marginTop="3dp"
+            android:text="显示答案"
+            android:textColor="@color/tab_blue"
+            android:textSize="@dimen/text_size_14" />
+
+        <TextView
+            android:id="@+id/txt_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/txt_show"
+            android:layout_marginTop="5dp"
+            android:text="正确"
+            android:textColor="@color/tab_blue"
+            android:textSize="@dimen/text_size_14"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</LinearLayout>

@@ -10,6 +10,8 @@ public class Question1 implements Serializable {
     private String empanswer;//: "错误"
     private boolean isright;//: false
 
+    private boolean isShowAnswer;//: 是否显示答案
+
     public int getId() {
         return id;
     }
@@ -56,5 +58,13 @@ public class Question1 implements Serializable {
 
     public void setIsright(boolean isright) {
         this.isright = isright;
+    }
+
+    public boolean isShowAnswer() {
+        return isShowAnswer;
+    }
+
+    public void setShowAnswer(boolean showAnswer) {
+        isShowAnswer = showAnswer;
     }
 }
