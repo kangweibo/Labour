@@ -66,18 +66,22 @@
             android:orientation="horizontal"
             android:visibility="gone">
             <RadioButton
-                android:id="@+id/radio1"
+                android:id="@+id/radioa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="A" />
             <RadioButton
-                android:id="@+id/radio2"
+                android:id="@+id/radiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="B" />
             <RadioButton
-                android:id="@+id/radio3"
+                android:id="@+id/radioc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="C" />
+            <RadioButton
+                android:id="@+id/radiod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="C" />

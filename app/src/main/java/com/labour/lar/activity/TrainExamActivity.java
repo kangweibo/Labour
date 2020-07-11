@@ -9,10 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.adapter.TrainAdapter;
+import com.labour.lar.adapter.TrainPaperAdapter;
 import com.labour.lar.module.Exam;
 import com.labour.lar.module.ExamPaper;
-import com.labour.lar.module.ExamResult;
 import com.labour.lar.module.Question1;
 import com.labour.lar.module.Question2;
 import com.labour.lar.util.AjaxResult;
@@ -50,15 +49,24 @@ public class TrainExamActivity extends BaseActivity {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    private TrainAdapter trainAdapter;
+    @BindView(R.id.txt_exam_time)
+    TextView txt_exam_time;
+    @BindView(R.id.txt_time_h)
+    TextView txt_time_h;
+    @BindView(R.id.txt_time_m)
+    TextView txt_time_m;
+    @BindView(R.id.txt_time_s)
+    TextView txt_time_s;
+
+    private TrainPaperAdapter trainAdapter;
 
     private List<Question1> question1List = new ArrayList<>();
     private List<Question2> question2List = new ArrayList<>();
 
     //group数据
-    private ArrayList<TrainAdapter.ListGroupItem> groupList = new ArrayList<>();;
+    private ArrayList<TrainPaperAdapter.ListGroupItem> groupList = new ArrayList<>();;
     //item数据
-    private ArrayList<ArrayList<TrainAdapter.ListItem>> itemSet = new ArrayList<>();;
+    private ArrayList<ArrayList<TrainPaperAdapter.ListItem>> itemSet = new ArrayList<>();;
 
     private Exam exam;
 
@@ -71,16 +79,22 @@ public class TrainExamActivity extends BaseActivity {
     public void afterInitLayout() {
         exam = (Exam)getIntent().getSerializableExtra("exam");
 
-        if (exam != null && TextUtils.isEmpty(exam.getTitle())) {
+        if (exam != null && !TextUtils.isEmpty(exam.getTitle())) {
             title_tv.setText(exam.getTitle());
         } else {
             title_tv.setText("测试题");
         }
 
+        if (exam != null && !TextUtils.isEmpty(exam.getExamtime())) {
+            txt_exam_time.setText("考试时长" + exam.getExamtime() + "分钟");
+            txt_time_m.setText(exam.getExamtime());
+        }
+
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        trainAdapter = new TrainAdapter(this);
+        trainAdapter = new TrainPaperAdapter(this);
         listView.setAdapter(trainAdapter);
+        listView.setGroupIndicator(null);
 
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -110,44 +124,34 @@ public class TrainExamActivity extends BaseActivity {
         getExam();
     }
 
-
     private void initData() {
-        TrainAdapter.ListGroupItem groupItem0 = new TrainAdapter.ListGroupItem();
+        TrainPaperAdapter.ListGroupItem groupItem0 = new TrainPaperAdapter.ListGroupItem();
         groupItem0.field1 = "判断题";
-        TrainAdapter.ListGroupItem groupItem1 = new TrainAdapter.ListGroupItem();
+        TrainPaperAdapter.ListGroupItem groupItem1 = new TrainPaperAdapter.ListGroupItem();
         groupItem1.field1 = "单选题";
 
         groupList.clear();
         groupList.add(groupItem0);
         groupList.add(groupItem1);
 
-        ArrayList<TrainAdapter.ListItem> itemList0 = new ArrayList<>();
+        ArrayList<TrainPaperAdapter.ListItem> itemList0 = new ArrayList<>();
         for (Question1 question1: question1List) {
-            TrainAdapter.ListItem listItem = new TrainAdapter.ListItem();
-            listItem.field1 = exam.getTitle();
-            listItem.field2 = exam.getTitle();
-            listItem.field3 = null;
-            listItem.field4 = exam.getTitle();
-            listItem.field5 = null;
-            listItem.field6 = exam.getTitle();
-            listItem.field7 = null;
-            listItem.arraw = "练习";
-            listItem.resId = R.mipmap.exam_icon;
+            TrainPaperAdapter.ListItem listItem = new TrainPaperAdapter.ListItem();
+            listItem.question = question1.getQuestion();
+            listItem.type = 0;
             itemList0.add(listItem);
         }
 
-        ArrayList<TrainAdapter.ListItem> itemList1 = new ArrayList<>();
+        ArrayList<TrainPaperAdapter.ListItem> itemList1 = new ArrayList<>();
         for (Question2 question2: question2List) {
-            TrainAdapter.ListItem listItem = new TrainAdapter.ListItem();
+            TrainPaperAdapter.ListItem listItem = new TrainPaperAdapter.ListItem();
 
-            listItem.field2 = "满分";
-            listItem.field3 = "对题";
-            listItem.field4 = "得分";
-            listItem.field5 = "错题";
-            listItem.field6 = null;
-            listItem.field7 = null;
-            listItem.arraw = "详细";
-            listItem.resId = R.mipmap.achievement_icon;
+            listItem.question = question2.getQuestion();
+            listItem.choicea = question2.getChoicea();
+            listItem.choiceb = question2.getChoiceb();
+            listItem.choicec = question2.getChoicec();
+            listItem.choiced = question2.getChoiced();
+            listItem.type = 1;
             itemList1.add(listItem);
         }
 
@@ -161,14 +165,11 @@ public class TrainExamActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.back_iv,R.id.take_photo_iv,R.id.btn_submit})
+    @OnClick({R.id.back_iv,R.id.btn_submit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
-                break;
-            case R.id.take_photo_iv:
-
                 break;
             case R.id.btn_submit:
 

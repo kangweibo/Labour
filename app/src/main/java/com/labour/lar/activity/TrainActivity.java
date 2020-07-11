@@ -163,13 +163,13 @@ public class TrainActivity extends BaseActivity {
         for (Exam exam: examList) {
             TrainAdapter.ListItem listItem = new TrainAdapter.ListItem();
             listItem.field1 = exam.getTitle();
-            listItem.field2 = exam.getTitle();
+            listItem.field2 = "考试时长：" + exam.getExamtime() + "分钟";
             listItem.field3 = null;
-            listItem.field4 = exam.getTitle();
+            listItem.field4 = "单选题数：" + exam.getQ1num() + "个";;
             listItem.field5 = null;
-            listItem.field6 = exam.getTitle();
+            listItem.field6 = "判断题数：" + exam.getQ2num() + "个";;
             listItem.field7 = null;
-            listItem.arraw = "练习";
+            listItem.arraw = "开始";
             listItem.resId = R.mipmap.exam_icon;
             itemList1.add(listItem);
         }
