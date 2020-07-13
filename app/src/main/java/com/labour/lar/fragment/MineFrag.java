@@ -15,8 +15,11 @@ import com.labour.lar.BaseApplication;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.BanZuAddActivity;
 import com.labour.lar.activity.BankcardAddActivity;
+import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
+import com.labour.lar.activity.InferiorsActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
@@ -26,6 +29,7 @@ import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.event.BaseEvent;
 import com.labour.lar.event.EventManager;
+import com.labour.lar.module.Employee;
 import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
@@ -47,6 +51,9 @@ import static android.app.Activity.RESULT_OK;
 public class MineFrag extends BaseFragment {
 
     private int REQUEST_CODE = 123;
+    private int REQUEST_CODE_Identified = 124;
+    private int REQUEST_CODE_Bankcard = 125;
+    private int REQUEST_CODE_ClockIn = 126;
 
     @BindView(R.id.title_tv)
     TextView title_tv;
@@ -103,6 +110,15 @@ public class MineFrag extends BaseFragment {
                 } else if(position == 6){
                     startActivity(new Intent(context, BankcardAddActivity.class));
                 } else if(position == 7){
+                    Intent intent = new Intent(context, InferiorsActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_Identified);
+                }else if(position == 8){
+                    Intent intent = new Intent(context, InferiorsActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_Bankcard);
+                }else if(position == 9){
+                    Intent intent = new Intent(context, InferiorsActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_ClockIn);
+                }else if(position == 10){
                     startActivity(new Intent(context, TrainActivity.class));
                 }
             }
@@ -156,7 +172,8 @@ public class MineFrag extends BaseFragment {
     }
 
     private String[] getStrings() {
-        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理","岗前安全培训"};
+        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理",
+                "代员工身份验证","代员工银行卡认证","代员打卡","岗前安全培训"};
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo == null) {
@@ -253,6 +270,34 @@ public class MineFrag extends BaseFragment {
                     }
                 } catch (RuntimeException e) {
                     AppToast.show(getContext(),"二维码格式出错");
+                }
+            }
+        }
+
+        // 代身份认证
+        if (requestCode == REQUEST_CODE_Identified && resultCode == RESULT_OK) {
+            if (data != null) {
+                Employee employee = (Employee)data.getSerializableExtra("employee");
+                if (employee != null) {
+                    subIdentified(employee);
+                }
+            }
+        }
+        // 代银行卡认证
+        if (requestCode == REQUEST_CODE_Bankcard && resultCode == RESULT_OK) {
+            if (data != null) {
+                Employee employee = (Employee)data.getSerializableExtra("employee");
+                if (employee != null) {
+                    subBankcard(employee);
+                }
+            }
+        }
+        // 代打卡
+        if (requestCode == REQUEST_CODE_ClockIn && resultCode == RESULT_OK) {
+            if (data != null) {
+                Employee employee = (Employee)data.getSerializableExtra("employee");
+                if (employee != null) {
+                    subClockIn(employee);
                 }
             }
         }
@@ -361,5 +406,38 @@ public class MineFrag extends BaseFragment {
                 AppToast.show(getContext(),"加入项目出错!");
             }
         });
+    }
+
+    // 代身份认证
+    private void subIdentified(Employee employee) {
+        User user = new User();
+        user.setId(employee.getId());
+        user.setProle(employee.getProle());
+
+        Intent intent = new Intent(context, IdentifiedActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
+
+    // 代银行卡认证
+    private void subBankcard(Employee employee) {
+        User user = new User();
+        user.setId(employee.getId());
+        user.setProle(employee.getProle());
+
+        Intent intent = new Intent(context, BankcardAddActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+    }
+
+    // 代打卡
+    private void subClockIn(Employee employee) {
+        User user = new User();
+        user.setId(employee.getId());
+        user.setProle(employee.getProle());
+
+        Intent intent = new Intent(context, ClockInActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 }

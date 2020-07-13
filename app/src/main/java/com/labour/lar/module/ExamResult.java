@@ -1,6 +1,7 @@
 package com.labour.lar.module;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 考试成绩
@@ -13,7 +14,11 @@ public class ExamResult implements Serializable {
     private int fullscore;//": 满分分数
     private int rightnum;//": 对题数量
     private int wrongnum;//": 错题数量
+    private String updated_at;//": 更新时间
     private boolean ispass;// 是否通过
+
+    private List<Question1> q1s;
+    private List<Question2> q2s;
 
     public int getId() {
         return id;
@@ -71,11 +76,35 @@ public class ExamResult implements Serializable {
         this.wrongnum = wrongnum;
     }
 
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
+    }
+
     public boolean isIspass() {
         return ispass;
     }
 
     public void setIspass(boolean ispass) {
         this.ispass = ispass;
+    }
+
+    public List<Question1> getQ1s() {
+        return q1s;
+    }
+
+    public void setQ1s(List<Question1> q1s) {
+        this.q1s = q1s;
+    }
+
+    public List<Question2> getQ2s() {
+        return q2s;
+    }
+
+    public void setQ2s(List<Question2> q2s) {
+        this.q2s = q2s;
     }
 }

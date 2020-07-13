@@ -67,7 +67,8 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/list_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
         <ExpandableListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
@@ -78,24 +79,23 @@
             android:overScrollMode="never" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-    <com.labour.lar.widget.LoadingView
-        android:id="@+id/loading_v"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+<!--    <com.labour.lar.widget.LoadingView-->
+<!--        android:id="@+id/loading_v"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_centerInParent="true" />-->
 
-    <include layout="@layout/noresult_view"/>
+<!--    <include layout="@layout/noresult_view"/>-->
 
     <Button android:id="@+id/btn_submit"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="45dp"
+        android:layout_gravity="center_horizontal"
         android:textColor="@color/white"
         android:background="@drawable/selector_button"
         android:text="提交"
         android:textSize="@dimen/text_size_16"
-        android:layout_marginRight="@dimen/common_margin_right"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginTop="25dp"/>
+        android:layout_margin="10dp"/>
 </LinearLayout>
 
 

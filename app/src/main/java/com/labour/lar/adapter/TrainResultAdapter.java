@@ -1,6 +1,7 @@
 package com.labour.lar.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,10 @@ import com.labour.lar.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TrainPaperAdapter extends BaseExpandableAdapter<TrainPaperAdapter.ListGroupItem,
-        TrainPaperAdapter.ListItem, TrainPaperAdapter.GroupHolder, TrainPaperAdapter.ItemHolder> {
+public class TrainResultAdapter extends BaseExpandableAdapter<TrainResultAdapter.ListGroupItem,
+        TrainResultAdapter.ListItem, TrainResultAdapter.GroupHolder, TrainResultAdapter.ItemHolder> {
 
-    public TrainPaperAdapter(Context mContext) {
+    public TrainResultAdapter(Context mContext) {
         super(mContext);
     }
 
@@ -45,12 +46,30 @@ public class TrainPaperAdapter extends BaseExpandableAdapter<TrainPaperAdapter.L
 
     @Override
     protected void fillChildView(int groupPosition, int childPosition, ListItem item, ItemHolder holder) {
-
         holder.txt_show.setVisibility(View.GONE);
+        holder.txt_result.setVisibility(View.VISIBLE);
         holder.rg_options.setVisibility(View.VISIBLE);
+
+        if (item.isright){
+            holder.txt_question.setTextColor(Color.rgb(0,0,0));
+            holder.txt_option1.setTextColor(Color.rgb(0,0,0));
+            holder.txt_option2.setTextColor(Color.rgb(0,0,0));
+            holder.txt_option3.setTextColor(Color.rgb(0,0,0));
+            holder.txt_option4.setTextColor(Color.rgb(0,0,0));
+        } else {
+            holder.txt_question.setTextColor(Color.rgb(255,18,18));
+            holder.txt_option1.setTextColor(Color.rgb(255,18,18));
+            holder.txt_option2.setTextColor(Color.rgb(255,18,18));
+            holder.txt_option3.setTextColor(Color.rgb(255,18,18));
+            holder.txt_option4.setTextColor(Color.rgb(255,18,18));
+        }
 
         if (!TextUtils.isEmpty(item.question)){
             holder.txt_question.setText(item.question);
+        }
+
+        if (!TextUtils.isEmpty(item.answer)){
+            holder.txt_result.setText("正确答案：" + item.answer);
         }
 
         holder.rg_options.setOnCheckedChangeListener(null);
@@ -65,27 +84,11 @@ public class TrainPaperAdapter extends BaseExpandableAdapter<TrainPaperAdapter.L
             holder.radioc.setVisibility(View.GONE);
             holder.radiod.setVisibility(View.GONE);
 
-            if (item.select == 1){
+            if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("正确")){
                 holder.rg_options.check(R.id.radioa);
-            } else if (item.select == 2){
+            } else if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("错误")){
                 holder.rg_options.check(R.id.radiob);
             }
-
-            holder.rg_options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId){
-                        case R.id.radioa:
-                            item.answer = "正确";
-                            item.select = 1;
-                            break;
-                        case R.id.radiob:
-                            item.answer = "错误";
-                            item.select = 2;
-                            break;
-                    }
-                }
-            });
         } else {
             holder.ly_options.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.choicea)){
@@ -124,40 +127,21 @@ public class TrainPaperAdapter extends BaseExpandableAdapter<TrainPaperAdapter.L
                 holder.radiod.setVisibility(View.GONE);
             }
 
-            if (item.select == 1){
+            if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("A")){
                 holder.rg_options.check(R.id.radioa);
-            } else if (item.select == 2){
+            } else if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("B")){
                 holder.rg_options.check(R.id.radiob);
-            } else if (item.select == 3){
+            } else if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("C")){
                 holder.rg_options.check(R.id.radioc);
-            } else if (item.select == 4){
+            } else if (!TextUtils.isEmpty(item.empanswer) && item.empanswer.equals("D")){
                 holder.rg_options.check(R.id.radiod);
             }
-
-            holder.rg_options.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    switch (checkedId){
-                        case R.id.radioa:
-                            item.answer = "A";
-                            item.select = 1;
-                            break;
-                        case R.id.radiob:
-                            item.answer = "B";
-                            item.select = 2;
-                            break;
-                        case R.id.radioc:
-                            item.answer = "C";
-                            item.select = 3;
-                            break;
-                        case R.id.radiod:
-                            item.answer = "D";
-                            item.select = 4;
-                            break;
-                    }
-                }
-            });
         }
+
+        holder.radioa.setClickable(false);
+        holder.radiob.setClickable(false);
+        holder.radioc.setClickable(false);
+        holder.radiod.setClickable(false);
     }
 
     public static class ListGroupItem {
@@ -174,7 +158,8 @@ public class TrainPaperAdapter extends BaseExpandableAdapter<TrainPaperAdapter.L
         public String choicec;//": C、现场人员应立即报告"
         public String choiced;//": D、现场人员应立即报告"
         public String answer;//": 答案
-        public int select;
+        public String empanswer;//": 用户答案
+        public boolean isright;
     }
 
     class GroupHolder {

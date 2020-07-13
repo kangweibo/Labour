@@ -2,6 +2,7 @@ package com.labour.lar.fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,12 +22,15 @@ import com.labour.lar.activity.GongRenDetailActivity;
 import com.labour.lar.activity.ManagerAddActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
+import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -116,9 +120,10 @@ public class StaffDetailListFrag extends BaseFragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 employeeSelect = employeeList.get(position);
 
-                UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-                if (userInfo != null) {
-                    String prole = userInfo.getProle();
+                UserCache userCache = UserCache.getInstance(getContext());
+                User user = userCache.get();
+                if (user != null) {
+                    String prole = user.getProle();
                     String personProle = employeeSelect.getProle();
 
                     if (prole != null && personProle != null){
@@ -185,7 +190,7 @@ public class StaffDetailListFrag extends BaseFragment {
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = employee.getName();;
             item.field1Content = "";
-            item.field2 = "状态：" + employee.getStatus();
+            item.field2 = "手机号：" + employee.getPhone();
             item.field2Content = "";
             item.isShowArraw = true;
 
@@ -218,7 +223,9 @@ public class StaffDetailListFrag extends BaseFragment {
                         if(id == R.id.txt_update){
                             updatePerson(employeeSelect);
                         } else if(id == R.id.txt_delete){
-                            deletePerson(employeeSelect);
+                            delete(employeeSelect);
+                        } else if(id == R.id.txt_see){
+                            callPhone(employeeSelect);
                         }
 
                         dialog.dismiss();
@@ -229,10 +236,11 @@ public class StaffDetailListFrag extends BaseFragment {
                 TextView txt_update = view.findViewById(R.id.txt_update);
                 TextView txt_delete = view.findViewById(R.id.txt_delete);
                 TextView txt_cancel = view.findViewById(R.id.txt_cancel);
-                txt_see.setVisibility(View.GONE);
-                txt_update.setText("更新作业队成员");
-                txt_delete.setText("删除作业队成员");
+                txt_see.setText("拨打电话");
+                txt_update.setText("更新成员");
+                txt_delete.setText("删除成员");
 
+                txt_see.setOnClickListener(onClickListener);
                 txt_update.setOnClickListener(onClickListener);
                 txt_delete.setOnClickListener(onClickListener);
                 txt_cancel.setOnClickListener(onClickListener);
@@ -254,7 +262,7 @@ public class StaffDetailListFrag extends BaseFragment {
         startActivityForResult(intent, Constants.RELOAD);
     }
 
-    public void updatePerson(Employee person) {
+    private void updatePerson(Employee person) {
         if (person == null){
             return;
         }
@@ -268,7 +276,16 @@ public class StaffDetailListFrag extends BaseFragment {
         startActivityForResult(intent, Constants.RELOAD);
     }
 
-    public void deletePerson(Employee person) {
+    private void delete(Employee person) {
+        DialogUtil.showConfirmDialog(getContext(),"提示信息","确认删除成员吗？",new DialogUtil.OnDialogEvent<Void>(){
+            @Override
+            public void onPositiveButtonClick(Void t) {
+                deletePerson(person);
+            }
+        });
+    }
+
+    private void deletePerson(Employee person) {
         if (person == null){
             return;
         }
@@ -307,5 +324,16 @@ public class StaffDetailListFrag extends BaseFragment {
         if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
             getEmployees();
         }
+    }
+
+    private void callPhone(Employee person){
+        if (person == null){
+            return;
+        }
+        String phoneNum = person.getPhone();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        intent.setData(data);
+        startActivity(intent);
     }
 }

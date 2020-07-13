@@ -69,21 +69,25 @@
                 android:id="@+id/radioa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/tab_blue"
                 android:text="A" />
             <RadioButton
                 android:id="@+id/radiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/tab_blue"
                 android:text="B" />
             <RadioButton
                 android:id="@+id/radioc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/tab_blue"
                 android:text="C" />
             <RadioButton
                 android:id="@+id/radiod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/tab_blue"
                 android:text="C" />
         </RadioGroup>
         <TextView

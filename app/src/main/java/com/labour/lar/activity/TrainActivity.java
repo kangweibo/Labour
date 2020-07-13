@@ -184,10 +184,10 @@ public class TrainActivity extends BaseActivity {
                 listItem.field1 = "未通过";
             }
 
-            listItem.field2 = "满分";
-            listItem.field3 = "对题";
-            listItem.field4 = "得分";
-            listItem.field5 = "错题";
+            listItem.field2 = "满分：" + result.getFullscore();
+            listItem.field3 = "对题：" + result.getRightnum();
+            listItem.field4 = "得分：" + result.getTotalscore();
+            listItem.field5 = "错题：" + result.getWrongnum();
             listItem.field6 = null;
             listItem.field7 = null;
             listItem.arraw = "详细";
@@ -263,6 +263,7 @@ public class TrainActivity extends BaseActivity {
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
         param.put("employeeid",user.getId()+"");
+        //    param.put("employeeid","25");
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/examresults";

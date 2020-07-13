@@ -98,9 +98,14 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     public void afterInitLayout() {
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
-        title_tv.setText("身份验证");
-//        initAccessTokenWithAkSk();
-        user = UserCache.getInstance(IdentifiedActivity.this).get();
+        user = (User)getIntent().getSerializableExtra("user");
+
+        if (user == null) {
+            user = UserCache.getInstance(this).get();
+            title_tv.setText("身份验证");
+        } else {
+            title_tv.setText("代员工身份验证");
+        }
     }
 
 //    /**

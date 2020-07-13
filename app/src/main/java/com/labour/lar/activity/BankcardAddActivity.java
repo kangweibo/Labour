@@ -19,6 +19,8 @@ import com.bumptech.glide.Glide;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.cache.UserCache;
+import com.labour.lar.module.User;
 import com.labour.lar.ocr.BaiDuOCR;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
@@ -55,6 +57,8 @@ public class BankcardAddActivity extends BaseActivity {
     private File file2;
     private static final int REQUEST_CODE_CAMERA = 102;
 
+    private User user;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_bankcard;
@@ -62,12 +66,14 @@ public class BankcardAddActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
-//        Intent intent = getIntent();
-//        type = intent.getIntExtra("type", 0);
-//        classteam_id = intent.getStringExtra("classteam_id");
-//        operteam_id = intent.getStringExtra("operteam_id");
+        user = (User)getIntent().getSerializableExtra("user");
 
-        title_tv.setText("添加银行卡");
+        if (user == null) {
+            user = UserCache.getInstance(this).get();
+            title_tv.setText("添加银行卡");
+        } else {
+            title_tv.setText("代员工添加银行卡");
+        }
     }
 
     @OnClick({R.id.back_iv,R.id.take_photo_iv,R.id.btn_submit})
@@ -153,12 +159,14 @@ public class BankcardAddActivity extends BaseActivity {
         }
 
         final Map<String,String> param = new HashMap<>();
-        param.put("token","063d91b4f57518ff");
+
+        param.put("id","063d91b4f57518ff");
+        param.put("prole","063d91b4f57518ff");
         param.put("bankcard_num",bankcard_num);
         param.put("bankname",bankname);
         String jsonParams = JSON.toJSONString(param);
 
-        String url = Constants.HTTP_BASE + "/api/classteam_new";
+        String url = Constants.HTTP_BASE + "/api/user_bankinfo_update";
         ProgressDialog dialog = ProgressDialog.createDialog(this);
         dialog.show();
 

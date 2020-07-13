@@ -13,11 +13,14 @@ import com.labour.lar.R;
 public class MineGridViewAdapter extends BaseAdapter {
     private Context context;
 
-    private int [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,R.mipmap.xiaoxitongzhi_icon,
-            R.mipmap.seting_icon,R.mipmap.help_icon,R.mipmap.xiangmu_icon,R.mipmap.personal_icon
+    private int [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,
+            R.mipmap.xiaoxitongzhi_icon, R.mipmap.seting_icon,R.mipmap.help_icon,
+            R.mipmap.xiangmu_icon,R.mipmap.personal_icon,R.mipmap.personal_icon,
+            R.mipmap.personal_icon,R.mipmap.personal_icon
     };
 
-    private  String [] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理","岗前安全培训"
+    private  String [] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理",
+            "代员工身份验证","代员工银行卡认证","代员打卡","岗前安全培训"
     };
 
     public MineGridViewAdapter(Context context) {
