@@ -116,6 +116,8 @@ public class ShowQRCodeActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        AppToast.show(this, "二维码图片保存成功");
+
         // 最后通知图库更新
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(pictureFile);intent.setData(uri);

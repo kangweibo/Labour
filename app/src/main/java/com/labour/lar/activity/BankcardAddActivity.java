@@ -53,6 +53,8 @@ public class BankcardAddActivity extends BaseActivity {
     EditText edt_bankname;
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
+    @BindView(R.id.txt_name)
+    TextView txt_name;
 
     private File file2;
     private static final int REQUEST_CODE_CAMERA = 102;
@@ -73,6 +75,10 @@ public class BankcardAddActivity extends BaseActivity {
             title_tv.setText("添加银行卡");
         } else {
             title_tv.setText("代员工添加银行卡");
+            txt_name.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(user.getName())) {
+                txt_name.setText("员工：" + user.getName());
+            }
         }
     }
 
@@ -158,9 +164,14 @@ public class BankcardAddActivity extends BaseActivity {
             return;
         }
 
+        if (user == null) {
+            AppToast.show(this,"用户信息出错");
+           return;
+        }
+
         final Map<String,String> param = new HashMap<>();
 
-        param.put("id","063d91b4f57518ff");
+        param.put("id",user.getId()+"");
         param.put("prole","063d91b4f57518ff");
         param.put("bankcard_num",bankcard_num);
         param.put("bankname",bankname);

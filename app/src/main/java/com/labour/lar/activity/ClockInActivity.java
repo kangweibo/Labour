@@ -4,7 +4,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.R;
 import com.labour.lar.fragment.KaoqinFrag;
-import com.labour.lar.module.User;
+import com.labour.lar.module.UserInfo;
 
 /**
  * 代人打卡
@@ -18,7 +18,7 @@ public class ClockInActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
-        User user = (User)getIntent().getSerializableExtra("user");
+        UserInfo user = (UserInfo)getIntent().getSerializableExtra("user");
 
         if (user == null) {
             return;

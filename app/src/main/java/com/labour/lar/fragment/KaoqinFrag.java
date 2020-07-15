@@ -98,12 +98,12 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     // 是否匹配人脸
     private boolean isFaceMatch = false;
 
-    private User user;
+    private UserInfo userInfo;
 
     private static final int REQUEST_CODE_FACE = 101;
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     @Override
@@ -115,15 +115,15 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     public void initView() {
         back_iv.setVisibility(View.INVISIBLE);
 
-        if(user == null){
-            user = UserCache.getInstance(context).get();
+        if(userInfo == null){
+            userInfo = UserInfoCache.getInstance(getContext()).get();
             title_tv.setText("考勤打卡");
             ly_name.setVisibility(View.GONE);
         } else {
             title_tv.setText("代员工考勤打卡");
             ly_name.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(user.getName())) {
-                txt_name.setText(user.getName());
+            if (!TextUtils.isEmpty(userInfo.getName())) {
+                txt_name.setText(userInfo.getName());
             }
         }
 
@@ -372,7 +372,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     }
 
     private void signInOut(){
-        if(user == null){
+        if(userInfo == null){
             AppToast.show(context,"用户信息错误！");
             return;
         }
@@ -386,21 +386,21 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         String clockdate = sf1.format(new Date());
         String clockintime = sf2.format(new Date());
 
-        int userId =user.getId();
-        Constants.ROLE role = user.getRole();
-        int employee_id = userId;
-        int staff_id = 0;
-        int manager_id = 0;
-        if(role == Constants.ROLE.employee){//工人
-            employee_id = 0;
-        } else if(role == Constants.ROLE.staff){
-            staff_id = 0;
-        } else if(role == Constants.ROLE.manager){
-            manager_id = 0;
-        }
+        int userId =userInfo.getId();
+//        String role = user.getProle();
+//        int employee_id = userId;
+//        int staff_id = 0;
+//        int manager_id = 0;
+//        if(role == Constants.ROLE.employee){//工人
+//            employee_id = 0;
+//        } else if(role == Constants.ROLE.staff){
+//            staff_id = 0;
+//        } else if(role == Constants.ROLE.manager){
+//            manager_id = 0;
+//        }
 
         final Map<String,String> param = new HashMap<>();
-        param.put("usertype",user.getProle());
+        param.put("usertype",userInfo.getProle());
         param.put("userid",userId+"");
         param.put("clockdate",clockdate);
         param.put("clockintime",clockintime);
@@ -451,7 +451,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
      * 检查是否实名认证
      */
     private boolean checkIdentified() {
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        //UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo != null && userInfo.isIdentified()) {
             return true;
         } else {

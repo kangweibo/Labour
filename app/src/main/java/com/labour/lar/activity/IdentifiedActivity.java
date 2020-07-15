@@ -24,7 +24,9 @@ import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.cache.UserCache;
+import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.User;
+import com.labour.lar.module.UserInfo;
 import com.labour.lar.ocr.BaiDuIDCardResult;
 import com.labour.lar.ocr.BaiDuOCR;
 import com.labour.lar.permission.PermissionManager;
@@ -57,15 +59,19 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
 
     @BindView(R.id.photo_zheng_iv)
     ImageView photo_zheng_iv;
-    @BindView(R.id.zheng_tv)
-    TextView zheng_tv;
+//    @BindView(R.id.zheng_tv)
+//    TextView zheng_tv;
 
     @BindView(R.id.photo_fan_iv)
     ImageView photo_fan_iv;
-    @BindView(R.id.fan_tv)
-    TextView fan_tv;
+//    @BindView(R.id.fan_tv)
+//    TextView fan_tv;
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
+    @BindView(R.id.take_photo_fan_iv)
+    ImageView take_photo_fan_iv;
+    @BindView(R.id.take_photo_zheng_iv)
+    ImageView take_photo_zheng_iv;
     @BindView(R.id.take_photo_iv)
     ImageView take_photo_iv;
     @BindView(R.id.edt_idcard_name)
@@ -76,6 +82,8 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     EditText edt_idcard_no;
     @BindView(R.id.edt_idcard_address)
     EditText edt_idcard_address;
+    @BindView(R.id.txt_name)
+    TextView txt_name;
 
     File file1;
     File file2;
@@ -83,6 +91,8 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
     PermissionManager permissionManager;
     private Map<String,String> idCardInfo = new HashMap<>();
     private User user;
+    private boolean isOneself;//是否是自己认证
+
     private boolean identifiedFront;//正面认证
     private boolean identifiedBack;//反面认证
     private boolean isFaceMatch;//人脸与头像是否匹配
@@ -103,8 +113,13 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         if (user == null) {
             user = UserCache.getInstance(this).get();
             title_tv.setText("身份验证");
+            isOneself = true;
         } else {
             title_tv.setText("代员工身份验证");
+            txt_name.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(user.getName())) {
+                txt_name.setText("员工：" + user.getName());
+            }
         }
     }
 
@@ -126,20 +141,20 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
 ////        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
 //    }
 
-    @OnClick({R.id.back_iv,R.id.photo_zheng_iv,R.id.photo_fan_iv,R.id.take_photo_iv,R.id.submit_btn})
+    @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,R.id.submit_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
-            case R.id.photo_zheng_iv:
+            case R.id.take_photo_zheng_iv:
                 file1 = Utils.getSaveFile(this,"idcard_"+new Date().getTime()+".png");
                 Intent intent = new Intent(IdentifiedActivity.this, CameraActivity.class);
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file1.getAbsolutePath());
                 intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
                 startActivityForResult(intent, REQUEST_CODE_CAMERA);
                 break;
-            case R.id.photo_fan_iv:
+            case R.id.take_photo_fan_iv:
                 file2 = Utils.getSaveFile(this,"idcard_"+new Date().getTime()+".png");
                 intent = new Intent(IdentifiedActivity.this, CameraActivity.class);
                 intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,file2.getAbsolutePath());
@@ -360,11 +375,15 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-                    UserCache userCache = UserCache.getInstance(IdentifiedActivity.this);
-                    userCache.put(ub);
                     AppToast.show(IdentifiedActivity.this,"身份认证成功!");
+
+                    if (isOneself){ //自己认证
+                        JSONObject jo = jr.getData();
+                        UserInfo userInfo = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+                        updateUserInfo(userInfo);
+                    }
+
+                    setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
                     AppToast.show(IdentifiedActivity.this,"身份认证失败!");
@@ -376,6 +395,12 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 AppToast.show(IdentifiedActivity.this,"身份认证出错!");
             }
         });
+    }
+
+    // 更新用户信息
+    private void updateUserInfo(UserInfo userInfo) {
+        UserInfoCache userCache = UserInfoCache.getInstance(IdentifiedActivity.this);
+        userCache.put(userInfo);
     }
 
     // 显示图片

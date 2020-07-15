@@ -15,7 +15,6 @@ import com.labour.lar.BaseApplication;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.activity.BanZuAddActivity;
 import com.labour.lar.activity.BankcardAddActivity;
 import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
@@ -107,18 +106,18 @@ public class MineFrag extends BaseFragment {
                     showClassteam();
                 } else if(position == 4){
                     startActivity(new Intent(context, SettingActivity.class));
-                } else if(position == 6){
+                } else if(position == 5){
                     startActivity(new Intent(context, BankcardAddActivity.class));
-                } else if(position == 7){
+                } else if(position == 6){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_Identified);
-                }else if(position == 8){
+                }else if(position == 7){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_Bankcard);
-                }else if(position == 9){
+                }else if(position == 8){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_ClockIn);
-                }else if(position == 10){
+                }else if(position == 9){
                     startActivity(new Intent(context, TrainActivity.class));
                 }
             }
@@ -128,7 +127,7 @@ public class MineFrag extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.identified_tv:
-                startActivity(new Intent(context, IdentifiedActivity.class));
+                identified();
                 break;
         }
     }
@@ -172,7 +171,7 @@ public class MineFrag extends BaseFragment {
     }
 
     private String[] getStrings() {
-        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理",
+        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","银行卡管理",
                 "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
@@ -201,8 +200,9 @@ public class MineFrag extends BaseFragment {
 
         String prole = userInfo.getProle();
 
-        if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
-                || prole.equals("project_manager")){
+        if (prole.equals("classteam_manager")
+                || prole.equals("operteam_manager") || prole.equals("operteam_quota")
+                || prole.equals("project_manager") || prole.equals("project_quota") ){
             showQRCode(prole);
         } else {
             showScan();
@@ -233,10 +233,10 @@ public class MineFrag extends BaseFragment {
         if (prole.equals("classteam_manager")){
             title = "加入班组";
             jsonObject.put("classteam_id", id);
-        } else if (prole.equals("operteam_manager")){
+        } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
             title = "加入作业队";
             jsonObject.put("operteam_id", id);
-        } else if (prole.equals("project_manager")){
+        } else if (prole.equals("project_manager") || prole.equals("project_quota")){
             title = "加入项目部";
             jsonObject.put("project_id", id);
         }
@@ -272,6 +272,10 @@ public class MineFrag extends BaseFragment {
                     AppToast.show(getContext(),"二维码格式出错");
                 }
             }
+        }
+
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            refreshUserInfo();
         }
 
         // 代身份认证
@@ -408,11 +412,18 @@ public class MineFrag extends BaseFragment {
         });
     }
 
+    // 身份认证
+    private void identified() {
+        Intent intent = new Intent(getContext(), IdentifiedActivity.class);
+        startActivityForResult(intent, Constants.RELOAD);
+    }
+
     // 代身份认证
     private void subIdentified(Employee employee) {
         User user = new User();
         user.setId(employee.getId());
         user.setProle(employee.getProle());
+        user.setName(employee.getName());
 
         Intent intent = new Intent(context, IdentifiedActivity.class);
         intent.putExtra("user", user);
@@ -424,6 +435,7 @@ public class MineFrag extends BaseFragment {
         User user = new User();
         user.setId(employee.getId());
         user.setProle(employee.getProle());
+        user.setName(employee.getName());
 
         Intent intent = new Intent(context, BankcardAddActivity.class);
         intent.putExtra("user", user);
@@ -432,10 +444,11 @@ public class MineFrag extends BaseFragment {
 
     // 代打卡
     private void subClockIn(Employee employee) {
-        User user = new User();
+        UserInfo user = new UserInfo();
         user.setId(employee.getId());
         user.setProle(employee.getProle());
         user.setName(employee.getName());
+        user.setIdentified(employee.isIdentified());
 
         Intent intent = new Intent(context, ClockInActivity.class);
         intent.putExtra("user", user);

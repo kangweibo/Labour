@@ -13,64 +13,154 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="15dp"
             android:orientation="vertical">
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/txt_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="点击拍摄身份证正反面"
+                android:drawableLeft="@mipmap/star_icon"
+                android:drawablePadding="4dp"
+                android:text="员工"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_centerInParent="true"/>
-            <RelativeLayout
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="@dimen/common_margin_left"
-                android:layout_marginRight="@dimen/common_margin_right">
+                android:drawableLeft="@mipmap/star_icon"
+                android:drawablePadding="4dp"
+                android:text="身份证正面"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:gravity="center">
                 <ImageView
                     android:id="@+id/photo_zheng_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@mipmap/zhengmian"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"/>
-                <TextView android:id="@+id/zheng_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="正面"
-                    android:textColor="@color/tab_grey"
-                    android:textSize="@dimen/text_size_16"
-                    android:layout_marginTop="20dp"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
+                    android:layout_width="160dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/bankcard_big"
+                    android:layout_marginHorizontal="20dp"
+                    android:visibility="visible"/>
 
-            <RelativeLayout
+                <ImageView
+                    android:id="@+id/take_photo_zheng_iv"
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/camera_icon"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="@dimen/common_margin_left"
-                android:layout_marginRight="@dimen/common_margin_right">
+                android:drawableLeft="@mipmap/star_icon"
+                android:drawablePadding="4dp"
+                android:text="身份证反面"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                android:gravity="center">
                 <ImageView
                     android:id="@+id/photo_fan_iv"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@mipmap/zhengmian"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:scaleType="fitXY"/>
+                    android:layout_width="160dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/bankcard_big"
+                    android:layout_marginHorizontal="20dp"
+                    android:visibility="visible"/>
 
-                <TextView android:id="@+id/fan_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="反面"
-                    android:textColor="@color/tab_grey"
-                    android:textSize="@dimen/text_size_16"
-                    android:layout_marginTop="20dp"
-                    android:layout_centerInParent="true"/>
-            </RelativeLayout>
+                <ImageView
+                    android:id="@+id/take_photo_fan_iv"
+                    android:layout_width="130dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="20dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/camera_icon"
+                    android:visibility="visible" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@mipmap/star_icon"
+                android:drawablePadding="4dp"
+                android:text="人脸正面照"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginHorizontal="10dp"/>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="点击拍摄身份证正反面"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/text_size_16"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_centerInParent="true"/>-->
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginLeft="@dimen/common_margin_left"-->
+<!--                android:layout_marginRight="@dimen/common_margin_right">-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/photo_zheng_iv"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="160dp"-->
+<!--                    android:background="@mipmap/zhengmian"-->
+<!--                    android:layout_marginLeft="20dp"-->
+<!--                    android:layout_marginRight="20dp"-->
+<!--                    android:scaleType="fitXY"/>-->
+<!--                <TextView android:id="@+id/zheng_tv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="正面"-->
+<!--                    android:textColor="@color/tab_grey"-->
+<!--                    android:textSize="@dimen/text_size_16"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:layout_centerInParent="true"/>-->
+<!--            </RelativeLayout>-->
+
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:layout_marginLeft="@dimen/common_margin_left"-->
+<!--                android:layout_marginRight="@dimen/common_margin_right">-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/photo_fan_iv"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="160dp"-->
+<!--                    android:background="@mipmap/zhengmian"-->
+<!--                    android:layout_marginLeft="20dp"-->
+<!--                    android:layout_marginRight="20dp"-->
+<!--                    android:scaleType="fitXY"/>-->
+
+<!--                <TextView android:id="@+id/fan_tv"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="反面"-->
+<!--                    android:textColor="@color/tab_grey"-->
+<!--                    android:textSize="@dimen/text_size_16"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:layout_centerInParent="true"/>-->
+<!--            </RelativeLayout>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -79,16 +169,16 @@
                 android:gravity="center">
                 <ImageView
                     android:id="@+id/photo_iv"
-                    android:layout_width="130dp"
-                    android:layout_height="150dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:background="@mipmap/zhengmian"
                     android:layout_margin="20dp"
                     android:scaleType="fitXY"
                     android:visibility="visible"/>
                 <ImageView
                     android:id="@+id/take_photo_iv"
-                    android:layout_width="130dp"
-                    android:layout_height="150dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:background="@mipmap/kaoqin_sign_icon"
                     android:layout_margin="20dp"
                     android:scaleType="fitXY"
@@ -97,10 +187,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp">
+                android:layout_marginHorizontal="0dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
                     android:layout_marginHorizontal="10dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16"
@@ -116,10 +208,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp">
+                android:layout_marginHorizontal="0dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
                     android:layout_marginHorizontal="10dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16"
@@ -135,10 +229,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp">
+                android:layout_marginHorizontal="0dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
                     android:layout_marginHorizontal="10dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16"
@@ -154,10 +250,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp">
+                android:layout_marginHorizontal="0dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:drawableLeft="@mipmap/star_icon"
+                    android:drawablePadding="4dp"
                     android:layout_marginHorizontal="10dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size_16"

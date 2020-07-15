@@ -79,6 +79,20 @@ public class ProjectFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         projectAdapter = new ProjectAdapter(getContext());
         listView.setAdapter(projectAdapter);
+
+        UserCache userCache = UserCache.getInstance(getContext());
+        User user = userCache.get();
+        if (user != null) {
+            String prole = user.getProle();
+
+            if (prole != null){
+                if ((prole.equals("project_manager") || prole.equals("root"))){
+                    right_header_btn.setVisibility(View.VISIBLE);
+                } else {
+                    right_header_btn.setVisibility(View.INVISIBLE);
+                }
+            }
+        }
     }
 
     @Override
