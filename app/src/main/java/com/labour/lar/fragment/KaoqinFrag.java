@@ -77,6 +77,11 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     @BindView(R.id.sign_iv)
     ImageView sign_iv;
 
+    @BindView(R.id.ly_name)
+    View ly_name;
+    @BindView(R.id.txt_name)
+    TextView txt_name;
+
     @BindView(R.id.sign_btn)
     Button sign_btn;
 
@@ -93,8 +98,13 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     // 是否匹配人脸
     private boolean isFaceMatch = false;
 
+    private User user;
 
     private static final int REQUEST_CODE_FACE = 101;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @Override
     public int getFragmentLayoutId() {
@@ -104,10 +114,20 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     @Override
     public void initView() {
         back_iv.setVisibility(View.INVISIBLE);
-        title_tv.setText("考勤打卡");
+
+        if(user == null){
+            user = UserCache.getInstance(context).get();
+            title_tv.setText("考勤打卡");
+            ly_name.setVisibility(View.GONE);
+        } else {
+            title_tv.setText("代员工考勤打卡");
+            ly_name.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(user.getName())) {
+                txt_name.setText(user.getName());
+            }
+        }
+
         right_header_btn.setText("刷新");
-//        Drawable d = getResources().getDrawable(R.mipmap.more_icon);
-//        right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
     }
 
     @Override
@@ -352,12 +372,11 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     }
 
     private void signInOut(){
-
-        UserCache userCache = UserCache.getInstance(context);
-        if(userCache.get() == null){
-            AppToast.show(context,Constants.LOGIN_ERROR_TIP);
+        if(user == null){
+            AppToast.show(context,"用户信息错误！");
             return;
         }
+
         if(latLonPoint == null){
             AppToast.show(context,"定位信息获取失败，请重新获取！");
             return;
@@ -367,7 +386,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         String clockdate = sf1.format(new Date());
         String clockintime = sf2.format(new Date());
 
-        User user =  userCache.get();
         int userId =user.getId();
         Constants.ROLE role = user.getRole();
         int employee_id = userId;

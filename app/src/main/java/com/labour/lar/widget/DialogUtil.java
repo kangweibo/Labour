@@ -46,13 +46,14 @@ public class DialogUtil {
 		}
 	}
 
-	public static void showTextDialog(Context context, String title, String msg, boolean isAlertDialog, final OnDialogListener<Void> onDialogListener) {
+	public static void showTextDialog(Context context, String title, String msg, boolean isAlertDialog, boolean cancelable, final OnDialogListener<Void> onDialogListener) {
 
 		final AlertDialog adlg = new Builder(context).create();
 		adlg.show();
 		Window window = adlg.getWindow();
 		window.setContentView(R.layout.widget_alert_dialog_view);
 
+		adlg.setCancelable(cancelable);
 		OnClickListener clickListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -130,12 +131,15 @@ public class DialogUtil {
 		title_tv.setText(title);
 
 	}
+	public static void showAlertDialog(Context context, String title, String msg, boolean cancelable, final OnDialogListener<Void> onDialogListener) {
+		showTextDialog(context, title, msg, true, cancelable,onDialogListener);
+	}
 	public static void showAlertDialog(Context context, String title, String msg, final OnDialogListener<Void> onDialogListener) {
-		showTextDialog(context, title, msg, true, onDialogListener);
+		showTextDialog(context, title, msg, true, true,onDialogListener);
 	}
 
 	public static void showConfirmDialog(Context context, String title, String msg, final OnDialogListener<Void> onDialogListener) {
-		showTextDialog(context, title, msg, false, onDialogListener);
+		showTextDialog(context, title, msg, false, true,onDialogListener);
 	}
 	
 	public static void showDateDialog(Context mContext, Calendar defaultCalendar, final OnDialogListener<Calendar> onDialogListener) {

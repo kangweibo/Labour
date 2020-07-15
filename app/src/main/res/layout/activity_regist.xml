@@ -215,7 +215,34 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"/>
     </RadioGroup>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:layout_marginRight="@dimen/common_margin_right"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+        <CheckBox
+            android:id="@+id/cb_agree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="#8a8a8a"
+            android:text="已阅读并同意"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+        <TextView
+            android:id="@+id/txt_agreement"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_16"
+            android:textColor="@color/common_blue"
+            android:text="《软件许可及服务协议》"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+    </LinearLayout>
     <Button android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="45dp"
@@ -225,6 +252,7 @@
         android:textSize="@dimen/text_size_16"
         android:layout_marginRight="@dimen/common_margin_right"
         android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginTop="25dp"/>
+        android:layout_marginTop="25dp"
+        android:enabled="false"/>
 
 </LinearLayout>

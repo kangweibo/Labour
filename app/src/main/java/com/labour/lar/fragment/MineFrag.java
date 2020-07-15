@@ -173,7 +173,7 @@ public class MineFrag extends BaseFragment {
 
     private String[] getStrings() {
         String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","帮助","银行卡管理",
-                "代员工身份验证","代员工银行卡认证","代员打卡","岗前安全培训"};
+                "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo == null) {
@@ -435,6 +435,7 @@ public class MineFrag extends BaseFragment {
         User user = new User();
         user.setId(employee.getId());
         user.setProle(employee.getProle());
+        user.setName(employee.getName());
 
         Intent intent = new Intent(context, ClockInActivity.class);
         intent.putExtra("user", user);

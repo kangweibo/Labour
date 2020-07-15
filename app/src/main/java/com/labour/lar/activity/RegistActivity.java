@@ -10,6 +10,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -77,6 +80,13 @@ public class RegistActivity extends BaseActivity {
     @BindView(R.id.getVerfyCode_tv)
     TextView getVerfyCode_tv;
 
+    @BindView(R.id.login_btn)
+    Button login_btn;
+    @BindView(R.id.cb_agree)
+    CheckBox cb_agree;
+    @BindView(R.id.txt_agreement)
+    TextView txt_agreement;
+
     private String checkedRole = "manager";
 
     //暂时没用
@@ -124,6 +134,16 @@ public class RegistActivity extends BaseActivity {
             }
         });
 
+        cb_agree.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    login_btn.setEnabled(true);
+                } else {
+                    login_btn.setEnabled(false);
+                }
+            }
+        });
         showIdentifie(this);
     }
 
@@ -141,7 +161,7 @@ public class RegistActivity extends BaseActivity {
         OkGo.getInstance().cancelTag("request_tag");
     }
 
-    @OnClick({R.id.back_iv,R.id.login_btn,R.id.sex_et,R.id.getVerfyCode_tv})
+    @OnClick({R.id.back_iv,R.id.login_btn,R.id.sex_et,R.id.getVerfyCode_tv,R.id.txt_agreement})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -163,6 +183,9 @@ public class RegistActivity extends BaseActivity {
                 break;
             case R.id.sex_et:
                 showSexDialog();
+                break;
+            case R.id.txt_agreement:
+                startAgreement();
                 break;
         }
     }
@@ -307,5 +330,10 @@ public class RegistActivity extends BaseActivity {
                 AppToast.show(RegistActivity.this,error.getMessage());
             }
         });
+    }
+
+    private void startAgreement() {
+        Intent intent = new Intent(this, AgreementActivity.class);
+        startActivity(intent);
     }
 }

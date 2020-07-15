@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -59,6 +60,15 @@ public class TrainExamActivity extends BaseActivity {
     @BindView(R.id.txt_time_s)
     TextView txt_time_s;
 
+    @BindView(R.id.ly_train_result)
+    View ly_train_result;
+    @BindView(R.id.img_ispass)
+    ImageView img_ispass;
+    @BindView(R.id.txt_exam_result)
+    TextView txt_exam_result;
+    @BindView(R.id.txt_exam_score)
+    TextView txt_exam_score;
+
     private TrainPaperAdapter trainAdapter;
 
     private List<Question1> question1List = new ArrayList<>();
@@ -107,7 +117,7 @@ public class TrainExamActivity extends BaseActivity {
                 countDownTimer.setOnCountDownListener(new MCountDownTimer.OnCountDownListener() {
                     @Override
                     public void onStop() {
-
+                        submitForce();
                     }
 
                     @Override
@@ -119,8 +129,6 @@ public class TrainExamActivity extends BaseActivity {
                         long h = second / 3600;
                         long m = second / 60;
                         long s = second % 60;
-
-                        Log.d("countDownTimer", "onStop: countDownTimer.onTick()");
 
                         txt_time_h.setText(df.format(h));
                         txt_time_m.setText(df.format(m));
@@ -165,14 +173,11 @@ public class TrainExamActivity extends BaseActivity {
         });
 
         getExam();
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (countDownTimer != null){
-            countDownTimer.start();
-        }
+//        ExamResult examResult = new ExamResult();
+//        examResult.setTotalscore(100);
+//        examResult.setIspass(true);
+//        showResult(examResult);
     }
 
     @Override
@@ -301,9 +306,40 @@ public class TrainExamActivity extends BaseActivity {
         });
     }
 
+    // 强制提交考试
+    private void submitForce() {
+        DialogUtil.showAlertDialog(this,"提示信息","考试时间已到，请确定交卷", false,
+                new DialogUtil.OnDialogEvent<Void>(){
+            @Override
+            public void onPositiveButtonClick(Void t) {
+                commitExam();
+            }
+        });
+    }
+
     // 提交考试
     private void submit() {
-        DialogUtil.showConfirmDialog(this,"提示信息","确认交卷吗？",new DialogUtil.OnDialogEvent<Void>(){
+        int count = 0;
+        for (TrainPaperAdapter.ListItem item : itemSet.get(0)) {
+            if (TextUtils.isEmpty(item.answer)) {
+                count++;
+            }
+        }
+
+        for (TrainPaperAdapter.ListItem item : itemSet.get(1)) {
+            if (TextUtils.isEmpty(item.answer)) {
+                count++;
+            }
+        }
+
+        String tip;
+        if (count > 0) {
+            tip = "您还有" + count + "道题没有答，确认交卷吗？";
+        } else {
+            tip = "确认交卷吗？";
+        }
+
+        DialogUtil.showConfirmDialog(this,"提示信息",tip,new DialogUtil.OnDialogEvent<Void>(){
             @Override
             public void onPositiveButtonClick(Void t) {
                 commitExam();
@@ -327,7 +363,7 @@ public class TrainExamActivity extends BaseActivity {
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
         param.put("examid",exam.getId());
-        param.put("empolyeeid",user.getId());
+        param.put("employeeid",user.getId());
         param.put("answer",getAnswer());
         String jsonParams = param.toJSONString();
 
@@ -389,20 +425,17 @@ public class TrainExamActivity extends BaseActivity {
 
     //显示结果
     private void showResult(ExamResult examResult) {
-        String result = "得分" + examResult.getTotalscore();
+        title_tv.setText("考试成绩");
+        ly_train_result.setVisibility(View.VISIBLE);
+        String score = "分数：" + examResult.getTotalscore();
+        txt_exam_score.setText(score);
 
         if (examResult.isIspass()) {
-            result = result + "\n通过";
+            txt_exam_result.setText("考试结果：通过");
+            img_ispass.setImageResource(R.mipmap.pass_icon);
         } else {
-            result = result + "\n未通过";
+            txt_exam_result.setText("考试结果：不通过");
+            img_ispass.setImageResource(R.mipmap.notpass_icon);
         }
-
-        DialogUtil.showAlertDialog(this,"考试结果",result,
-                new DialogUtil.OnDialogEvent<Void>(){
-            @Override
-            public void onPositiveButtonClick(Void t) {
-                finish();
-            }
-        });
     }
 }
