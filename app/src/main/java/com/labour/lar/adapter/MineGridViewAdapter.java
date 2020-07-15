@@ -13,7 +13,7 @@ import com.labour.lar.R;
 public class MineGridViewAdapter extends BaseAdapter {
     private Context context;
 
-    private int [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,
+    private Integer [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,
             R.mipmap.xiaoxitongzhi_icon, R.mipmap.seting_icon,
             R.mipmap.xiangmu_icon,R.mipmap.personal_icon,R.mipmap.personal_icon,
             R.mipmap.kaoqinbaobiao_icon,R.mipmap.personal_icon
@@ -63,6 +63,10 @@ public class MineGridViewAdapter extends BaseAdapter {
     class ViewHolder{
         ImageView imageView;
         TextView textView;
+    }
+
+    public void setImgs(Integer[] imgs) {
+        this.imgs = imgs;
     }
 
     public void setStrings(String[] strs) {

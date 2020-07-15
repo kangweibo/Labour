@@ -20,14 +20,11 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.GongRenDetailActivity;
 import com.labour.lar.activity.ManagerAddActivity;
-import com.labour.lar.adapter.ProjectDetailListAdapter;
-import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.EmployeeListAdapter;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.User;
-import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.DialogUtil;
@@ -41,10 +38,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 
 import static android.app.Activity.RESULT_OK;
@@ -63,9 +58,9 @@ public class BanZuDetailListFrag extends BaseFragment {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectDetailListAdapter projectAdapter;
+    private EmployeeListAdapter employeeListAdapter;
     private List<Employee> employeeList = new ArrayList<>();
-    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
+    private List<EmployeeListAdapter.ListItem> list = new ArrayList<>();
 
     private Classteam classteam;
     private Employee employeeSelect;
@@ -78,11 +73,10 @@ public class BanZuDetailListFrag extends BaseFragment {
 
     @Override
     public void initView() {
-
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectDetailListAdapter(getContext());
-        listView.setAdapter(projectAdapter);
+        employeeListAdapter = new EmployeeListAdapter(getContext());
+        listView.setAdapter(employeeListAdapter);
     }
 
     @Override
@@ -102,7 +96,15 @@ public class BanZuDetailListFrag extends BaseFragment {
         });
         list_refresh.setEnableLoadMore(false);
 
-        projectAdapter.setList(list);
+        employeeListAdapter.setList(list);
+
+        employeeListAdapter.setOnButtonClickListener(new EmployeeListAdapter.OnButtonClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Employee employee = employeeList.get(position);
+                auditEmployee(employee);
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,17 +189,39 @@ public class BanZuDetailListFrag extends BaseFragment {
     private void showEmployees() {
         list.clear();
         for(Employee employee : employeeList){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            EmployeeListAdapter.ListItem item = new EmployeeListAdapter.ListItem();
             item.field1 = employee.getName();;
             item.field1Content = "";
             item.field2 = "手机号：" + employee.getPhone();
             item.field2Content = "";
             item.isShowArraw = true;
 
+            UserCache userCache = UserCache.getInstance(getContext());
+            User user = userCache.get();
+
+            if (user != null) {
+                User.Classteam myClassteam = user.getClassteam();
+                if (myClassteam != null){
+                    int myClassteamId = myClassteam.getId();
+                    int classteamId = classteam.getId();
+                    String prole = user.getProle();
+
+                    // 本班组组长
+                    if (prole != null && prole.equals("classteam_manager")
+                            && myClassteamId == classteamId){
+                        if (employee.getStatus() == null || !employee.getStatus().equals("在岗")) {
+                            item.isPass = true;
+                        } else {
+                            item.isPass = false;
+                        }
+                    }
+                }
+            }
+
             list.add(item);
         }
 
-        projectAdapter.notifyDataSetChanged();
+        employeeListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -315,6 +339,43 @@ public class BanZuDetailListFrag extends BaseFragment {
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(getActivity(),"删除班组成员出错!");
+            }
+        });
+    }
+
+    // 审核
+    private void auditEmployee(Employee person) {
+        if (person == null){
+            return;
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("employeeid",person.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/employee_audit";
+        ProgressDialog dialog = ProgressDialog.createDialog(getActivity());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(getActivity(),"班组成员审核通过!");
+                    getEmployees();
+                } else {
+                    JSONObject jo = jr.getJsonObj();
+                    String errmsg = jo.getString("errmsg");
+                    AppToast.show(getActivity(),errmsg);
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getActivity(),"班组成员审核出错!");
             }
         });
     }

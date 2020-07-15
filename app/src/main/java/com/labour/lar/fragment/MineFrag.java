@@ -42,6 +42,9 @@ import com.lzy.okgo.model.Response;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.common.Constant;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -74,6 +77,8 @@ public class MineFrag extends BaseFragment {
     RoundImageView photo_iv;
 
     MineGridViewAdapter mineGridViewAdapter;
+    List<Integer> imgList = new ArrayList();
+    List<String> list = new ArrayList();
 
     @Override
     public int getFragmentLayoutId() {
@@ -93,32 +98,33 @@ public class MineFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mineGridViewAdapter = new MineGridViewAdapter(context);
-        mineGridViewAdapter.setStrings(getStrings());
+        initData(mineGridViewAdapter);
         main_gridview.setAdapter(mineGridViewAdapter);
         main_gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 0){
+                String item = list.get(position);
+                if(item.equals("个人信息")){
                     startActivity(new Intent(context, MyInfoActivity.class));
-                } else if(position == 1){
+                } else if(item.equals("工程项目")){
                     showProjectFrag();
-                } else if(position == 3){
+                } else if(item.equals("加入班组") || item.equals("加入作业队") || item.equals("加入项目部")){
                     showClassteam();
-                } else if(position == 4){
-                    startActivity(new Intent(context, SettingActivity.class));
-                } else if(position == 5){
+                } else if(item.equals("银行卡管理")){
                     startActivity(new Intent(context, BankcardAddActivity.class));
-                } else if(position == 6){
+                } else if(item.equals("代员工身份验证")){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_Identified);
-                }else if(position == 7){
+                } else if(item.equals("代员工银行卡认证")){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_Bankcard);
-                }else if(position == 8){
+                } else if(item.equals("代员工打卡")){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_ClockIn);
-                }else if(position == 9){
+                } else if(item.equals("岗前安全培训")){
                     startActivity(new Intent(context, TrainActivity.class));
+                } else if(item.equals("设置")){
+                    startActivity(new Intent(context, SettingActivity.class));
                 }
             }
         });
@@ -170,26 +176,58 @@ public class MineFrag extends BaseFragment {
         EventManager.post(event);
     }
 
-    private String[] getStrings() {
-        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","银行卡管理",
-                "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
+    private void initData(MineGridViewAdapter mineGridViewAdapter) {
+//        int [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,
+//                R.mipmap.xiaoxitongzhi_icon, R.mipmap.seting_icon,
+//                R.mipmap.xiangmu_icon,R.mipmap.personal_icon,R.mipmap.personal_icon,
+//                R.mipmap.kaoqinbaobiao_icon,R.mipmap.personal_icon
+//        };
+//        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","银行卡管理",
+//                "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
+
+        list.add("个人信息");
+        imgList.add(R.mipmap.personal_icon);
+        list.add("工程项目");
+        imgList.add(R.mipmap.xiangmu_icon);
+        list.add("考勤报表");
+        imgList.add(R.mipmap.kaoqinbaobiao_icon);
+        list.add("银行卡管理");
+        imgList.add(R.mipmap.xiangmu_icon);
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo == null) {
-            return strs;
-        }
-
         String prole = userInfo.getProle();
 
         if (prole.equals("classteam_manager") || prole.equals("employee")){
-            strs[3] = "加入班组";
+            list.add("加入班组");
+            imgList.add(R.mipmap.personal_icon);
         } else if (prole.equals("operteam_manager") || prole.equals("staff")){
-            strs[3] = "加入作业队";
+            list.add("加入作业队");
+            imgList.add(R.mipmap.personal_icon);
         } else if (prole.equals("project_manager") || prole.equals("manager")){
-            strs[3] = "加入项目部";
+            list.add("加入项目部");
+            imgList.add(R.mipmap.personal_icon);
         }
 
-        return strs;
+        if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
+                || prole.equals("manager")){
+            list.add("代员工身份验证");
+            imgList.add(R.mipmap.personal_icon);
+            list.add("代员工银行卡认证");
+            imgList.add(R.mipmap.xiangmu_icon);
+            list.add("代员工打卡");
+            imgList.add(R.mipmap.kaoqinbaobiao_icon);
+        }
+
+        list.add("岗前安全培训");
+        imgList.add(R.mipmap.personal_icon);
+        list.add("设置");
+        imgList.add(R.mipmap.seting_icon);
+
+        String[] strs = list.toArray(new String[list.size()]);
+        Integer[] imgs = imgList.toArray(new Integer[imgList.size()]);
+
+        mineGridViewAdapter.setImgs(imgs);
+        mineGridViewAdapter.setStrings(strs);
     }
 
     private void showClassteam() {
