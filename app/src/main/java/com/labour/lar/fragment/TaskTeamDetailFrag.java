@@ -11,18 +11,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
-import com.labour.lar.cache.UserInfoCache;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.Operteam;
-import com.labour.lar.module.UserInfo;
+import com.labour.lar.module.User;
 import com.labour.lar.widget.RoundImageView;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -81,7 +78,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(operteam.getMemo())){
+            if (!TextUtils.isEmpty(operteam.getPm())){
                 company_tv.setText("队长：" + operteam.getPm());
             } else {
                 company_tv.setText("队长：");
@@ -100,13 +97,15 @@ public class TaskTeamDetailFrag extends BaseFragment {
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo != null) {
-            String prole = userInfo.getProle();
-
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
             if (prole != null){
                 if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                    right_header_btn.setVisibility(View.VISIBLE);
+                    User.Operteam operteam = user.getOperteam();
+                    if (operteam != null && operteam.getId() == this.operteam.getId()){
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

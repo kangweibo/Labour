@@ -20,7 +20,7 @@ public class User implements Serializable {
     private Project project;
 
     //作业队: 作业队-->项目-->企业
-    private Classteam.Operteam operteam;
+    private Operteam operteam;
     private String operteamname;//": "unknown";
 
     //工人： 班组-->作业队-->项目-->企业
@@ -92,11 +92,11 @@ public class User implements Serializable {
         this.classteam = classteam;
     }
 
-    public Classteam.Operteam getOperteam() {
+    public Operteam getOperteam() {
         return operteam;
     }
 
-    public void setOperteam(Classteam.Operteam operteam) {
+    public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
     }
 
@@ -114,6 +114,73 @@ public class User implements Serializable {
 
     public void setClassteamname(String classteamname) {
         this.classteamname = classteamname;
+    }
+
+    //企业
+    public static class Ent implements Serializable {
+        private int id;//": 999999999,企业id
+        private String name;//": "unknown",企业名称
+        private String linkman;//": null,联系人
+        private String linktel;//": null,联系电话
+        private int admin_user_id;//": 999999999,
+        private String created_at;//": "2020-05-26T01:50:18.000Z",
+        private String updated_at;//": "2020-05-26T01:50:18.000Z"
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getLinkman() {
+            return linkman;
+        }
+
+        public void setLinkman(String linkman) {
+            this.linkman = linkman;
+        }
+
+        public String getLinktel() {
+            return linktel;
+        }
+
+        public void setLinktel(String linktel) {
+            this.linktel = linktel;
+        }
+
+        public int getAdmin_user_id() {
+            return admin_user_id;
+        }
+
+        public void setAdmin_user_id(int admin_user_id) {
+            this.admin_user_id = admin_user_id;
+        }
+
+        public String getCreated_at() {
+            return created_at;
+        }
+
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
+
+        public String getUpdated_at() {
+            return updated_at;
+        }
+
+        public void setUpdated_at(String updated_at) {
+            this.updated_at = updated_at;
+        }
     }
 
     /**
@@ -228,72 +295,81 @@ public class User implements Serializable {
         public void setEnt(Ent ent) {
             this.ent = ent;
         }
+    }
 
-        //企业
-        public static class Ent implements Serializable {
-            private int id;//": 999999999,企业id
-            private String name;//": "unknown",企业名称
-            private String linkman;//": null,联系人
-            private String linktel;//": null,联系电话
-            private int admin_user_id;//": 999999999,
-            private String created_at;//": "2020-05-26T01:50:18.000Z",
-            private String updated_at;//": "2020-05-26T01:50:18.000Z"
+    //作业队
+    public static class Operteam implements Serializable {
+        private int id;//": 999999999,作业队id
+        private int project_id;//": 999999999,所属项目id
+        private String name;//": "unknown",作业队名称
+        private String memo;//": null,作业队备注
+        private String duty;//": null,作业队职责
+        private String created_at;//": "2020-05-26T01:54:17.000Z",
+        private String updated_at;//": "2020-05-26T01:54:17.000Z",
+        private Project project;//项目部
 
-            public int getId() {
-                return id;
-            }
+        public int getId() {
+            return id;
+        }
 
-            public void setId(int id) {
-                this.id = id;
-            }
+        public void setId(int id) {
+            this.id = id;
+        }
 
-            public String getName() {
-                return name;
-            }
+        public int getProject_id() {
+            return project_id;
+        }
 
-            public void setName(String name) {
-                this.name = name;
-            }
+        public void setProject_id(int project_id) {
+            this.project_id = project_id;
+        }
 
-            public String getLinkman() {
-                return linkman;
-            }
+        public String getName() {
+            return name;
+        }
 
-            public void setLinkman(String linkman) {
-                this.linkman = linkman;
-            }
+        public void setName(String name) {
+            this.name = name;
+        }
 
-            public String getLinktel() {
-                return linktel;
-            }
+        public String getMemo() {
+            return memo;
+        }
 
-            public void setLinktel(String linktel) {
-                this.linktel = linktel;
-            }
+        public void setMemo(String memo) {
+            this.memo = memo;
+        }
 
-            public int getAdmin_user_id() {
-                return admin_user_id;
-            }
+        public String getDuty() {
+            return duty;
+        }
 
-            public void setAdmin_user_id(int admin_user_id) {
-                this.admin_user_id = admin_user_id;
-            }
+        public void setDuty(String duty) {
+            this.duty = duty;
+        }
 
-            public String getCreated_at() {
-                return created_at;
-            }
+        public String getCreated_at() {
+            return created_at;
+        }
 
-            public void setCreated_at(String created_at) {
-                this.created_at = created_at;
-            }
+        public void setCreated_at(String created_at) {
+            this.created_at = created_at;
+        }
 
-            public String getUpdated_at() {
-                return updated_at;
-            }
+        public String getUpdated_at() {
+            return updated_at;
+        }
 
-            public void setUpdated_at(String updated_at) {
-                this.updated_at = updated_at;
-            }
+        public void setUpdated_at(String updated_at) {
+            this.updated_at = updated_at;
+        }
+
+        public Project getProject() {
+            return project;
+        }
+
+        public void setProject(Project project) {
+            this.project = project;
         }
     }
 
@@ -363,80 +439,6 @@ public class User implements Serializable {
             this.operteam = operteam;
         }
 
-        //作业队
-        public static class Operteam implements Serializable {
-            private int id;//": 999999999,作业队id
-            private int project_id;//": 999999999,所属项目id
-            private String name;//": "unknown",作业队名称
-            private String memo;//": null,作业队备注
-            private String duty;//": null,作业队职责
-            private String created_at;//": "2020-05-26T01:54:17.000Z",
-            private String updated_at;//": "2020-05-26T01:54:17.000Z",
-            private Project project;//项目部
 
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
-
-            public int getProject_id() {
-                return project_id;
-            }
-
-            public void setProject_id(int project_id) {
-                this.project_id = project_id;
-            }
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-
-            public String getMemo() {
-                return memo;
-            }
-
-            public void setMemo(String memo) {
-                this.memo = memo;
-            }
-
-            public String getDuty() {
-                return duty;
-            }
-
-            public void setDuty(String duty) {
-                this.duty = duty;
-            }
-
-            public String getCreated_at() {
-                return created_at;
-            }
-
-            public void setCreated_at(String created_at) {
-                this.created_at = created_at;
-            }
-
-            public String getUpdated_at() {
-                return updated_at;
-            }
-
-            public void setUpdated_at(String updated_at) {
-                this.updated_at = updated_at;
-            }
-
-            public Project getProject() {
-                return project;
-            }
-
-            public void setProject(Project project) {
-                this.project = project;
-            }
-        }
     }
 }

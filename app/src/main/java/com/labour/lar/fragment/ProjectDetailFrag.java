@@ -15,8 +15,10 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
 import java.util.ArrayList;
@@ -98,13 +100,15 @@ public class ProjectDetailFrag extends BaseFragment {
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo != null) {
-            String prole = userInfo.getProle();
-
-            if (prole != null){
-                if (prole.equals("project_manager") || prole.equals("project_quota")){
-                    right_header_btn.setVisibility(View.VISIBLE);
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null) {
+                if (prole.equals("project_manager") || prole.equals("project_quota")) {
+                    User.Project project = user.getProject();
+                    if (project != null && project.getId() == this.project.getId()) {
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

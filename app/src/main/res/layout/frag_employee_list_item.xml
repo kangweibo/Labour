@@ -65,12 +65,11 @@
 
     <Button android:id="@+id/btn_examine"
         android:layout_width="wrap_content"
-        android:layout_height="36dp"
+        android:layout_height="32dp"
         android:textColor="@color/white"
         android:background="@drawable/selector_button"
         android:text="上岗审核"
-        android:textSize="@dimen/text_size_16"
-        android:layout_marginRight="@dimen/common_margin_right"
+        android:textSize="@dimen/text_size_14"
         android:layout_marginLeft="@dimen/common_margin_left"/>
 
     <ImageView android:id="@+id/arraw_iv"

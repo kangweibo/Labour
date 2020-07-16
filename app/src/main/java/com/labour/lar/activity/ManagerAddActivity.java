@@ -107,7 +107,6 @@ public class ManagerAddActivity extends BaseActivity {
             strType = "项目成员";
         } else if (type == 1){
             strType = "作业队成员";
-            title_tv.setText("添加作业队成员");
         } else {
             strType = "班组成员";
         }

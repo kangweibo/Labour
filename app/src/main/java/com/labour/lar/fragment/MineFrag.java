@@ -189,8 +189,8 @@ public class MineFrag extends BaseFragment {
         imgList.add(R.mipmap.personal_icon);
         list.add("工程项目");
         imgList.add(R.mipmap.xiangmu_icon);
-        list.add("考勤报表");
-        imgList.add(R.mipmap.kaoqinbaobiao_icon);
+//        list.add("考勤报表");
+//        imgList.add(R.mipmap.kaoqinbaobiao_icon);
         list.add("银行卡管理");
         imgList.add(R.mipmap.xiangmu_icon);
 
@@ -200,10 +200,10 @@ public class MineFrag extends BaseFragment {
         if (prole.equals("classteam_manager") || prole.equals("employee")){
             list.add("加入班组");
             imgList.add(R.mipmap.personal_icon);
-        } else if (prole.equals("operteam_manager") || prole.equals("staff")){
+        } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
             list.add("加入作业队");
             imgList.add(R.mipmap.personal_icon);
-        } else if (prole.equals("project_manager") || prole.equals("manager")){
+        } else if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
             list.add("加入项目部");
             imgList.add(R.mipmap.personal_icon);
         }

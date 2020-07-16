@@ -16,9 +16,11 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
 
@@ -76,7 +78,7 @@ public class StaffDetailFrag extends BaseFragment {
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (operteam!= null){
-            if (!TextUtils.isEmpty(operteam.getName())){
+            if (!TextUtils.isEmpty(operteam.getPm())){
                 name_tv.setText("队长：" + operteam.getPm());
             } else {
                 name_tv.setText("队长：");
@@ -92,14 +94,22 @@ public class StaffDetailFrag extends BaseFragment {
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo != null) {
-            String prole = userInfo.getProle();
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null) {
+                if (prole.equals("project_manager") || prole.equals("project_quota")) {
+                    User.Project project = user.getProject();
+                    if (project != null && project.getId() == this.operteam.getProject_id()) {
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
+                }
 
-            if (prole != null){
-                if (prole.equals("project_manager") || prole.equals("project_quota")
-                || prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                    right_header_btn.setVisibility(View.VISIBLE);
+                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                    User.Operteam operteam = user.getOperteam();
+                    if (operteam != null && operteam.getId() == this.operteam.getId()){
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }

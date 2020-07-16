@@ -16,8 +16,10 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
 
@@ -81,7 +83,7 @@ public class BanZuDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(classteam.getMemo())){
+            if (!TextUtils.isEmpty(classteam.getPm())){
                 company_tv.setText("组长：" + classteam.getPm());
             } else {
                 company_tv.setText("组长：");
@@ -95,14 +97,22 @@ public class BanZuDetailFrag extends BaseFragment {
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo != null) {
-            String prole = userInfo.getProle();
-
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
             if (prole != null){
-                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")
-                || prole.equals("classteam_manager")){
-                    right_header_btn.setVisibility(View.VISIBLE);
+                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                    User.Operteam operteam = user.getOperteam();
+                    if (operteam != null && operteam.getId() == classteam.getOperteam_id()){
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                if (prole.equals("classteam_manager")){
+                    User.Classteam team = user.getClassteam();
+                    if (team != null && team.getId() == classteam.getId()) {
+                        right_header_btn.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }
