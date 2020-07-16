@@ -36,7 +36,7 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
         holder.field2_content_tv.setText(item.field2Content);
 
         holder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
-        holder.btn_examine.setVisibility(item.isPass?View.GONE:View.VISIBLE);
+        holder.btn_examine.setVisibility(item.isShowPass?View.VISIBLE:View.GONE);
 
         holder.btn_examine.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +55,7 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
         public String field2Content;
 
         public boolean isShowArraw;
-        public boolean isPass;
+        public boolean isShowPass;
     }
 
     class ItemHolder {

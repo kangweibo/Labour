@@ -70,7 +70,8 @@
         android:background="@drawable/selector_button"
         android:text="上岗审核"
         android:textSize="@dimen/text_size_14"
-        android:layout_marginLeft="@dimen/common_margin_left"/>
+        android:layout_marginLeft="@dimen/common_margin_left"
+        android:visibility="gone"/>
 
     <ImageView android:id="@+id/arraw_iv"
         android:layout_width="wrap_content"

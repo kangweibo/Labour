@@ -209,10 +209,8 @@ public class BanZuDetailListFrag extends BaseFragment {
                     // 本班组组长
                     if (prole != null && prole.equals("classteam_manager")
                             && myClassteamId == classteamId){
-                        if (employee.getStatus() == null || !employee.getStatus().equals("在岗")) {
-                            item.isPass = true;
-                        } else {
-                            item.isPass = false;
+                        if (employee.getStatus() == null || employee.getStatus().equals("不通过")) {
+                            item.isShowPass = true;
                         }
                     }
                 }

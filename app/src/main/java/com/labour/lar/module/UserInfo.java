@@ -26,6 +26,10 @@ public class UserInfo implements Serializable {
     private boolean identified;//": true,
     private String prolename;//":": null
 
+    private int clockinfence;// 签到对应围栏id
+    private int clockoutfence;// 签退对应围栏id
+    private String examstatus;//“通过”，null为未通过
+
     public int getId() {
         return id;
     }
@@ -160,5 +164,29 @@ public class UserInfo implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getClockinfence() {
+        return clockinfence;
+    }
+
+    public void setClockinfence(int clockinfence) {
+        this.clockinfence = clockinfence;
+    }
+
+    public int getClockoutfence() {
+        return clockoutfence;
+    }
+
+    public void setClockoutfence(int clockoutfence) {
+        this.clockoutfence = clockoutfence;
+    }
+
+    public String getExamstatus() {
+        return examstatus;
+    }
+
+    public void setExamstatus(String examstatus) {
+        this.examstatus = examstatus;
     }
 }

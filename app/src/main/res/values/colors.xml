@@ -14,6 +14,7 @@
     <color name="confirm">#FF8800</color>
     <color name="info">#669900</color>
 
+    <color name="common_yellow">#F8AB4F</color>
     <color name="common_red">#EE3D11</color>
     <color name="common_blue">#4F8AFE</color>
     <color name="common_blue_press">#2D72F9</color>

@@ -69,6 +69,8 @@ public class MineFrag extends BaseFragment {
     TextView name_tv;
     @BindView(R.id.brief_tv)
     TextView brief_tv;
+    @BindView(R.id.status_tv)
+    TextView status_tv;
 
     @BindView(R.id.main_gridview)
     NoScrollGridView main_gridview;
@@ -157,6 +159,12 @@ public class MineFrag extends BaseFragment {
             name_tv.setText(userInfo.getName());
         }
 
+        if (!TextUtils.isEmpty(userInfo.getStatus()) && userInfo.getStatus().equals("通过")){
+            status_tv.setText("（已上岗）");
+        } else {
+            status_tv.setText("（未上岗）");
+        }
+
         if (!TextUtils.isEmpty(userInfo.getPhone())){
             brief_tv.setText(userInfo.getPhone());
         }
@@ -186,42 +194,42 @@ public class MineFrag extends BaseFragment {
 //                "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
 
         list.add("个人信息");
-        imgList.add(R.mipmap.personal_icon);
+        imgList.add(R.mipmap.userinfo_icon);
         list.add("工程项目");
-        imgList.add(R.mipmap.xiangmu_icon);
+        imgList.add(R.mipmap.tab_home_checked);
 //        list.add("考勤报表");
 //        imgList.add(R.mipmap.kaoqinbaobiao_icon);
         list.add("银行卡管理");
-        imgList.add(R.mipmap.xiangmu_icon);
+        imgList.add(R.mipmap.bankcard_icon);
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         String prole = userInfo.getProle();
 
         if (prole.equals("classteam_manager") || prole.equals("employee")){
             list.add("加入班组");
-            imgList.add(R.mipmap.personal_icon);
+            imgList.add(R.mipmap.team_icon);
         } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
             list.add("加入作业队");
-            imgList.add(R.mipmap.personal_icon);
+            imgList.add(R.mipmap.team_icon);
         } else if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
             list.add("加入项目部");
-            imgList.add(R.mipmap.personal_icon);
+            imgList.add(R.mipmap.team_icon);
         }
 
         if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
-                || prole.equals("manager")){
+                || prole.equals("project_manager")){
             list.add("代员工身份验证");
-            imgList.add(R.mipmap.personal_icon);
+            imgList.add(R.mipmap.idcard_icon);
             list.add("代员工银行卡认证");
-            imgList.add(R.mipmap.xiangmu_icon);
+            imgList.add(R.mipmap.bankcard_icon);
             list.add("代员工打卡");
-            imgList.add(R.mipmap.kaoqinbaobiao_icon);
+            imgList.add(R.mipmap.tab_kaoqin_checked);
         }
 
         list.add("岗前安全培训");
-        imgList.add(R.mipmap.personal_icon);
+        imgList.add(R.mipmap.test_icon);
         list.add("设置");
-        imgList.add(R.mipmap.seting_icon);
+        imgList.add(R.mipmap.seting2_icon);
 
         String[] strs = list.toArray(new String[list.size()]);
         Integer[] imgs = imgList.toArray(new Integer[imgList.size()]);

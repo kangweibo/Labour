@@ -128,7 +128,8 @@ public class MainActivity extends BaseActivity {
         mainTabBarView.selectedTab(DEFAULT_SELECT_TAB);
 
         // 获取用户信息
-        getUserInfo();
+        //getUserInfo();
+        checkUserInfo();
     }
 
     @Override
@@ -208,67 +209,69 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void getUserInfo() {
-        UserCache userCache = UserCache.getInstance(this);
-        User user = userCache.get();
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("token","063d91b4f57518ff");
-        jsonObject.put("dtype", user.getProle());
-        jsonObject.put("userid", user.getId());
-        String jsonParams =jsonObject.toJSONString();
+//    private void getUserInfo() {
+//        UserCache userCache = UserCache.getInstance(this);
+//        User user = userCache.get();
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("token","063d91b4f57518ff");
+//        jsonObject.put("dtype", user.getProle());
+//        jsonObject.put("userid", user.getId());
+//        String jsonParams =jsonObject.toJSONString();
+//
+//        String url = Constants.HTTP_BASE + "/api/user";
+//        ProgressDialog dialog = ProgressDialog.createDialog(this);
+//        dialog.show();
+//
+//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+//            @Override
+//            public void onSuccess(Response<String> response) {
+//                dialog.dismiss();
+//                AjaxResult jr = new AjaxResult(response.body());
+//                if(jr.getSuccess() == 1){
+//                    JSONObject jo = jr.getData();
+//                    UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+//                    UserInfo userInfo = dealWithPic(userInfoOrg);
+//                    UserInfoCache.getInstance(MainActivity.this).put(userInfo);
+//                    checkUserInfo(MainActivity.this, userInfo);
+//                } else {
+//                    AppToast.show(MainActivity.this,"获取用户信息失败!");
+//                }
+//            }
+//            @Override
+//            public void onError(Response<String> response) {
+//                dialog.dismiss();
+//                AppToast.show(MainActivity.this,"获取用户信息出错!");
+//            }
+//        });
+//    }
+//
+//    private UserInfo dealWithPic(UserInfo userInfo) {
+//        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
+//        String pic = jsonObject.getString("url");
+//        userInfo.setPic(pic);
+//
+//        jsonObject = JSON.parseObject(userInfo.getIdpic1());
+//        String Idpic1 = jsonObject.getString("url");
+//        userInfo.setIdpic1(Idpic1);
+//
+//        jsonObject = JSON.parseObject(userInfo.getIdpic2());
+//        String Idpic2 = jsonObject.getString("url");
+//        userInfo.setIdpic2(Idpic2);
+//
+//        return userInfo;
+//    }
 
-        String url = Constants.HTTP_BASE + "/api/user";
-        ProgressDialog dialog = ProgressDialog.createDialog(this);
-        dialog.show();
+    private void checkUserInfo() {
+        UserInfo userInfo = UserInfoCache.getInstance(this).get();
 
-        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                dialog.dismiss();
-                AjaxResult jr = new AjaxResult(response.body());
-                if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
-                    UserInfo userInfo = dealWithPic(userInfoOrg);
-                    UserInfoCache.getInstance(MainActivity.this).put(userInfo);
-                    checkUserInfo(MainActivity.this, userInfo);
-                } else {
-                    AppToast.show(MainActivity.this,"获取用户信息失败!");
-                }
-            }
-            @Override
-            public void onError(Response<String> response) {
-                dialog.dismiss();
-                AppToast.show(MainActivity.this,"获取用户信息出错!");
-            }
-        });
-    }
-
-    private UserInfo dealWithPic(UserInfo userInfo) {
-        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
-        String pic = jsonObject.getString("url");
-        userInfo.setPic(pic);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic1());
-        String Idpic1 = jsonObject.getString("url");
-        userInfo.setIdpic1(Idpic1);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic2());
-        String Idpic2 = jsonObject.getString("url");
-        userInfo.setIdpic2(Idpic2);
-
-        return userInfo;
-    }
-
-    private void checkUserInfo(final Context context, UserInfo userInfo) {
-        if (userInfo.isIdentified()){
+        if (userInfo == null || userInfo.isIdentified()){
             return;
         }
 
-        DialogUtil.showConfirmDialog(context,"提示信息","你还未身份认证，是否去认证",new DialogUtil.OnDialogEvent<Void>(){
+        DialogUtil.showConfirmDialog(this,"提示信息","你还未身份认证，是否去认证",new DialogUtil.OnDialogEvent<Void>(){
             @Override
             public void onPositiveButtonClick(Void t) {
-                startActivity(new Intent(context, IdentifiedActivity.class));
+                startActivity(new Intent(MainActivity.this, IdentifiedActivity.class));
             }
         });
     }

@@ -1,18 +1,14 @@
 package com.labour.lar.fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,9 +22,6 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.baidu.idl.face.platform.FaceStatusEnum;
-import com.baidu.idl.face.platform.ILivenessStrategyCallback;
-import com.baidu.idl.face.platform.ui.FaceLivenessFragment;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
@@ -41,7 +34,6 @@ import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.Base64Bitmap;
-import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
@@ -53,7 +45,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 import butterknife.BindView;
@@ -95,6 +86,8 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
      */
     private int signState;
 
+    // 是否在围栏中
+    private boolean insideFence = false;
     // 是否匹配人脸
     private boolean isFaceMatch = false;
 
@@ -187,6 +180,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                 latLonPoint = new LatLonPoint(amapLocation.getLatitude(), amapLocation.getLongitude());
                 locationManager.getAddress(latLonPoint);
                 checkSignState();
+                insideFence();
             }else {
                 location_tv.setText("定位失败，请重试！");
             }
@@ -377,8 +371,8 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             return;
         }
 
-        if(latLonPoint == null){
-            AppToast.show(context,"定位信息获取失败，请重新获取！");
+        if(insideFence){
+            AppToast.show(context,"当前位置不在围栏内！");
             return;
         }
         SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -571,6 +565,60 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(context,"操作失败!");
+            }
+        });
+    }
+
+    /**
+     * 是否在里面
+     */
+    private void insideFence() {
+        if (latLonPoint == null){
+            return;
+        }
+
+        UserInfo user = UserInfoCache.getInstance(getContext()).get();
+        if (user == null){
+            return;
+        }
+        String fence_id = user.getClockinfence()+"";
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("id",fence_id);//围栏id
+        param.put("lon",latLonPoint.getLatitude()+"");
+        param.put("lat",latLonPoint.getLongitude()+"");
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/if_infence";
+        ProgressDialog dialog = ProgressDialog.createDialog(context);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    if (jo != null) {
+                        boolean infence =  jo.getBooleanValue("infence");
+                        if (infence){
+                            insideFence = true;
+                            AppToast.show(context,"围栏检测成功!");
+                        } else {
+                            insideFence = false;
+                            AppToast.show(context,"当前位置不在指定围栏中!");
+                        }
+                    }
+                } else {
+                    AppToast.show(context,"围栏检测失败!");
+                    AppToast.show(context,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(context,"围栏检测错误!");
             }
         });
     }
