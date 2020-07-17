@@ -581,12 +581,19 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         if (user == null){
             return;
         }
-        String fence_id = user.getClockinfence()+"";
 
-        final Map<String,String> param = new HashMap<>();
+        int fence_id;
+
+        if (signState == 1){
+            fence_id = user.getClockinfence();
+        } else {
+            fence_id = user.getClockoutfence();
+        }
+
+        JSONObject param = new JSONObject();
         param.put("id",fence_id);//围栏id
-        param.put("lon",latLonPoint.getLatitude()+"");
-        param.put("lat",latLonPoint.getLongitude()+"");
+        param.put("lng",latLonPoint.getLongitude());
+        param.put("lat",latLonPoint.getLatitude());
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/if_infence";
