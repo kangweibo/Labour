@@ -363,6 +363,7 @@ public class TrainExamActivity extends BaseActivity {
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
         param.put("examid",exam.getId());
+        param.put("prole",user.getProle());
         param.put("employeeid",user.getId());
         param.put("answer",getAnswer());
         String jsonParams = param.toJSONString();

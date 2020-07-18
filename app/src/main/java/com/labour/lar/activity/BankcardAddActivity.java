@@ -172,7 +172,7 @@ public class BankcardAddActivity extends BaseActivity {
         final Map<String,String> param = new HashMap<>();
 
         param.put("id",user.getId()+"");
-        param.put("prole","063d91b4f57518ff");
+        param.put("prole",user.getProle());
         param.put("bankcard_num",bankcard_num);
         param.put("bankname",bankname);
         String jsonParams = JSON.toJSONString(param);

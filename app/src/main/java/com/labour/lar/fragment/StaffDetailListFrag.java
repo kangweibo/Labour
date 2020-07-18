@@ -20,14 +20,11 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.activity.GongRenDetailActivity;
 import com.labour.lar.activity.ManagerAddActivity;
-import com.labour.lar.adapter.ProjectDetailListAdapter;
-import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.EmployeeListAdapter;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.User;
-import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.DialogUtil;
@@ -63,9 +60,9 @@ public class StaffDetailListFrag extends BaseFragment {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectDetailListAdapter projectAdapter;
+    EmployeeListAdapter projectAdapter;
     private List<Employee> employeeList = new ArrayList<>();
-    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
+    private List<EmployeeListAdapter.ListItem> list = new ArrayList<>();
 
     private Operteam operteam;
     private Employee employeeSelect;
@@ -81,7 +78,7 @@ public class StaffDetailListFrag extends BaseFragment {
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectDetailListAdapter(getContext());
+        projectAdapter = new EmployeeListAdapter(getContext());
         listView.setAdapter(projectAdapter);
     }
 
@@ -187,12 +184,32 @@ public class StaffDetailListFrag extends BaseFragment {
     private void showEmployees() {
         list.clear();
         for(Employee employee : employeeList){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            EmployeeListAdapter.ListItem item = new EmployeeListAdapter.ListItem();
             item.field1 = employee.getName();;
             item.field1Content = "";
             item.field2 = "手机号：" + employee.getPhone();
             item.field2Content = "";
             item.isShowArraw = true;
+
+            UserCache userCache = UserCache.getInstance(getContext());
+            User user = userCache.get();
+
+            if (user != null) {
+                User.Operteam myOperteam = user.getOperteam();
+                if (myOperteam != null){
+                    int myOperteamId = myOperteam.getId();
+                    int operteamId = operteam.getId();
+                    String prole = user.getProle();
+
+                    // 本作业队队长
+                    if (prole != null && (prole.equals("operteam_manager") || prole.equals("operteam_quota"))
+                            && myOperteamId == operteamId){
+                        if (employee.getStatus() == null || employee.getStatus().equals("不通过")) {
+                            item.isShowPass = true;
+                        }
+                    }
+                }
+            }
 
             list.add(item);
         }

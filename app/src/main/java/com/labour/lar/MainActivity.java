@@ -268,7 +268,8 @@ public class MainActivity extends BaseActivity {
             return;
         }
 
-        DialogUtil.showConfirmDialog(this,"提示信息","你还未身份认证，是否去认证",new DialogUtil.OnDialogEvent<Void>(){
+        DialogUtil.showConfirmDialog(this,"提示信息","你还未身份认证，是否去认证",
+                false, new DialogUtil.OnDialogEvent<Void>(){
             @Override
             public void onPositiveButtonClick(Void t) {
                 startActivity(new Intent(MainActivity.this, IdentifiedActivity.class));

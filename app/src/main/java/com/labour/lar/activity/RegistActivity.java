@@ -72,6 +72,8 @@ public class RegistActivity extends BaseActivity {
     EditText phone_et;
     @BindView(R.id.password_et)
     EditText password_et;
+    @BindView(R.id.repassword_et)
+    EditText repassword_et;
     @BindView(R.id.role_rg)
     RadioGroup role_rg;
 
@@ -144,7 +146,7 @@ public class RegistActivity extends BaseActivity {
                 }
             }
         });
-        showIdentifie(this);
+//        showIdentifie(this);
     }
 
     public void cancelCountDownTimer(){
@@ -214,20 +216,32 @@ public class RegistActivity extends BaseActivity {
     }
 
     public void save() {
-        String name = name_et.getText().toString();
-        String sex = sex_et.getText().toString();
+//        String name = name_et.getText().toString();
+//        String sex = sex_et.getText().toString();
         String phone = phone_et.getText().toString();
         String password = password_et.getText().toString();
+        String re_password = repassword_et.getText().toString();
         String role = checkedRole;
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(sex) || StringUtils.isBlank(phone) || StringUtils.isBlank(password)){
+
+        if(StringUtils.isBlank(phone) || StringUtils.isBlank(password)){
             AppToast.show(this,"请填写完整信息！");
             return;
         }
 
+        if(StringUtils.isBlank(re_password)){
+            AppToast.show(this,"请再次输入密码！");
+            return;
+        }
+
+        if(!password.equals(re_password)){
+            AppToast.show(this,"两次输入密码不一致！");
+            return;
+        }
+
         final Map<String,String> param = new HashMap<>();
-        param.put("name",name);
+//        param.put("name",name);
+//        param.put("gender",sex);
         param.put("passwd",password);
-        param.put("gender",sex);
         param.put("phone",phone);
         param.put("role",role);
         String jsonParams = JSON.toJSONString(param);

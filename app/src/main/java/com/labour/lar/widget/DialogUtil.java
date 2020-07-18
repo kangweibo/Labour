@@ -141,6 +141,10 @@ public class DialogUtil {
 	public static void showConfirmDialog(Context context, String title, String msg, final OnDialogListener<Void> onDialogListener) {
 		showTextDialog(context, title, msg, false, true,onDialogListener);
 	}
+
+	public static void showConfirmDialog(Context context, String title, String msg, boolean cancelable,final OnDialogListener<Void> onDialogListener) {
+		showTextDialog(context, title, msg, false, cancelable,onDialogListener);
+	}
 	
 	public static void showDateDialog(Context mContext, Calendar defaultCalendar, final OnDialogListener<Calendar> onDialogListener) {
 		if (defaultCalendar == null) {
