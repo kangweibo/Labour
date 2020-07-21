@@ -3,6 +3,7 @@ package com.labour.lar.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.AccessToken;
 import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.bumptech.glide.Glide;
@@ -121,25 +123,27 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 txt_name.setText("员工：" + user.getName());
             }
         }
+
+        initAccessTokenWithAkSk();
     }
 
-//    /**
-//     * 用明文ak，sk初始化
-//     */
-//    private void initAccessTokenWithAkSk() {
-//        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
-//        baiDuOCR.setAutoCacheToken(true);
-//        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
-//            @Override
-//            public void onResult(AccessToken result) {
-//            }
-//            @Override
-//            public void onError(OCRError error) {
-//                error.printStackTrace();
-//            }
-//        }, getApplicationContext(),  "GNPUuASB8wKIVGkH2xHtQcl4", "GaE6gY29BaFkUvOrtcBMwj54Gi8Z63BT");
-////        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
-//    }
+    /**
+     * 用明文ak，sk初始化
+     */
+    private void initAccessTokenWithAkSk() {
+        BaiDuOCR baiDuOCR = BaiDuOCR.getInstance(this);
+        baiDuOCR.setAutoCacheToken(true);
+        baiDuOCR.initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+            @Override
+            public void onResult(AccessToken result) {
+            }
+            @Override
+            public void onError(OCRError error) {
+                error.printStackTrace();
+            }
+            //       }, getApplicationContext(),  "GNPUuASB8wKIVGkH2xHtQcl4", "GaE6gY29BaFkUvOrtcBMwj54Gi8Z63BT");
+        }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
+    }
 
     @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,R.id.submit_btn})
     public void onClick(View view) {
@@ -327,6 +331,117 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
         });
     }
 
+    private void recIDCard2(final String idCardSide, String filePath) {
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+        if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
+            Glide.with(IdentifiedActivity.this).load(file1).into(photo_zheng_iv);
+            idCardInfo.put("idpic1","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap));
+        } else if(IDCardParams.ID_CARD_SIDE_BACK.equals(idCardSide)){
+            Glide.with(IdentifiedActivity.this).load(file2).into(photo_fan_iv);
+            idCardInfo.put("idpic2","data:image/jpeg;base64," + Base64Bitmap.bitmapToBase64(bitmap));
+            identifiedBack = true;
+            return;
+        }
+
+        final ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+        String photo = Base64Bitmap.bitmapToBase64(bmp);
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("img",photo);
+
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/ocr_idcard";
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject result = jr.getData();
+
+                    if(user != null) {
+                        idCardInfo.put("userid", user.getId()+"");
+                        idCardInfo.put("prole", user.getProle());
+                    }
+
+                    if(IDCardParams.ID_CARD_SIDE_FRONT.equals(idCardSide)){
+                        String photo = result.getString("photo");
+                        if(photo != null) {
+                            photo_iv.setVisibility(View.VISIBLE);
+                            Bitmap bitmap = Base64Bitmap.base64ToBitmap(photo);
+                            photo_iv.setImageBitmap(bitmap);
+
+                            idCardInfo.put("avatar","data:image/png;base64," + photo);
+                            bmpIdcardPhoto = photo;
+
+                            faceMatch();
+                        }
+
+                        JSONObject words = result.getJSONObject("words_result");
+                        if (words != null) {
+                            JSONObject name = words.getJSONObject("姓名");
+                            if (name != null){
+                                String word = name.getString("words");
+                                edt_idcard_name.setText(word);
+                                idCardInfo.put("name",word);
+                            }
+
+                            JSONObject gender = words.getJSONObject("性别");
+                            if (gender != null){
+                                String word = gender.getString("words");
+                                edt_idcard_gender.setText(word);
+                                idCardInfo.put("gender",word);
+                            }
+
+                            JSONObject idcard_no = words.getJSONObject("公民身份号码");
+                            if (idcard_no != null){
+                                String word = idcard_no.getString("words");
+                                edt_idcard_no.setText(word);
+                                idCardInfo.put("idcard",word);
+                            }
+
+                            JSONObject address = words.getJSONObject("住址");
+                            if (address != null){
+                                String word = address.getString("words");
+                                edt_idcard_address.setText(word);
+                                idCardInfo.put("address",word);
+                            }
+
+                            JSONObject birthday = words.getJSONObject("出生");
+                            if (birthday != null){
+                                String word = birthday.getString("words");
+                                idCardInfo.put("birthday",word);
+                            }
+
+                            JSONObject nation = words.getJSONObject("民族");
+                            if (nation != null){
+                                String word = nation.getString("words");
+                                idCardInfo.put("nation",word);
+                            }
+
+                            identifiedFront = true;
+                        }
+                    }
+
+                } else {
+                    identifiedFront = false;
+                    AppToast.show(IdentifiedActivity.this,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(IdentifiedActivity.this,"身份证识别失败!");
+            }
+        });
+    }
+
     public void save() {
         if(user == null){
             AppToast.show(this,Constants.LOGIN_ERROR_TIP);
@@ -379,7 +494,8 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
 
                     if (isOneself){ //自己认证
                         JSONObject jo = jr.getData();
-                        UserInfo userInfo = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+                        UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
+                        UserInfo userInfo = dealWithPic(userInfoOrg);
                         updateUserInfo(userInfo);
                     }
 
@@ -395,6 +511,22 @@ public class IdentifiedActivity extends BaseActivity implements PermissionManage
                 AppToast.show(IdentifiedActivity.this,"身份认证出错!");
             }
         });
+    }
+
+    private UserInfo dealWithPic(UserInfo userInfo) {
+        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
+        String pic = jsonObject.getString("url");
+        userInfo.setPic(pic);
+
+        jsonObject = JSON.parseObject(userInfo.getIdpic1());
+        String Idpic1 = jsonObject.getString("url");
+        userInfo.setIdpic1(Idpic1);
+
+        jsonObject = JSON.parseObject(userInfo.getIdpic2());
+        String Idpic2 = jsonObject.getString("url");
+        userInfo.setIdpic2(Idpic2);
+
+        return userInfo;
     }
 
     // 更新用户信息

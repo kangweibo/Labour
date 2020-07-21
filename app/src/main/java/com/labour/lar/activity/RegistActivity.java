@@ -256,11 +256,12 @@ public class RegistActivity extends BaseActivity {
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
-                    UserCache userCache = UserCache.getInstance(RegistActivity.this);
-                    userCache.put(ub);
-                    startActivity(new Intent(RegistActivity.this,MainActivity.class));
+//                    JSONObject jo = jr.getData();
+//                    User ub = JSON.parseObject(JSON.toJSONString(jo), User.class);
+//                    UserCache userCache = UserCache.getInstance(RegistActivity.this);
+//                    userCache.put(ub);
+//                    startActivity(new Intent(RegistActivity.this,MainActivity.class));
+                    AppToast.show(RegistActivity.this,"注册成功!");
                     finish();
                 } else {
                     AppToast.show(RegistActivity.this,jr.getMsg());

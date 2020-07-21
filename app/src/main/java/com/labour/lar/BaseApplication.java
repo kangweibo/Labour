@@ -81,7 +81,7 @@ public class BaseApplication extends Application {
 //        JShareInterface.init(this,platformConfig);
 
         initLib();
-        initAccessTokenWithAkSk();
+//        initAccessTokenWithAkSk();
     }
 
     /**

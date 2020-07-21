@@ -349,6 +349,7 @@ public class BanZuDetailListFrag extends BaseFragment {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("rtype","employee");
         jsonObject.put("employeeid",person.getId());
         String jsonParams =jsonObject.toJSONString();
 

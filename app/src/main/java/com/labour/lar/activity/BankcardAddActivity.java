@@ -2,6 +2,8 @@ package com.labour.lar.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.BankCardParams;
@@ -23,6 +26,7 @@ import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.User;
 import com.labour.lar.ocr.BaiDuOCR;
 import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.Base64Bitmap;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.util.Utils;
 import com.labour.lar.widget.ProgressDialog;
@@ -110,7 +114,7 @@ public class BankcardAddActivity extends BaseActivity {
                     String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
                     if (!TextUtils.isEmpty(contentType)) {
                         if (CameraActivity.CONTENT_TYPE_BANK_CARD.equals(contentType)) {
-                            recBankCard(file2.getAbsolutePath());
+                            recBankCard2(file2.getAbsolutePath());
                         }
                     }
                 }
@@ -146,6 +150,55 @@ public class BankcardAddActivity extends BaseActivity {
             public void onError(OCRError error) {
                 dialog.dismiss();
                 AppToast.show(BankcardAddActivity.this,error.getMessage());
+            }
+        });
+    }
+
+    private void recBankCard2(String filePath) {
+        Log.i("bankcard recBankCard", filePath);
+        Glide.with(this).load(file2).into(photo_iv);
+
+        final ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+        String photo = Base64Bitmap.bitmapToBase64(bmp);
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("img",photo);
+
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/ocr_bankcard";
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONObject jo = jr.getData();
+                    JSONObject result =  jo.getJSONObject("result");
+
+                    if (result != null) {
+                        String cardNumber = result.getString("bank_card_number");
+                        String cardName = result.getString("bank_name");
+
+                        if (!TextUtils.isEmpty(cardNumber)) {
+                            edt_bankcard_num.setText(cardNumber);
+                        }
+                        if (!TextUtils.isEmpty(cardName)) {
+                            edt_bankname.setText(cardName);
+                        }
+                    }
+                } else {
+                    AppToast.show(BankcardAddActivity.this,jr.getMsg());
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(BankcardAddActivity.this,"银行卡识别失败!");
             }
         });
     }

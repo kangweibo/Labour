@@ -153,6 +153,8 @@ public class MineFrag extends BaseFragment {
 
         if (!userInfo.isIdentified()){
             identified_tv.setVisibility(View.VISIBLE);
+        } else {
+            identified_tv.setVisibility(View.GONE);
         }
 
         if (!TextUtils.isEmpty(userInfo.getName())){
@@ -203,29 +205,30 @@ public class MineFrag extends BaseFragment {
         imgList.add(R.mipmap.bankcard_icon);
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        String prole = userInfo.getProle();
+        if (userInfo != null){
+            String prole = userInfo.getProle();
 
-        if (prole.equals("classteam_manager") || prole.equals("employee")){
-            list.add("加入班组");
-            imgList.add(R.mipmap.team_icon);
-        } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-            list.add("加入作业队");
-            imgList.add(R.mipmap.team_icon);
-        } else if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-            list.add("加入项目部");
-            imgList.add(R.mipmap.team_icon);
+            if (prole.equals("classteam_manager") || prole.equals("employee")){
+                list.add("加入班组");
+                imgList.add(R.mipmap.team_icon);
+            } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
+                list.add("加入作业队");
+                imgList.add(R.mipmap.team_icon);
+            } else if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
+                list.add("加入项目部");
+                imgList.add(R.mipmap.team_icon);
+            }
+
+            if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
+                    || prole.equals("project_manager")){
+                list.add("代员工身份验证");
+                imgList.add(R.mipmap.idcard_icon);
+                list.add("代员工银行卡认证");
+                imgList.add(R.mipmap.bankcard_icon);
+                list.add("代员工打卡");
+                imgList.add(R.mipmap.tab_kaoqin_checked);
+            }
         }
-
-        if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
-                || prole.equals("project_manager")){
-            list.add("代员工身份验证");
-            imgList.add(R.mipmap.idcard_icon);
-            list.add("代员工银行卡认证");
-            imgList.add(R.mipmap.bankcard_icon);
-            list.add("代员工打卡");
-            imgList.add(R.mipmap.tab_kaoqin_checked);
-        }
-
         list.add("岗前安全培训");
         imgList.add(R.mipmap.test_icon);
         list.add("设置");

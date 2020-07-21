@@ -30,7 +30,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_14"
             android:layout_marginTop="4dp"
-            android:text="名字"
+            android:text="姓名"
             android:textStyle="bold"
             android:layout_toLeftOf="@id/state_tv"
             android:singleLine="true"

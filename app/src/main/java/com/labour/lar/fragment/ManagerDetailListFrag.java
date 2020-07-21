@@ -100,6 +100,13 @@ public class ManagerDetailListFrag extends BaseFragment {
         list_refresh.setEnableLoadMore(false);
 
         projectAdapter.setList(list);
+        projectAdapter.setOnButtonClickListener(new EmployeeListAdapter.OnButtonClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Employee employee = employeeList.get(position);
+                auditEmployee(employee);
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -327,6 +334,44 @@ public class ManagerDetailListFrag extends BaseFragment {
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(getActivity(),"删除项目成员出错!");
+            }
+        });
+    }
+
+    // 审核
+    private void auditEmployee(Employee person) {
+        if (person == null){
+            return;
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("token","063d91b4f57518ff");
+        jsonObject.put("rtype","manager");
+        jsonObject.put("employeeid",person.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/employee_audit";
+        ProgressDialog dialog = ProgressDialog.createDialog(getActivity());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(getActivity(),"班组成员审核通过!");
+                    getEmployees();
+                } else {
+                    JSONObject jo = jr.getJsonObj();
+                    String errmsg = jo.getString("errmsg");
+                    AppToast.show(getActivity(),errmsg);
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getActivity(),"班组成员审核出错!");
             }
         });
     }

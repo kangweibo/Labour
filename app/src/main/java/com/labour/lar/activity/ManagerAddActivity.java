@@ -247,7 +247,7 @@ public class ManagerAddActivity extends BaseActivity {
             prolesMap.put("作业队定额员", "operteam_quota");
             prolesMap.put("作业队成员", "staff");
         } else {
-            if (prole.equals("project_manager") || prole.equals("project_quota")){
+            if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
                 proles.add("班组长");
             } else {
                 proles.add("工人");
