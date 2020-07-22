@@ -7,6 +7,8 @@ public class UserInfo implements Serializable {
     private int id;//": 2,
     private String name;//":": "张三",
     private String duty;//":": null,
+    private String gender;//":": null,
+
     private String phone;//":": "12200030001",
     private String idcard;//":": "110101161102060468",
 
@@ -116,6 +118,14 @@ public class UserInfo implements Serializable {
 
     public void setProle(String prole) {
         this.prole = prole;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getNation() {

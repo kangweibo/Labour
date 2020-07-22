@@ -40,15 +40,15 @@ public class MyinfoAdapter extends BaseAdapter<MyinfoAdapter.ListItem, MyinfoAda
         }
 
         if (!TextUtils.isEmpty(item.type)){
-            holder.txt_value.setText(item.type);
-        } else {
-            holder.txt_value.setText("");
-        }
-
-        if (!TextUtils.isEmpty(item.type)){
             holder.txt_type.setText(item.type);
         } else {
             holder.txt_type.setText("");
+        }
+
+        if (!TextUtils.isEmpty(item.value)){
+            holder.txt_value.setText(item.value);
+        } else {
+            holder.txt_value.setText("");
         }
     }
 

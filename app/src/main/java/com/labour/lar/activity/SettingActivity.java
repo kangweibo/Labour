@@ -6,8 +6,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.BaseApplication;
+import com.labour.lar.Constants;
 import com.labour.lar.LoginActivity;
 import com.labour.lar.MainActivity;
 import com.labour.lar.R;
@@ -17,8 +20,13 @@ import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
+import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.MCountDownTimer;
+import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Response;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -70,7 +78,7 @@ public class SettingActivity extends BaseActivity {
                 clear();
                 break;
             case R.id.btn_quit:
-                quit();
+                logout();
                 break;
         }
     }
@@ -81,7 +89,58 @@ public class SettingActivity extends BaseActivity {
     }
 
     // 退出登录
-    public void quit(){
+    public void logout(){
+        UserCache userCache = UserCache.getInstance(this);
+        User user = userCache.get();
+        JSONObject jsonObject = new JSONObject();
+
+        String prole = user.getProle();
+        String rtype = "employee";
+
+        if (prole != null){
+            if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
+                rtype = "manager";
+            }
+
+            if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
+                rtype = "staff";
+            }
+
+            if (prole.equals("classteam_manager") || prole.equals("employee")){
+                rtype = "employee";
+            }
+        }
+
+        jsonObject.put("rtype", rtype);
+        jsonObject.put("userid", user.getId());
+        String jsonParams =jsonObject.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/logout";
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(SettingActivity.this,"退出登录成功!");
+                    quit();
+                } else {
+                    AppToast.show(SettingActivity.this,"退出登录失败!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(SettingActivity.this,"退出登录出错!");
+            }
+        });
+    }
+
+    // 退出登录
+    private void quit(){
         UserCache userCache = UserCache.getInstance(this);
         userCache.clear();
         UserInfoCache userInfoCache = UserInfoCache.getInstance(this);

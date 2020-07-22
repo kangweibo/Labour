@@ -16,12 +16,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.labour.lar.BaseApplication;
 import com.labour.lar.Constants;
+import com.labour.lar.adapter.MyinfoAdapter;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.circledialog.callback.ConfigButton;
 import com.labour.lar.widget.circledialog.callback.ConfigDialog;
@@ -35,6 +39,7 @@ import com.labour.lar.widget.RoundImageView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -53,26 +58,32 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
-    @BindView(R.id.name_et)
-    TextView name_et;
-    @BindView(R.id.sex_et)
-    TextView sex_et;
-    @BindView(R.id.phone_et)
-    TextView phone_et;
-    @BindView(R.id.nation_et)
-    TextView nation_et;
-    @BindView(R.id.birthday_et)
-    TextView birthday_et;
-    @BindView(R.id.address_et)
-    TextView address_et;
+//    @BindView(R.id.photo_iv)
+//    RoundImageView photo_iv;
+//    @BindView(R.id.name_et)
+//    TextView name_et;
+//    @BindView(R.id.sex_et)
+//    TextView sex_et;
+//    @BindView(R.id.phone_et)
+//    TextView phone_et;
+//    @BindView(R.id.nation_et)
+//    TextView nation_et;
+//    @BindView(R.id.birthday_et)
+//    TextView birthday_et;
+//    @BindView(R.id.address_et)
+//    TextView address_et;
+
+    @BindView(R.id.listView)
+    ListView listView;
 
     public static final int REQUEST_CODE_TAKE_PHOTO = 1;
     public static final int REQUEST_CODE_SELECT_IMAGE = 2;
 
     PermissionManager permissionManager;
     private File photoFile;
+
+    private MyinfoAdapter myinfoAdapter;
+    private List<MyinfoAdapter.ListItem> list = new ArrayList<>();
 
     @Override
     public int getActivityLayoutId() {
@@ -86,18 +97,23 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
         photoFile =new File(Utils.getTakePhotoPath(),"temp.png");
 
         title_tv.setText("个人信息");
+
+        myinfoAdapter = new MyinfoAdapter(this);
+        listView.setAdapter(myinfoAdapter);
+        myinfoAdapter.setList(list);
+
         showUserInfo();
     }
 
-    @OnClick({R.id.back_iv,R.id.photo_ll})
+    @OnClick({R.id.back_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
                 break;
-            case R.id.photo_ll:
-                //showPhotoDialog();
-                break;
+//            case R.id.photo_ll:
+//                //showPhotoDialog();
+//                break;
         }
     }
 
@@ -216,7 +232,7 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
 
                         String url = file.getAbsolutePath();
                         Log.i("idcard" , url);
-                        Glide.with(MyInfoActivity.this).load(url).into(photo_iv);
+//                        Glide.with(MyInfoActivity.this).load(url).into(photo_iv);
                     }
 
                     @Override
@@ -248,20 +264,108 @@ public class MyInfoActivity extends BaseActivity implements PermissionManager.Pe
         sendBroadcast(mediaScanIntent);
     }
 
+//    private void showUserInfo(){
+//        UserInfo userInfo = UserInfoCache.getInstance(this).get();
+//        if (userInfo == null) {
+//            return;
+//        }
+//
+//        if (!TextUtils.isEmpty(userInfo.getPic())) {
+//            Glide.with(BaseApplication.getInstance()).load(Constants.HTTP_BASE + userInfo.getPic()).into(photo_iv);
+//        }
+//
+//        name_et.setText(userInfo.getName());
+//        phone_et.setText(userInfo.getPhone());
+//        nation_et.setText(userInfo.getNation());
+//        birthday_et.setText(userInfo.getBirthday());
+//        address_et.setText(userInfo.getAddress());
+//    }
+
     private void showUserInfo(){
         UserInfo userInfo = UserInfoCache.getInstance(this).get();
         if (userInfo == null) {
             return;
         }
 
-        if (!TextUtils.isEmpty(userInfo.getPic())) {
-            Glide.with(BaseApplication.getInstance()).load(Constants.HTTP_BASE + userInfo.getPic()).into(photo_iv);
+        MyinfoAdapter.ListItem item0 = new MyinfoAdapter.ListItem();
+        item0.type = "头像";
+        item0.pic = userInfo.getPic();
+
+        MyinfoAdapter.ListItem item1 = new MyinfoAdapter.ListItem();
+        item1.type = "姓名";
+        item1.value = userInfo.getName();
+
+        MyinfoAdapter.ListItem item2 = new MyinfoAdapter.ListItem();
+        item2.type = "性别";
+        item2.value = userInfo.getGender();
+
+        MyinfoAdapter.ListItem item3 = new MyinfoAdapter.ListItem();
+        item3.type = "电话";
+        item3.value = userInfo.getPhone();
+
+        MyinfoAdapter.ListItem item4 = new MyinfoAdapter.ListItem();
+        item4.type = "民族";
+        item4.value = userInfo.getNation();
+
+        MyinfoAdapter.ListItem item5 = new MyinfoAdapter.ListItem();
+        item5.type = "生日";
+        item5.value = userInfo.getBirthday();
+
+        MyinfoAdapter.ListItem item6 = new MyinfoAdapter.ListItem();
+        item6.type = "住址";
+        item6.value = userInfo.getAddress();
+
+        list.clear();
+        list.add(item0);
+        list.add(item1);
+        list.add(item2);
+        list.add(item3);
+        list.add(item4);
+        list.add(item5);
+        list.add(item6);
+
+        UserCache userCache = UserCache.getInstance(this);
+        User user = userCache.get();
+
+        if (user != null) {
+            User.Project project = user.getProject();
+            User.Operteam operteam = user.getOperteam();
+            User.Classteam classteam = user.getClassteam();
+
+            if (operteam != null) {
+                project = operteam.getProject();
+            }
+
+            if (classteam != null) {
+                operteam = classteam.getOperteam();
+                if (operteam != null) {
+                    project = operteam.getProject();
+                }
+            }
+
+            if (project != null){
+                MyinfoAdapter.ListItem item7 = new MyinfoAdapter.ListItem();
+                item7.type = "项目";
+                item7.value = project.getName();
+                list.add(item7);
+            }
+
+            if (operteam != null) {
+                MyinfoAdapter.ListItem item7 = new MyinfoAdapter.ListItem();
+                item7.type = "作业队";
+                item7.value = operteam.getName();
+                list.add(item7);
+            }
+
+            if (classteam != null) {
+                MyinfoAdapter.ListItem item7 = new MyinfoAdapter.ListItem();
+                item7.type = "班组";
+                item7.value = classteam.getName();
+                list.add(item7);
+            }
+
         }
 
-        name_et.setText(userInfo.getName());
-        phone_et.setText(userInfo.getPhone());
-        nation_et.setText(userInfo.getNation());
-        birthday_et.setText(userInfo.getBirthday());
-        address_et.setText(userInfo.getAddress());
+        myinfoAdapter.notifyDataSetChanged();
     }
 }
