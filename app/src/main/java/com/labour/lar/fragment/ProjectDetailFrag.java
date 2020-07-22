@@ -81,20 +81,36 @@ public class ProjectDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(project.getSupervisor())){
-                company_tv.setText(project.getSupervisor());
+//            if (!TextUtils.isEmpty(project.getSupervisor())){
+//                company_tv.setText(project.getSupervisor());
+//            } else {
+//                company_tv.setText("");
+//            }
+//            if (!TextUtils.isEmpty(project.getProjectfunction())){
+//                type_tv.setText(project.getProjectfunction());
+//            } else {
+//                type_tv.setText("");
+//            }
+//            if (!TextUtils.isEmpty(project.getBuildaera())){
+//                mianji_tv.setText(project.getBuildaera());
+//            } else {
+//                mianji_tv.setText("");
+//            }
+
+            if (!TextUtils.isEmpty(project.getPm())){
+                company_tv.setText("项目经理：" + project.getPm());
             } else {
-                company_tv.setText("");
+                company_tv.setText("项目经理：");
             }
-            if (!TextUtils.isEmpty(project.getProjectfunction())){
-                type_tv.setText(project.getProjectfunction());
+            if (!TextUtils.isEmpty(project.getAll_num())){
+                type_tv.setText("花名册：" + project.getAll_num() + "人");
             } else {
-                type_tv.setText("");
+                type_tv.setText("花名册：0人");
             }
-            if (!TextUtils.isEmpty(project.getBuildaera())){
-                mianji_tv.setText(project.getBuildaera());
+            if (!TextUtils.isEmpty(project.getOperteam_num())){
+                mianji_tv.setText("作业队：" + project.getOperteam_num() + "个");
             } else {
-                mianji_tv.setText("");
+                mianji_tv.setText("作业队：0个");
             }
         }
 

@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
+        android:gravity="center_vertical"
         android:background="@color/common_blue_deep">
 
         <com.labour.lar.widget.RoundImageView
@@ -33,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/common_margin_right"
-                android:layout_marginTop="15dp">
+                android:layout_marginTop="1dp">
                 <TextView android:id="@+id/state_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

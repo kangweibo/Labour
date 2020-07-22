@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:paddingLeft="@dimen/common_margin_left"
+    android:paddingRight="@dimen/common_margin_right">
+
+    <com.labour.lar.widget.RoundImageView
+        android:id="@+id/photo_iv"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:type="round"
+        app:borderWidth="1dp"
+        android:background="@drawable/circle_shape"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"/>
+
+    <TextView android:id="@+id/txt_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="头像"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16"
+        android:layout_centerVertical="true"/>
+
+    <TextView android:id="@+id/txt_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/photo_iv"
+        android:layout_toRightOf="@id/txt_type"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="张三"
+        android:layout_centerVertical="true"
+        android:gravity="right"
+        android:textColor="#979797"
+        android:textSize="@dimen/text_size_16"/>
+</RelativeLayout>

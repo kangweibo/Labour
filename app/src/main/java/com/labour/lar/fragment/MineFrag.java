@@ -197,8 +197,8 @@ public class MineFrag extends BaseFragment {
 
         list.add("个人信息");
         imgList.add(R.mipmap.userinfo_icon);
-        list.add("工程项目");
-        imgList.add(R.mipmap.tab_home_checked);
+//        list.add("工程项目");
+//        imgList.add(R.mipmap.tab_home_checked);
 //        list.add("考勤报表");
 //        imgList.add(R.mipmap.kaoqinbaobiao_icon);
         list.add("银行卡管理");
@@ -242,17 +242,17 @@ public class MineFrag extends BaseFragment {
     }
 
     private void showClassteam() {
-        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-        if (userInfo == null) {
+        User user = UserCache.getInstance(getContext()).get();
+        if (user == null) {
             return;
         }
 
-        String prole = userInfo.getProle();
+        String prole = user.getProle();
 
         if (prole.equals("classteam_manager")
                 || prole.equals("operteam_manager") || prole.equals("operteam_quota")
                 || prole.equals("project_manager") || prole.equals("project_quota") ){
-            showQRCode(prole);
+            showQRCode(user);
         } else {
             showScan();
         }
@@ -273,19 +273,32 @@ public class MineFrag extends BaseFragment {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
-    private void showQRCode(String prole) {
+    private void showQRCode(User user) {
         String id = "";
         String title = "";
-
+        String prole = user.getProle();
         JSONObject jsonObject = new JSONObject();
 
         if (prole.equals("classteam_manager")){
+            User.Classteam classteam = user.getClassteam();
+            if (classteam != null) {
+                id = classteam.getId()+"";
+            }
+
             title = "加入班组";
             jsonObject.put("classteam_id", id);
         } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+            User.Operteam operteam = user.getOperteam();
+            if (operteam != null) {
+                id = operteam.getId()+"";
+            }
             title = "加入作业队";
             jsonObject.put("operteam_id", id);
         } else if (prole.equals("project_manager") || prole.equals("project_quota")){
+            User.Project project = user.getProject();
+            if (project != null){
+                id = project.getId()+"";
+            }
             title = "加入项目部";
             jsonObject.put("project_id", id);
         }

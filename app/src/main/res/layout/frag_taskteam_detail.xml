@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:paddingBottom="15dp"
         android:paddingTop="15dp"
+        android:gravity="center_vertical"
         android:background="@color/common_blue_deep">
 
         <com.labour.lar.widget.RoundImageView
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="1dp"
                 android:text="南苑花园c座"
                 android:textStyle="bold"
                 android:layout_toLeftOf="@id/state_tv"

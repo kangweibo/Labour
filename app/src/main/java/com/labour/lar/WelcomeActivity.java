@@ -76,7 +76,7 @@ public class WelcomeActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
 
         // 设置时间
-        cal.set(2020, 9-1, 1,8,0);
+        cal.set(2020, 10-1, 1,8,0);
         cal.setTimeZone(TimeZone.getDefault());
 
         long end = cal.getTime().getTime();
