@@ -46,6 +46,8 @@ public class BanZuDetailFrag extends BaseFragment {
     TextView company_tv;
     @BindView(R.id.type_tv)
     TextView type_tv;
+    @BindView(R.id.txt_team)
+    TextView txt_team;
 
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
@@ -71,7 +73,7 @@ public class BanZuDetailFrag extends BaseFragment {
 
     @Override
     public void initView() {
-        title_tv.setText("班组");
+        title_tv.setText("班组详情");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
@@ -83,10 +85,15 @@ public class BanZuDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(classteam.getPm())){
-                company_tv.setText("组长：" + classteam.getPm());
+            if (!TextUtils.isEmpty(classteam.getOperteamname())){
+                txt_team.setText(classteam.getOperteamname());
             } else {
-                company_tv.setText("组长：");
+                txt_team.setText("");
+            }
+            if (!TextUtils.isEmpty(classteam.getPm())){
+                company_tv.setText("班组长：" + classteam.getPm());
+            } else {
+                company_tv.setText("班组长：");
             }
             if (!TextUtils.isEmpty(classteam.getEmployees_num())){
                 type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");

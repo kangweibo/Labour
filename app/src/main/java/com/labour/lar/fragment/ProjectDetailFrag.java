@@ -81,36 +81,20 @@ public class ProjectDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-//            if (!TextUtils.isEmpty(project.getSupervisor())){
-//                company_tv.setText(project.getSupervisor());
-//            } else {
-//                company_tv.setText("");
-//            }
-//            if (!TextUtils.isEmpty(project.getProjectfunction())){
-//                type_tv.setText(project.getProjectfunction());
-//            } else {
-//                type_tv.setText("");
-//            }
-//            if (!TextUtils.isEmpty(project.getBuildaera())){
-//                mianji_tv.setText(project.getBuildaera());
-//            } else {
-//                mianji_tv.setText("");
-//            }
-
-            if (!TextUtils.isEmpty(project.getPm())){
-                company_tv.setText("项目经理：" + project.getPm());
+            if (!TextUtils.isEmpty(project.getEntname())){
+                company_tv.setText(project.getEntname());
             } else {
-                company_tv.setText("项目经理：");
+                company_tv.setText("");
+            }
+            if (!TextUtils.isEmpty(project.getStartdate())){
+                type_tv.setText("开工日期：" + project.getStartdate());
+            } else {
+                type_tv.setText("开工日期：无");
             }
             if (!TextUtils.isEmpty(project.getAll_num())){
-                type_tv.setText("花名册：" + project.getAll_num() + "人");
+                mianji_tv.setText("工人总数：" + project.getAll_num() + "人");
             } else {
-                type_tv.setText("花名册：0人");
-            }
-            if (!TextUtils.isEmpty(project.getOperteam_num())){
-                mianji_tv.setText("作业队：" + project.getOperteam_num() + "个");
-            } else {
-                mianji_tv.setText("作业队：0个");
+                mianji_tv.setText("工人总数：0人");
             }
         }
 

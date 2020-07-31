@@ -66,7 +66,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
 
     @Override
     public void initView() {
-        title_tv.setText("作业队");
+        title_tv.setText("作业队详情");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
@@ -78,21 +78,17 @@ public class TaskTeamDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(operteam.getPm())){
-                company_tv.setText("队长：" + operteam.getPm());
+            if (!TextUtils.isEmpty(operteam.getProjectname())){
+                company_tv.setText(operteam.getProjectname());
             } else {
-                company_tv.setText("队长：");
+                company_tv.setText("");
             }
             if (!TextUtils.isEmpty(operteam.getAll_num())){
-                type_tv.setText("花名册：" + operteam.getAll_num() + "人");
+                type_tv.setText("工人总数：" + operteam.getAll_num() + "个");
             } else {
-                type_tv.setText("花名册：0人");
+                type_tv.setText("工人总数：0个");
             }
-            if (!TextUtils.isEmpty(operteam.getClassteam_num())){
-                classteam_tv.setText("班组：" + operteam.getClassteam_num() + "个");
-            } else {
-                classteam_tv.setText("班组：0个");
-            }
+            classteam_tv.setText("");
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);

@@ -75,18 +75,18 @@ public class GongRenDetailListFrag extends BaseFragment {
 
         //测试
         List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = "南苑花园c座" + i;
-            item.field1Content = "南苑花";
-            item.field2 = "南苑花园c座";
-            item.field2Content = "南苑花";
-            item.field3 = "南苑花园c座";
-            item.field3Content = "南苑花园";
-            item.isShowArraw = false;
-
-            list.add(item);
-        }
+//        for(int i=0;i<10;i++){
+//            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+//            item.field1 = "南苑花园c座" + i;
+//            item.field1Content = "南苑花";
+//            item.field2 = "南苑花园c座";
+//            item.field2Content = "南苑花";
+//            item.field3 = "南苑花园c座";
+//            item.field3Content = "南苑花园";
+//            item.isShowArraw = false;
+//
+//            list.add(item);
+//        }
         projectAdapter.setList(list);
         projectAdapter.notifyDataSetChanged();
 

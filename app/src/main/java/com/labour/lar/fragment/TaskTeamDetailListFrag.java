@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -193,9 +194,14 @@ public class TaskTeamDetailListFrag extends BaseFragment {
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
         item0.field1 = "队部";
-        item0.field1Content = "";
-        item0.field2 = "成员" + operteam.getStaff_num() + "个";
-        item0.field2Content =  "班组" + operteam.getClassteam_num() +"个";
+        if (!TextUtils.isEmpty(operteam.getPm())){
+            item0.field1Content = "队长：" + operteam.getPm();
+        } else {
+            item0.field1Content = "队长：无";
+        }
+
+        item0.field2 = "人数：" + operteam.getStaff_num() + "个";
+        item0.field2Content =  "班组：" + operteam.getClassteam_num() +"个";
         item0.isShowArraw = true;
 
         list.add(item0);
@@ -204,8 +210,13 @@ public class TaskTeamDetailListFrag extends BaseFragment {
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
             item.field1 = classteam.getName();;
             item.field1Content = "";
-            item.field2 = "人数：" + classteam.getEmployees_num() + "人";;
-            item.field2Content = "";
+            item.field2 = "人数：" + classteam.getEmployees_num() + "人";
+            if (!TextUtils.isEmpty(classteam.getPm())){
+                item.field2Content = "班组长：" + classteam.getPm();
+            } else {
+                item.field2Content = "班组长：无";
+            }
+
             item.isShowArraw = true;
 
             list.add(item);

@@ -1,6 +1,8 @@
 package com.labour.lar.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -71,6 +73,8 @@ public class MineFrag extends BaseFragment {
     TextView brief_tv;
     @BindView(R.id.status_tv)
     TextView status_tv;
+    @BindView(R.id.txt_version)
+    TextView txt_version;
 
     @BindView(R.id.main_gridview)
     NoScrollGridView main_gridview;
@@ -92,6 +96,7 @@ public class MineFrag extends BaseFragment {
         identified_tv.setVisibility(View.GONE);
         back_iv.setVisibility(View.INVISIBLE);
         title_tv.setText("我的");
+        txt_version.setText("版本：" + getVersionName());
 
         refreshUserInfo();
     }
@@ -161,7 +166,7 @@ public class MineFrag extends BaseFragment {
             name_tv.setText(userInfo.getName());
         }
 
-        if (!TextUtils.isEmpty(userInfo.getStatus()) && userInfo.getStatus().equals("通过")){
+        if (!TextUtils.isEmpty(userInfo.getStatus()) && userInfo.getStatus().equals("已审核")){
             status_tv.setText("（已上岗）");
         } else {
             status_tv.setText("（未上岗）");
@@ -515,5 +520,17 @@ public class MineFrag extends BaseFragment {
         Intent intent = new Intent(context, ClockInActivity.class);
         intent.putExtra("user", user);
         startActivity(intent);
+    }
+
+    // 获取软件版本号
+    private String getVersionName(){
+        Context context = BaseApplication.getInstance();
+        String versionName = "";
+        try {
+            versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 }

@@ -47,6 +47,8 @@ public class StaffDetailFrag extends BaseFragment {
     TextView company_tv;
     @BindView(R.id.type_tv)
     TextView type_tv;
+    @BindView(R.id.txt_team)
+    TextView txt_team;
 
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
@@ -78,18 +80,25 @@ public class StaffDetailFrag extends BaseFragment {
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (operteam!= null){
-            if (!TextUtils.isEmpty(operteam.getPm())){
-                name_tv.setText("队长：" + operteam.getPm());
+            name_tv.setText("队部");
+
+            if (!TextUtils.isEmpty(operteam.getName())){
+                txt_team.setText(operteam.getName());
             } else {
-                name_tv.setText("队长：");
-            }
-            if (!TextUtils.isEmpty(operteam.getStaff_num())){
-                company_tv.setText("花名册：" + operteam.getStaff_num() + "人");
-            } else {
-                company_tv.setText("花名册：0人");
+                txt_team.setText("");
             }
 
-            type_tv.setText("");
+            if (!TextUtils.isEmpty(operteam.getPm())){
+                company_tv.setText("队长：" + operteam.getPm());
+            } else {
+                company_tv.setText("队长：");
+            }
+
+            if (!TextUtils.isEmpty(operteam.getStaff_num())){
+                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
+            } else {
+                type_tv.setText("花名册：0人");
+            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);

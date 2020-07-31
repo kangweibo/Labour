@@ -206,7 +206,7 @@ public class ManagerDetailListFrag extends BaseFragment {
                     // 本作业队队长
                     if (prole != null && (prole.equals("project_manager") || prole.equals("project_quota"))
                             && myProjectId == projectId){
-                        if (employee.getStatus() == null || employee.getStatus().equals("不通过")) {
+                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
                             item.isShowPass = true;
                         }
                     }

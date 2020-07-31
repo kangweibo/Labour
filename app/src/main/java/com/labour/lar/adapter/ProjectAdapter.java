@@ -39,21 +39,22 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         } else {
             holder.name_tv.setText("");
         }
-        if (!TextUtils.isEmpty(item.getSupervisor())){
-            holder.company_tv.setText(item.getSupervisor());
+        if (!TextUtils.isEmpty(item.getEntname())){
+            holder.company_tv.setText(item.getEntname());
         } else {
             holder.company_tv.setText("");
         }
-        if (!TextUtils.isEmpty(item.getProjectfunction())){
-            holder.type_tv.setText(item.getProjectfunction());
+        if (!TextUtils.isEmpty(item.getStartdate())){
+            holder.type_tv.setText("开工日期：" + item.getStartdate());
         } else {
-            holder.type_tv.setText("");
+            holder.type_tv.setText("开工日期：无");
         }
         if (!TextUtils.isEmpty(item.getBuildaera())){
             holder.mianji_tv.setText(item.getBuildaera());
         } else {
             holder.mianji_tv.setText("");
         }
+        holder.mianji_tv.setVisibility(View.GONE);
     }
 
     class ItemHolder {

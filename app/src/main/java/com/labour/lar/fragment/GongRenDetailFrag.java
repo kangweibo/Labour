@@ -56,7 +56,7 @@ public class GongRenDetailFrag extends BaseFragment {
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
 
-    String[] titles  = {"务工资料","考勤记录","发薪记录"};
+    String[] titles  = {"个人资料","务工资料","考勤记录","发薪记录"};
 
     private Employee employee;
 
@@ -80,21 +80,44 @@ public class GongRenDetailFrag extends BaseFragment {
             } else {
                 name_tv.setText("");
             }
-            if (!TextUtils.isEmpty(employee.getPhone())){
-                number_tv.setText("手机号：" + employee.getPhone());
-            } else {
-                number_tv.setText("手机号：未知");
+
+            String prole = employee.getProle();
+            if (prole != null){
+                if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
+                    if (!TextUtils.isEmpty(employee.getProjectname())){
+                        number_tv.setText("项目部：" + employee.getProjectname());
+                    } else {
+                        number_tv.setText("项目部：未知");
+                    }
+                    title_tv.setText("管理人员");
+                }
+
+                if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
+                    if (!TextUtils.isEmpty(employee.getOperteamname())){
+                        number_tv.setText("队部：" + employee.getOperteamname());
+                    } else {
+                        number_tv.setText("队部：未知");
+                    }
+                    title_tv.setText("管理人员");
+                }
+
+                if (prole.equals("classteam_manager") || prole.equals("employee")){
+                    if (!TextUtils.isEmpty(employee.getClassteamname())){
+                        number_tv.setText("班组：" + employee.getClassteamname());
+                    } else {
+                        number_tv.setText("班组：未知");
+                    }
+                    title_tv.setText("劳务工人");
+                }
             }
-            if (!TextUtils.isEmpty(employee.getClassteamname())){
-                classteam_tv.setText("班组：" + employee.getClassteamname());
+
+            if (!TextUtils.isEmpty(employee.getDuty())){
+                classteam_tv.setText("职务：" + employee.getDuty());
             } else {
-                classteam_tv.setText("班组：未知");
+                classteam_tv.setText("职务：未知");
             }
-            if (!TextUtils.isEmpty(employee.getStatus())){
-                state_tv.setText("状态：" + employee.getStatus());
-            } else {
-                state_tv.setText("状态：未知");
-            }
+
+            state_tv.setText("");
         }
     }
 
@@ -102,7 +125,10 @@ public class GongRenDetailFrag extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
+        MyInfoFrag frag = new MyInfoFrag();
+        frag.setUserInfo(employee.getId(), employee.getProle());
 
+        frgs.add(frag);
         frgs.add(new GongRenDetailListFrag());
         frgs.add(new GongRenDetailListFrag());
         frgs.add(new GongRenDetailListFrag());
@@ -111,6 +137,7 @@ public class GongRenDetailFrag extends BaseFragment {
 
         pstsIndicator.setIndicatorColor(getResources().getColor(R.color.common_blue));
         pstsIndicator.setDividerColor(getResources().getColor(R.color.transparent));
+        pstsIndicator.setTabPaddingLeftRight(1);
         pstsIndicator.setViewPager(vpContent);
         vpContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

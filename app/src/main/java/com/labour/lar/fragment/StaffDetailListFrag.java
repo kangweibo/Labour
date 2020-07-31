@@ -211,7 +211,7 @@ public class StaffDetailListFrag extends BaseFragment {
                     // 本作业队队长
                     if (prole != null && (prole.equals("operteam_manager") || prole.equals("operteam_quota"))
                             && myOperteamId == operteamId){
-                        if (employee.getStatus() == null || employee.getStatus().equals("不通过")) {
+                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
                             item.isShowPass = true;
                         }
                     }

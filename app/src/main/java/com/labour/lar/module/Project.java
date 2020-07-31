@@ -15,6 +15,7 @@ public class Project implements Serializable {
     private String budget;//: null,
     private String created_at;//: "2020-05-13T01:36:29.000Z",
     private String updated_at;//: "2020-05-13T01:36:29.000Z",
+    private String startdate;//: "2020-05-13T01:36:29.000Z",
     private String entname;//: "方正通信建设有限公司"
     private String manager_num;//成员人数
     private String operteam_num;//作业队数量
@@ -107,6 +108,14 @@ public class Project implements Serializable {
 
     public void setUpdated_at(String updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public String getStartdate() {
+        return startdate;
+    }
+
+    public void setStartdate(String startdate) {
+        this.startdate = startdate;
     }
 
     public String getEntname() {

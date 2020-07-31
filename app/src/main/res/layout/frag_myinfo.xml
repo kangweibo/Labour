@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_header"/>
-
-    <FrameLayout
-        android:id="@+id/container"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:divider="@color/line"
+        android:dividerHeight="1dp"
+        android:overScrollMode="never" />
+
 </LinearLayout>

@@ -43,6 +43,8 @@ public class ManagerDetailFrag extends BaseFragment {
     TextView company_tv;
     @BindView(R.id.type_tv)
     TextView type_tv;
+    @BindView(R.id.txt_team)
+    TextView txt_team;
 
     @BindView(R.id.photo_iv)
     RoundImageView photo_iv;
@@ -74,17 +76,25 @@ public class ManagerDetailFrag extends BaseFragment {
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (project!= null){
+            name_tv.setText("项目部");
+
+            if (!TextUtils.isEmpty(project.getName())){
+                txt_team.setText(project.getName());
+            } else {
+                txt_team.setText("");
+            }
+
             if (!TextUtils.isEmpty(project.getPm())){
-                name_tv.setText("项目经理：" + project.getPm());
+                company_tv.setText("项目经理：" + project.getPm());
             } else {
                 company_tv.setText("项目经理：");
             }
+
             if (!TextUtils.isEmpty(project.getManager_num())){
-                company_tv.setText("花名册：" + project.getManager_num() + "人");
+                type_tv.setText("花名册：" + project.getManager_num() + "人");
             } else {
-                company_tv.setText("花名册：0人");
+                type_tv.setText("花名册：0人");
             }
-            type_tv.setText("");
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);

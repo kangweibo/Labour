@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -223,22 +224,26 @@ public class ProjectDetailListFrag extends BaseFragment {
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
         item0.field1 = "项目部";
-        item0.field1Content = "";
-        item0.field2 = "项目经理："+ project.getPm();
-        item0.field2Content = "成员" + project.getManager_num() + "个";
-        item0.field3 = "作业队："+ project.getOperteam_num() + "个";
-        item0.field3Content = "共"+ project.getAll_num() +"人";
+        item0.field1Content = "项目经理："+ project.getPm();
+        item0.field2 = "人数：" + project.getManager_num() + "个";
+        item0.field2Content = "作业队："+ project.getOperteam_num() + "个";
+        item0.field3 = "";
+        item0.field3Content = "";
         item0.isShowArraw = true;
-        item0.isShowTwo = true;
+        item0.isShowTwo = false;
 
         list.add(item0);
 
         for(Operteam operteam : operteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = operteam.getName();;
-            item.field1Content = "";
+            item.field1 = operteam.getName();
+            if (!TextUtils.isEmpty(operteam.getPm())){
+                item.field1Content = "队长："+ operteam.getPm();
+            } else {
+                item.field1Content = "队长：无";
+            }
             item.field2 = "人数："+ operteam.getAll_num() +"人";
-            item.field2Content = "班组" + operteam.getClassteam_num() +"个";
+            item.field2Content = "班组：" + operteam.getClassteam_num() +"个";
             item.isShowArraw = true;
 
             list.add(item);

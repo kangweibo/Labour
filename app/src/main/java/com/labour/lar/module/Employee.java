@@ -27,7 +27,10 @@ public class Employee implements Serializable {
 
     private boolean identified;//": true,
     private String prolename;//":": null
+    private String projectname;//":": 项目名称
+    private String operteamname;//":": 作业队名称
     private String classteamname;//":": 班组名称
+    private String duty;//":": 职务
 
     public int getId() {
         return id;
@@ -171,5 +174,29 @@ public class Employee implements Serializable {
 
     public void setClassteamname(String classteamname) {
         this.classteamname = classteamname;
+    }
+
+    public String getProjectname() {
+        return projectname;
+    }
+
+    public void setProjectname(String projectname) {
+        this.projectname = projectname;
+    }
+
+    public String getOperteamname() {
+        return operteamname;
+    }
+
+    public void setOperteamname(String operteamname) {
+        this.operteamname = operteamname;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
     }
 }
