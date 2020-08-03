@@ -528,6 +528,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
         final Map<String,String> param = new HashMap<>();
         param.put("img",base64Data);
+        param.put("rtype",user.getProle());
         param.put("employee_id",employee_id+"");//工人id
         String jsonParams = JSON.toJSONString(param);
 

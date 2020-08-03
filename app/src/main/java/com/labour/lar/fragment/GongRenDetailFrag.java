@@ -56,7 +56,7 @@ public class GongRenDetailFrag extends BaseFragment {
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
     FragmentManager fm;
 
-    String[] titles  = {"个人资料","务工资料","考勤记录","发薪记录"};
+    String[] titles  = {"个人信息","务工资料","考勤记录","发薪记录"};
 
     private Employee employee;
 
