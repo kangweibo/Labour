@@ -153,6 +153,27 @@ public class MyInfoFrag extends BaseFragment {
             }
         }
 
+        MyinfoAdapter.ListItem item11 = new MyinfoAdapter.ListItem();
+        item11.type = "员工状态";
+        item11.value = userInfo.getStatus();
+
+        MyinfoAdapter.ListItem item12 = new MyinfoAdapter.ListItem();
+        item12.type = "上岗日期";
+        item12.value = userInfo.getBankcard();
+
+        MyinfoAdapter.ListItem item13 = new MyinfoAdapter.ListItem();
+        item13.type = "累计工时";
+        item13.value = userInfo.getBank();
+
+        MyinfoAdapter.ListItem item14 = new MyinfoAdapter.ListItem();
+        item14.type = "发放总额";
+        item14.value = userInfo.getAddress();
+
+        list.add(item11);
+        list.add(item12);
+        list.add(item13);
+        list.add(item14);
+
         myinfoAdapter.notifyDataSetChanged();
     }
 

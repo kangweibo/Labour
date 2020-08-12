@@ -22,9 +22,12 @@ import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.InferiorsActivity;
 import com.labour.lar.activity.MyInfoActivity;
+import com.labour.lar.activity.SalaryManagerActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
+import com.labour.lar.activity.SubOperationActivity;
 import com.labour.lar.activity.TrainActivity;
+import com.labour.lar.activity.VerifyActivity;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
@@ -119,6 +122,8 @@ public class MineFrag extends BaseFragment {
                     showClassteam();
                 } else if(item.equals("银行卡管理")){
                     startActivity(new Intent(context, BankcardAddActivity.class));
+                } else if(item.equals("代员工操作")){
+                    startActivity(new Intent(context, SubOperationActivity.class));
                 } else if(item.equals("代员工身份验证")){
                     Intent intent = new Intent(context, InferiorsActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_Identified);
@@ -130,6 +135,10 @@ public class MineFrag extends BaseFragment {
                     startActivityForResult(intent, REQUEST_CODE_ClockIn);
                 } else if(item.equals("岗前安全培训")){
                     startActivity(new Intent(context, TrainActivity.class));
+                } else if(item.equals("员工审核")){
+                    startActivity(new Intent(context, VerifyActivity.class));
+                }  else if(item.equals("薪酬管理")){
+                    startActivity(new Intent(context, SalaryManagerActivity.class));
                 } else if(item.equals("设置")){
                     startActivity(new Intent(context, SettingActivity.class));
                 }
@@ -224,18 +233,26 @@ public class MineFrag extends BaseFragment {
                 imgList.add(R.mipmap.team_icon);
             }
 
-            if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
-                    || prole.equals("project_manager")){
-                list.add("代员工身份验证");
-                imgList.add(R.mipmap.idcard_icon);
-                list.add("代员工银行卡认证");
-                imgList.add(R.mipmap.bankcard_icon);
-                list.add("代员工打卡");
-                imgList.add(R.mipmap.tab_kaoqin_checked);
+            if (prole.equals("classteam_manager")
+                    || prole.equals("operteam_manager") || prole.equals("operteam_quota")
+                    || prole.equals("project_manager")|| prole.equals("project_quota")){
+//                list.add("代员工身份验证");
+//                imgList.add(R.mipmap.idcard_icon);
+//                list.add("代员工银行卡认证");
+//                imgList.add(R.mipmap.bankcard_icon);
+//                list.add("代员工打卡");
+//                imgList.add(R.mipmap.tab_kaoqin_checked);
+                list.add("代员工操作");
+                imgList.add(R.mipmap.replace_icon);
+
+                list.add("员工审核");
+                imgList.add(R.mipmap.approval_icon);
             }
         }
         list.add("岗前安全培训");
         imgList.add(R.mipmap.test_icon);
+        list.add("薪酬管理");
+        imgList.add(R.mipmap.salary_icon);
         list.add("设置");
         imgList.add(R.mipmap.seting2_icon);
 

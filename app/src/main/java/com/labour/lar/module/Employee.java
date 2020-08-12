@@ -15,9 +15,9 @@ public class Employee implements Serializable {
     private String email;//":": "111@qq.com",
     private String status;//":": "1",
 
-    private String pic;// "url": "/uploads/staff/pic/2/temp.png"
-    private String idpic1;//"url": "/uploads/staff/idpic1/2/temp.png"
-    private String idpic2;//"url": "/uploads/staff/idpic2/2/temp.png"
+    private Pic pic;// "url": "/uploads/staff/pic/2/temp.png"
+    private Pic idpic1;//"url": "/uploads/staff/idpic1/2/temp.png"
+    private Pic idpic2;//"url": "/uploads/staff/idpic2/2/temp.png"
 
     private int prole_id;//":": 5,
     private String prole;//":": "staff",
@@ -31,6 +31,20 @@ public class Employee implements Serializable {
     private String operteamname;//":": 作业队名称
     private String classteamname;//":": 班组名称
     private String duty;//":": 职务
+    private String bankcard;
+    private String examstatus;
+
+    public static class Pic implements Serializable {
+        private String url;
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
 
     public int getId() {
         return id;
@@ -88,27 +102,27 @@ public class Employee implements Serializable {
         this.status = status;
     }
 
-    public String getPic() {
+    public Pic getPic() {
         return pic;
     }
 
-    public void setPic(String pic) {
+    public void setPic(Pic pic) {
         this.pic = pic;
     }
 
-    public String getIdpic1() {
+    public Pic getIdpic1() {
         return idpic1;
     }
 
-    public void setIdpic1(String idpic1) {
+    public void setIdpic1(Pic idpic1) {
         this.idpic1 = idpic1;
     }
 
-    public String getIdpic2() {
+    public Pic getIdpic2() {
         return idpic2;
     }
 
-    public void setIdpic2(String idpic2) {
+    public void setIdpic2(Pic idpic2) {
         this.idpic2 = idpic2;
     }
 
@@ -198,5 +212,21 @@ public class Employee implements Serializable {
 
     public void setDuty(String duty) {
         this.duty = duty;
+    }
+
+    public String getBankcard() {
+        return bankcard;
+    }
+
+    public void setBankcard(String bankcard) {
+        this.bankcard = bankcard;
+    }
+
+    public String getExamstatus() {
+        return examstatus;
+    }
+
+    public void setExamstatus(String examstatus) {
+        this.examstatus = examstatus;
     }
 }
