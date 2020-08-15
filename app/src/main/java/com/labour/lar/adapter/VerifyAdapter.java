@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -13,10 +14,18 @@ import com.labour.lar.R;
 import com.labour.lar.module.Employee;
 import com.labour.lar.widget.RoundImageView;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class VerifyAdapter extends BaseAdapter<Employee, VerifyAdapter.ItemHolder> {
+
+    private boolean isShowVerify;
+
+    public void setList(List<Employee> datas) {
+        super.setList(datas);
+    }
 
     public VerifyAdapter(Context mContext) {
         super(mContext);
@@ -45,22 +54,40 @@ public class VerifyAdapter extends BaseAdapter<Employee, VerifyAdapter.ItemHolde
             holder.txt_field2.setText("");
         }
 
-        holder.txt_field3.setText("手机号");
+        holder.txt_field3.setText("手机:");
 
-        if (!TextUtils.isEmpty(item.getIdcard())){
-            holder.txt_field4.setText("身份证号：" + item.getIdcard());
+        if (!TextUtils.isEmpty(item.getPhone())){
+            holder.txt_field4.setText(item.getPhone());
         } else {
-            holder.txt_field4.setText("身份证号：");
+            holder.txt_field4.setText("");
+        }
+        if (!TextUtils.isEmpty(item.getIdcard())){
+            holder.txt_field5.setText("身份证号：" + item.getIdcard());
+        } else {
+            holder.txt_field5.setText("身份证号：");
         }
         if (!TextUtils.isEmpty(item.getBankcard())){
-            holder.txt_field4.setText("银行卡号：" + item.getBankcard());
+            holder.txt_field6.setText("银行卡号：" + item.getBankcard());
         } else {
-            holder.txt_field4.setText("银行卡号：");
+            holder.txt_field6.setText("银行卡号：");
         }
         if (!TextUtils.isEmpty(item.getExamstatus())){
-            holder.txt_field4.setText("培训考试：" + item.getExamstatus());
+            holder.txt_field7.setText("培训考试：" + item.getExamstatus());
         } else {
-            holder.txt_field4.setText("培训考试：");
+            holder.txt_field7.setText("培训考试：");
+        }
+
+        holder.btn_examine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onButtonClickListener != null) {
+                    onButtonClickListener.onItemClick(v, position);
+                }
+            }
+        });
+
+        if (!isShowVerify) {
+            holder.btn_examine.setVisibility(View.GONE);
         }
     }
 
@@ -85,5 +112,21 @@ public class VerifyAdapter extends BaseAdapter<Employee, VerifyAdapter.ItemHolde
         TextView txt_field6;
         @BindView(R.id.txt_field7)
         TextView txt_field7;
+        @BindView(R.id.btn_examine)
+        Button btn_examine;
+    }
+
+    public void setShowVerify(boolean showVerify) {
+        isShowVerify = showVerify;
+    }
+
+    private OnButtonClickListener onButtonClickListener;
+
+    public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {
+        this.onButtonClickListener = onButtonClickListener;
+    }
+
+    public interface OnButtonClickListener {
+        void onItemClick(View view, int position);
     }
 }

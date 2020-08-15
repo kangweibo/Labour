@@ -16,22 +16,22 @@ import com.labour.lar.widget.RoundImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MyinfoAdapter extends BaseAdapter<MyinfoAdapter.ListItem, MyinfoAdapter.ItemHolder> {
+public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAdapter.ItemHolder> {
 
-    public MyinfoAdapter(Context mContext) {
+    public MemberAdapter(Context mContext) {
         super(mContext);
     }
 
     @Override
     protected View createView(int position, View convertView, ViewGroup parent) {
-        View view = this.mInflater.inflate(R.layout.frag_myinfo_item, null);
+        View view = this.mInflater.inflate(R.layout.frag_member_item, null);
         ItemHolder holder = new ItemHolder(view);
         view.setTag(holder);
         return view;
     }
 
     @Override
-    protected void fillView(int position, MyinfoAdapter.ListItem item, ItemHolder holder) {
+    protected void fillView(int position, MemberAdapter.ListItem item, ItemHolder holder) {
         if (item.showPic) {
             holder.photo_iv.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.pic)) {

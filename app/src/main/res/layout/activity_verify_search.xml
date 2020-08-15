@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_header"/>
+
+    <TextView android:id="@+id/txt_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@mipmap/tree_ex"
+        android:minHeight="40dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/black"
+        android:hint="请选择查询条件"
+        android:textColorHint="@color/text_input_tip"
+        android:background="@drawable/login_input_bg"
+        android:textSize="@dimen/text_size_15"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="1dp"
+        android:paddingHorizontal="8dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/list_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/line_grey"
+                android:dividerHeight="1dp"
+                android:overScrollMode="never" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/cb_id_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:checked="true"
+                    android:textSize="@dimen/text_size_15"
+                    android:textColor="#8a8a8a"
+                    android:text="身份验证未通过"
+                    android:gravity="right|center_vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp"/>
+                <CheckBox
+                    android:id="@+id/cb_exam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:checked="true"
+                    android:textSize="@dimen/text_size_15"
+                    android:textColor="#8a8a8a"
+                    android:text="培训考试未通过"
+                    android:gravity="right|center_vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp"/>
+                <CheckBox
+                    android:id="@+id/cb_bank_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:textSize="@dimen/text_size_15"
+                    android:textColor="#8a8a8a"
+                    android:text="银行卡验证未通过"
+                    android:gravity="right|center_vertical"
+                    android:padding="10dp"
+                    android:layout_marginHorizontal="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/selector_grey_btn"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:text="取消"/>
+                <Button
+                    android:id="@+id/btn_ok"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/selector_button"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:text="确定"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+
+

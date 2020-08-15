@@ -68,8 +68,6 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
 
     @BindView(R.id.photo_fan_iv)
     ImageView photo_fan_iv;
-//    @BindView(R.id.fan_tv)
-//    TextView fan_tv;
     @BindView(R.id.photo_iv)
     ImageView photo_iv;
     @BindView(R.id.take_photo_fan_iv)
@@ -86,8 +84,6 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
     EditText edt_idcard_no;
     @BindView(R.id.edt_idcard_address)
     EditText edt_idcard_address;
-    @BindView(R.id.txt_name)
-    TextView txt_name;
 
     @BindView(R.id.edt_phone)
     EditText edt_phone;
@@ -118,13 +114,11 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
         permissionManager = PermissionManager.getInstance(this);
         permissionManager.setPermissionCallbacks(this);
         user = (User)getIntent().getSerializableExtra("user");
-        
-        title_tv.setText("代员工批量注册");
-        txt_name.setVisibility(View.VISIBLE);
-        if (!TextUtils.isEmpty(user.getName())) {
-            txt_name.setText("员工：" + user.getName());
-        }
 
+        if (user == null){
+            user = UserCache.getInstance(this).get();
+        }
+        title_tv.setText("代员工批量注册");
         initAccessTokenWithAkSk();
     }
 
@@ -146,7 +140,7 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
         }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
     }
 
-    @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,R.id.submit_btn,R.id.submit_btn})
+    @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,R.id.submit_btn,R.id.txt_create_num})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -462,17 +456,27 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
             return;
         }
 
-        if(!isFaceMatch){
-            AppToast.show(SubRegisterActivity.this,"身份证正面照与本人头像相似度过低!");
-            return;
-        }
+//        if(!isFaceMatch){
+//            AppToast.show(SubRegisterActivity.this,"身份证正面照与本人头像相似度过低!");
+//            return;
+//        }
 
+        String phone = edt_phone.getText().toString();
+        String passwd = edt_password.getText().toString();
         String idCardNo = edt_idcard_no.getText().toString();
         String name = edt_idcard_name.getText().toString();
         String gender = edt_idcard_gender.getText().toString();
         String address = edt_idcard_address.getText().toString();
         String avatar = idCardInfo.get("avatar");
 
+        if(StringUtils.isBlank(phone)){
+            AppToast.show(this,"请填写手机号码！");
+            return;
+        }
+        if(StringUtils.isBlank(passwd)){
+            AppToast.show(this,"请填写密码！");
+            return;
+        }
         if(StringUtils.isBlank(idCardNo) || StringUtils.isBlank(name)
                 || StringUtils.isBlank(gender)|| StringUtils.isBlank(address)){
             AppToast.show(this,"请填写完整信息！");
@@ -483,8 +487,23 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
             return;
         }
 
-        String jsonParams = JSON.toJSONString(idCardInfo);
-        String url = Constants.HTTP_BASE + "/api/identify";
+        JSONObject param = new JSONObject();
+        param.put("token","063d91b4f57518ff");
+        param.put("userprole",user.getProle());
+        param.put("userid",user.getId());
+        param.put("phone",phone);
+        param.put("passwd",passwd);
+
+        param.put("idpic1",idCardInfo.get("idpic1"));
+        param.put("idpic2",idCardInfo.get("idpic2"));
+        param.put("avatar",avatar);
+        param.put("idcard",idCardNo);
+        param.put("name",name);
+        param.put("address",address);
+        param.put("gender",gender);
+        String jsonParams = param.toJSONString();
+
+        String url = Constants.HTTP_BASE + "/api/batch_register";
         ProgressDialog dialog = ProgressDialog.createDialog(this);
         dialog.show();
 
@@ -494,49 +513,20 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    AppToast.show(SubRegisterActivity.this,"身份认证成功!");
-
-                    if (isOneself){ //自己认证
-                        JSONObject jo = jr.getData();
-                        UserInfo userInfoOrg = JSON.parseObject(JSON.toJSONString(jo), UserInfo.class);
-                        UserInfo userInfo = dealWithPic(userInfoOrg);
-                        updateUserInfo(userInfo);
-                    }
+                    AppToast.show(SubRegisterActivity.this,"注册成功!");
 
                     setResult(RESULT_OK, getIntent());
                     finish();
                 } else {
-                    AppToast.show(SubRegisterActivity.this,"身份认证失败!");
+                    AppToast.show(SubRegisterActivity.this,"注册失败!");
                 }
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
-                AppToast.show(SubRegisterActivity.this,"身份认证出错!");
+                AppToast.show(SubRegisterActivity.this,"注册出错!");
             }
         });
-    }
-
-    private UserInfo dealWithPic(UserInfo userInfo) {
-        JSONObject jsonObject = JSON.parseObject(userInfo.getPic());
-        String pic = jsonObject.getString("url");
-        userInfo.setPic(pic);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic1());
-        String Idpic1 = jsonObject.getString("url");
-        userInfo.setIdpic1(Idpic1);
-
-        jsonObject = JSON.parseObject(userInfo.getIdpic2());
-        String Idpic2 = jsonObject.getString("url");
-        userInfo.setIdpic2(Idpic2);
-
-        return userInfo;
-    }
-
-    // 更新用户信息
-    private void updateUserInfo(UserInfo userInfo) {
-        UserInfoCache userCache = UserInfoCache.getInstance(SubRegisterActivity.this);
-        userCache.put(userInfo);
     }
 
     // 显示图片

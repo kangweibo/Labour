@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@mipmap/star_icon"
                 android:drawablePadding="4dp"
-                android:text="人脸正面照"
+                android:text="身份证头像"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_16"
                 android:layout_gravity="center_horizontal"
@@ -231,7 +231,7 @@
                     android:background="@mipmap/kaoqin_sign_icon"
                     android:layout_margin="20dp"
                     android:scaleType="fitXY"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

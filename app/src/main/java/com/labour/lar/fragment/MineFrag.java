@@ -22,6 +22,7 @@ import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.InferiorsActivity;
 import com.labour.lar.activity.MyInfoActivity;
+import com.labour.lar.activity.ProjectManagerActivity;
 import com.labour.lar.activity.SalaryManagerActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
@@ -137,7 +138,9 @@ public class MineFrag extends BaseFragment {
                     startActivity(new Intent(context, TrainActivity.class));
                 } else if(item.equals("员工审核")){
                     startActivity(new Intent(context, VerifyActivity.class));
-                }  else if(item.equals("薪酬管理")){
+                } else if(item.equals("项目及人员管理")){
+                    startActivity(new Intent(context, ProjectManagerActivity.class));
+                } else if(item.equals("薪酬管理")){
                     startActivity(new Intent(context, SalaryManagerActivity.class));
                 } else if(item.equals("设置")){
                     startActivity(new Intent(context, SettingActivity.class));
@@ -215,8 +218,8 @@ public class MineFrag extends BaseFragment {
 //        imgList.add(R.mipmap.tab_home_checked);
 //        list.add("考勤报表");
 //        imgList.add(R.mipmap.kaoqinbaobiao_icon);
-        list.add("银行卡管理");
-        imgList.add(R.mipmap.bankcard_icon);
+//        list.add("银行卡管理");
+//        imgList.add(R.mipmap.bankcard_icon);
 
         UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
         if (userInfo != null){
@@ -247,6 +250,9 @@ public class MineFrag extends BaseFragment {
 
                 list.add("员工审核");
                 imgList.add(R.mipmap.approval_icon);
+
+                list.add("项目及人员管理");
+                imgList.add(R.mipmap.organization);
             }
         }
         list.add("岗前安全培训");

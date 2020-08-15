@@ -10,12 +10,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.adapter.SalaryListAdapter;
-import com.labour.lar.adapter.TrainLearn1Adapter;
-import com.labour.lar.cache.UserInfoCache;
-import com.labour.lar.module.Question1;
-import com.labour.lar.module.Salary;
-import com.labour.lar.module.UserInfo;
+import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.TrainLearn2Adapter;
+import com.labour.lar.module.Manager;
+import com.labour.lar.module.Operteam;
+import com.labour.lar.module.Question2;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
@@ -35,9 +34,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * 薪酬列表
+ * 成员
  */
-public class SalaryListActivity extends BaseActivity {
+public class MemberOrgActivity extends BaseActivity {
 
     @BindView(R.id.title_tv)
     TextView title_tv;
@@ -51,10 +50,14 @@ public class SalaryListActivity extends BaseActivity {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    private SalaryListAdapter salaryListAdapter;
+    private TrainLearn2Adapter trainLearnAdapter;
 
-    private List<Salary> salaryList = new ArrayList<>();
+    private List<Question2> question2List = new ArrayList<>();
+    private List<Manager> managerList = new ArrayList<>();
+    private List<Operteam> operteamList = new ArrayList<>();
+    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();;
 
+    private int offset;
 
     @Override
     public int getActivityLayoutId() {
@@ -63,32 +66,32 @@ public class SalaryListActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout() {
-        title_tv.setText("薪酬发放记录");
-        getUserSalaries();
+        title_tv.setText("岗前安全培训 单选题");
+        getQaselectones(true);
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        salaryListAdapter = new SalaryListAdapter(this);
-        listView.setAdapter(salaryListAdapter);
+        trainLearnAdapter = new TrainLearn2Adapter(this);
+        listView.setAdapter(trainLearnAdapter);
 
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getUserSalaries();
+                getQuestion(true);
             }
         });
         list_refresh.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshlayout) {
-
+                getQuestion(false);
             }
         });
 
-        salaryListAdapter.setList(salaryList);
-        salaryListAdapter.notifyDataSetChanged();
+        trainLearnAdapter.setList(question2List);
+        trainLearnAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.back_iv,})
+    @OnClick({R.id.back_iv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -99,26 +102,24 @@ public class SalaryListActivity extends BaseActivity {
 
     /**
      * 获取数据
+     * @param refresh 是否全部刷新
      */
-    private void getUserSalaries() {
-        UserInfo userInfo = UserInfoCache.getInstance(this).get();
-        if (userInfo == null) {
-            return;
-        }
+    private void getQuestion(boolean refresh) {
+        getQaselectones(refresh);
+    }
 
-        String prole = userInfo.getProle();
-
-        if (prole == null){
-            return;
+    private void getQaselectones(boolean refresh) {
+        if (refresh){
+            offset = 0;
         }
 
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
-        param.put("prole",prole);
-        param.put("userid",userInfo.getId());
+        param.put("offset",offset);
+        param.put("limit",10);
         String jsonParams = param.toJSONString();
 
-        String url = Constants.HTTP_BASE + "/api/get_user_salaries";
+        String url = Constants.HTTP_BASE + "/api/qaselectones";
         ProgressDialog dialog = ProgressDialog.createDialog(this);
         dialog.show();
 
@@ -126,19 +127,23 @@ public class SalaryListActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<String> response) {
                 dialog.dismiss();
-                list_refresh.finishRefresh();
-                list_refresh.finishLoadMore();
+                list_refresh.finishRefresh(true);
+                list_refresh.finishLoadMore(true);
 
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
                     JSONArray jsonArray = jr.getJSONArrayData();
-                    List<Salary> list = JSON.parseArray(JSON.toJSONString(jsonArray), Salary.class);
+                    List<Question2> question2s = JSON.parseArray(JSON.toJSONString(jsonArray), Question2.class);
 
-                    salaryList.clear();
-                    salaryList.addAll(list);
-                    showData();
+                    if (refresh){
+                        question2List.clear();
+                    }
+
+                    offset += question2s.size();
+                    question2List.addAll(question2s);
+                    showQuestion2();
                 } else {
-                    AppToast.show(SalaryListActivity.this,"获取薪酬信息失败!");
+                    AppToast.show(MemberOrgActivity.this,"获取成绩信息失败!");
                 }
             }
             @Override
@@ -146,12 +151,12 @@ public class SalaryListActivity extends BaseActivity {
                 dialog.dismiss();
                 list_refresh.finishRefresh(false);
                 list_refresh.finishLoadMore(false);
-                AppToast.show(SalaryListActivity.this,"获取薪酬信息出错!");
+                AppToast.show(MemberOrgActivity.this,"获取成绩信息出错!");
             }
         });
     }
 
-    private void showData() {
-        salaryListAdapter.notifyDataSetChanged();
+    private void showQuestion2() {
+        trainLearnAdapter.notifyDataSetChanged();
     }
 }

@@ -7,42 +7,6 @@
 
     <include layout="@layout/layout_header"/>
 
-    <CheckBox
-        android:id="@+id/cb_id_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:textSize="@dimen/text_size_16"
-        android:textColor="#8a8a8a"
-        android:text="身份验证未通过"
-        android:gravity="right|center_vertical"
-        android:padding="10dp"
-        android:layout_marginHorizontal="5dp"/>
-
-    <CheckBox
-        android:id="@+id/cb_bank_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:textSize="@dimen/text_size_16"
-        android:textColor="#8a8a8a"
-        android:text="银行卡验证未通过"
-        android:gravity="right|center_vertical"
-        android:padding="10dp"
-        android:layout_marginHorizontal="5dp"/>
-
-    <CheckBox
-        android:id="@+id/cb_exam"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:textSize="@dimen/text_size_16"
-        android:textColor="#8a8a8a"
-        android:text="考试未通过"
-        android:gravity="right|center_vertical"
-        android:padding="10dp"
-        android:layout_marginHorizontal="5dp"/>
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/list_refresh"
         android:layout_width="match_parent"
