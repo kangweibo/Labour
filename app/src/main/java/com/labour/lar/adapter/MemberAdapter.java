@@ -6,12 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.labour.lar.BaseAdapter;
-import com.labour.lar.BaseApplication;
-import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.widget.RoundImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,35 +28,16 @@ public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAda
 
     @Override
     protected void fillView(int position, MemberAdapter.ListItem item, ItemHolder holder) {
-        if (item.showPic) {
-            holder.photo_iv.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(item.pic)) {
-                Glide.with(BaseApplication.getInstance()).load(Constants.HTTP_BASE + item.pic).into(holder.photo_iv);
-            } else {
-                holder.photo_iv.setImageResource(R.mipmap.worker_icon);
-            }
+        if (!TextUtils.isEmpty(item.name)){
+            holder.txt_name.setText(item.name);
         } else {
-            holder.photo_iv.setVisibility(View.GONE);
-        }
-
-        if (!TextUtils.isEmpty(item.type)){
-            holder.txt_type.setText(item.type);
-        } else {
-            holder.txt_type.setText("");
-        }
-
-        if (!TextUtils.isEmpty(item.value)){
-            holder.txt_value.setText(item.value);
-        } else {
-            holder.txt_value.setText("");
+            holder.txt_name.setText("");
         }
     }
 
     public static class ListItem {
-        public boolean showPic;
-        public String pic;
-        public String type;
-        public String value;
+        public int id;
+        public String name;
     }
 
     class ItemHolder {
@@ -68,11 +45,7 @@ public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAda
             ButterKnife.bind(this, view);
         }
 
-        @BindView(R.id.photo_iv)
-        RoundImageView photo_iv;
-        @BindView(R.id.txt_type)
-        TextView txt_type;
-        @BindView(R.id.txt_value)
-        TextView txt_value;
+        @BindView(R.id.txt_name)
+        TextView txt_name;
     }
 }

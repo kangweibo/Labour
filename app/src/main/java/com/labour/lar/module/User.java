@@ -15,6 +15,8 @@ public class User implements Serializable {
      */
     private String prole;//": "manager",角色
 
+    private Ent ent;//企业
+
     //项目部: 项目-->企业
     private String projectname;//": "unknown"
     private Project project;
@@ -66,6 +68,14 @@ public class User implements Serializable {
 
     public void setProle(String prole) {
         this.prole = prole;
+    }
+
+    public Ent getEnt() {
+        return ent;
+    }
+
+    public void setEnt(Ent ent) {
+        this.ent = ent;
     }
 
     public String getProjectname() {

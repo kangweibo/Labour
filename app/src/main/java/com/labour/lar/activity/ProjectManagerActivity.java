@@ -10,10 +10,7 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MineGridViewAdapter;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserInfoCache;
-import com.labour.lar.module.Employee;
 import com.labour.lar.module.User;
-import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.NoScrollGridView;
 
 import java.util.ArrayList;
@@ -64,8 +61,7 @@ public class ProjectManagerActivity extends BaseActivity {
                 } else if(item.equals("二维码")){
                     showQRCode();
                 } else if(item.equals("成员管理")){
-                    Intent intent = new Intent(ProjectManagerActivity.this, InferiorsActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE_ClockIn);
+                    memberManager();
                 }
             }
         });
@@ -106,6 +102,7 @@ public class ProjectManagerActivity extends BaseActivity {
 
     // 显示二维码
     private void showQRCode() {
+        String title = "";
         int type = 0;
         int id = 0;
         User user = UserCache.getInstance(this).get();
@@ -113,21 +110,36 @@ public class ProjectManagerActivity extends BaseActivity {
             String prole = user.getProle();
             if (prole.equals("ent_manager")) {
                 type = 0;
+                User.Ent ent = user.getEnt();
+                if (ent != null) {
+                    title = ent.getName();
+                }
             }
 
             if (prole.equals("project_manager")) {
                 type = 1;
                 id = user.getProject().getId();
+                User.Project project = user.getProject();
+                if (project != null) {
+                    title = project.getEnt().getName() + "\n" + project.getName();
+                }
             }
 
             if (prole.equals("operteam_manager")) {
                 type = 2;
                 id = user.getOperteam().getId();
+                User.Operteam operteam = user.getOperteam();
+                if (operteam != null) {
+                    title = operteam.getProject().getEnt().getName() + "\n"
+                            + operteam.getProject().getName() + "\n"
+                            + operteam.getName();
+                }
             }
         }
-        Intent intent = new Intent(this, ShowQRCodeActivity2.class);
+        Intent intent = new Intent(this, ShowQRCodeActivity.class);
         intent.putExtra("id", id);
         intent.putExtra("type", type);
+        intent.putExtra("title", title);
         startActivity(intent);
     }
 
@@ -166,27 +178,9 @@ public class ProjectManagerActivity extends BaseActivity {
 
     // 成员管理
     private void memberManager() {
-//        User user = UserCache.getInstance(this).get();
-//        if (user != null) {
-//            String prole = user.getProle();
-//            if (prole.equals("ent_manager")) {
-//                type = 0;
-//            }
-//
-//            if (prole.equals("project_manager")) {
-//                type = 1;
-//                id = user.getProject().getId();
-//            }
-//
-//            if (prole.equals("operteam_manager")) {
-//                type = 2;
-//                id = user.getOperteam().getId();
-//            }
-//        }
-//        Intent intent = new Intent(this, ShowQRCodeActivity2.class);
-//        intent.putExtra("id", id);
-//        intent.putExtra("type", type);
-//        startActivity(intent);
+        Intent intent = new Intent(ProjectManagerActivity.this,
+                MemberOrgActivity.class);
+        startActivity(intent);
     }
 
     @OnClick({R.id.back_iv})

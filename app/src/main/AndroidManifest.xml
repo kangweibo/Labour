@@ -136,11 +136,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
-            android:name="com.labour.lar.activity.ShowQRCodeActivity"
+            android:name="com.labour.lar.activity.ShowQRCodeActivity1"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
-            android:name="com.labour.lar.activity.ShowQRCodeActivity2"
+            android:name="com.labour.lar.activity.ShowQRCodeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
@@ -234,6 +234,14 @@
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
             android:name="com.labour.lar.activity.ProjectManagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.MemberOrgActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.MemberManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
 

@@ -25,7 +25,7 @@ import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.ProjectManagerActivity;
 import com.labour.lar.activity.SalaryManagerActivity;
 import com.labour.lar.activity.SettingActivity;
-import com.labour.lar.activity.ShowQRCodeActivity;
+import com.labour.lar.activity.ShowQRCodeActivity1;
 import com.labour.lar.activity.SubOperationActivity;
 import com.labour.lar.activity.TrainActivity;
 import com.labour.lar.activity.VerifyActivity;
@@ -178,10 +178,10 @@ public class MineFrag extends BaseFragment {
             name_tv.setText(userInfo.getName());
         }
 
-        if (!TextUtils.isEmpty(userInfo.getStatus()) && userInfo.getStatus().equals("已审核")){
-            status_tv.setText("（已上岗）");
+        if (!TextUtils.isEmpty(userInfo.getStatus())){
+            status_tv.setText("（" +  userInfo.getStatus()+ "）");
         } else {
-            status_tv.setText("（未上岗）");
+            status_tv.setText("（）");
         }
 
         if (!TextUtils.isEmpty(userInfo.getPhone())){
@@ -332,7 +332,7 @@ public class MineFrag extends BaseFragment {
         }
 
         String content = jsonObject.toJSONString();
-        Intent intent = new Intent(getContext(), ShowQRCodeActivity.class);
+        Intent intent = new Intent(getContext(), ShowQRCodeActivity1.class);
         intent.putExtra("content", content);
         intent.putExtra("title", title);
         startActivity(intent);
