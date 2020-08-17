@@ -37,7 +37,7 @@ public class MyInfoActivity extends BaseActivity {
         User user = userCache.get();
 
         MyInfoFrag frag = new MyInfoFrag();
-        frag.setUserInfo(user.getId(), user.getProle());
+        frag.setUserInfo(user.getId(), user.getProle(), true);
         FragmentTransaction trs = fm.beginTransaction();
         trs.add(R.id.container,frag);
         trs.commit();

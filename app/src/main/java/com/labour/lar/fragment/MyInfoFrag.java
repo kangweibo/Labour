@@ -63,6 +63,7 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
     private MyinfoAdapter myinfoAdapter;
     private List<MyinfoAdapter.ListItem> list = new ArrayList<>();
 
+    private boolean isMyself;
     private int userid;
     private String prole;
 
@@ -89,7 +90,7 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+                if (isMyself && position == 0) {
                     showPhotoDialog();
                 }
             }
@@ -206,11 +207,11 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
 
         MyinfoAdapter.ListItem item13 = new MyinfoAdapter.ListItem();
         item13.type = "累计工时";
-        item13.value = userInfo.getBank();
+        item13.value = userInfo.getBank()+"人天";
 
         MyinfoAdapter.ListItem item14 = new MyinfoAdapter.ListItem();
         item14.type = "发放总额";
-        item14.value = userInfo.getAddress();
+        item14.value = userInfo.getBank()+"元";
 
         list.add(item11);
         list.add(item12);
@@ -220,9 +221,10 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
         myinfoAdapter.notifyDataSetChanged();
     }
 
-    public void setUserInfo(int userid, String prole) {
+    public void setUserInfo(int userid, String prole,boolean isMyself) {
         this.userid = userid;
         this.prole = prole;
+        this.isMyself = isMyself;
     }
 
     private void getUserInfo(int userid, String prole) {
@@ -427,6 +429,7 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
+                    AppToast.show(context,"头像上传成功!");
                     // 重新获取用户信息
                     getUserInfo(userid, prole);
                 } else {

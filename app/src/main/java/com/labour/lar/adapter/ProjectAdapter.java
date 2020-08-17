@@ -39,22 +39,42 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         } else {
             holder.name_tv.setText("");
         }
-        if (!TextUtils.isEmpty(item.getEntname())){
-            holder.company_tv.setText(item.getEntname());
+
+        if (!TextUtils.isEmpty(item.getStartdate())){
+            holder.txt_start_date.setText("开工日期：" + item.getStartdate());
         } else {
-            holder.company_tv.setText("");
+            holder.txt_start_date.setText("开工日期：无");
         }
         if (!TextUtils.isEmpty(item.getStartdate())){
-            holder.type_tv.setText("开工日期：" + item.getStartdate());
+            holder.txt_start_date.setText("结束日期：" + item.getStartdate());
         } else {
-            holder.type_tv.setText("开工日期：无");
+            holder.txt_start_date.setText("结束日期：无");
         }
+
+        if (!TextUtils.isEmpty(item.getEntname())){
+            holder.txt_time_scale.setText("比例：" + "86%100");
+        } else {
+            holder.txt_time_scale.setText("比例：");
+        }
+
         if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.mianji_tv.setText(item.getBuildaera());
+            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "(" + item.getOnjobnum() + ")");
         } else {
-            holder.mianji_tv.setText("");
+            holder.txt_number_people.setText("上岗人数：");
         }
-        holder.mianji_tv.setVisibility(View.GONE);
+
+        if (!TextUtils.isEmpty(item.getBuildaera())){
+            holder.txt_work_hours.setText(item.getBuildaera());
+        } else {
+            holder.txt_work_hours.setText("");
+        }
+
+        if (!TextUtils.isEmpty(item.getBuildaera())){
+            holder.txt_number_people.setText(item.getBuildaera());
+        } else {
+            holder.txt_number_people.setText("");
+        }
+//        holder.mianji_tv.setVisibility(View.GONE);
     }
 
     class ItemHolder {
@@ -69,11 +89,21 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         @BindView(R.id.state_tv)
         TextView state_tv;
 
-        @BindView(R.id.company_tv)
-        TextView company_tv;
-        @BindView(R.id.type_tv)
-        TextView type_tv;
-        @BindView(R.id.mianji_tv)
-        TextView mianji_tv;
+        @BindView(R.id.txt_start_date)
+        TextView txt_start_date;
+        @BindView(R.id.txt_end_date)
+        TextView txt_end_date;
+        @BindView(R.id.txt_time_scale)
+        TextView txt_time_scale;
+        @BindView(R.id.txt_number_people)
+        TextView txt_number_people;
+        @BindView(R.id.txt_work_hours)
+        TextView txt_work_hours;
+        @BindView(R.id.txt_money)
+        TextView txt_money;
+        @BindView(R.id.txt_money_total)
+        TextView txt_money_total;
+        @BindView(R.id.txt_money_scale)
+        TextView txt_money_scale;
     }
 }

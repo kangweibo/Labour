@@ -21,6 +21,8 @@ public class Project implements Serializable {
     private String operteam_num;//作业队数量
     private String all_num;//项目总人数
     private String pm;//项目经理名称
+    private String ondutynum;//上岗人数
+    private String onjobnum;//在岗人数
 
     public int getId() {
         return id;
@@ -156,5 +158,21 @@ public class Project implements Serializable {
 
     public void setPm(String pm) {
         this.pm = pm;
+    }
+
+    public String getOndutynum() {
+        return ondutynum;
+    }
+
+    public void setOndutynum(String ondutynum) {
+        this.ondutynum = ondutynum;
+    }
+
+    public String getOnjobnum() {
+        return onjobnum;
+    }
+
+    public void setOnjobnum(String onjobnum) {
+        this.onjobnum = onjobnum;
     }
 }

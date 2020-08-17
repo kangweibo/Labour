@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:paddingHorizontal="10dp"
     android:paddingBottom="10dp"
     android:paddingTop="10dp">
 
@@ -14,7 +15,8 @@
         android:layout_height="70dp"
         android:layout_margin="10dp"
         app:type="round"
-        app:borderRadius="5dp"/>
+        app:borderRadius="5dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +40,7 @@
             <TextView android:id="@+id/name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/title"
+                android:textColor="@color/common_blue"
                 android:textSize="@dimen/text_size_16"
                 android:layout_marginTop="3dp"
                 android:text="南苑花园c座"
@@ -48,29 +50,90 @@
                 android:ellipsize="end"/>
         </RelativeLayout>
 
-        <TextView android:id="@+id/company_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/content"
-            android:textSize="@dimen/text_size_14"
-            android:layout_marginTop="3dp"
-            android:text="方正通信" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_start_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="开工日期" />
+            <TextView
+                android:id="@+id/txt_end_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="结束日期" />
+            <TextView
+                android:id="@+id/txt_time_scale"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="比例" />
+        </LinearLayout>
 
-        <TextView android:id="@+id/type_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/content"
-            android:textSize="@dimen/text_size_14"
-            android:layout_marginTop="3dp"
-            android:text="写字楼" />
-
-        <TextView android:id="@+id/mianji_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/content"
-            android:textSize="@dimen/text_size_14"
-            android:layout_marginTop="3dp"
-            android:text="20000m" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_number_people"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="上岗人数" />
+            <TextView
+                android:id="@+id/txt_work_hours"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="累计工时" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txt_money"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="发放总额" />
+            <TextView
+                android:id="@+id/txt_money_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="合同总额" />
+            <TextView
+                android:id="@+id/txt_money_scale"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_14"
+                android:layout_marginTop="3dp"
+                android:text="比例" />
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

@@ -126,7 +126,7 @@ public class GongRenDetailFrag extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         fm = this.getChildFragmentManager();
         MyInfoFrag frag = new MyInfoFrag();
-        frag.setUserInfo(employee.getId(), employee.getProle());
+        frag.setUserInfo(employee.getId(), employee.getProle(), false);
 
         frgs.add(frag);
         frgs.add(new GongRenDetailListFrag());

@@ -25,6 +25,7 @@ import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.ProjectManagerActivity;
 import com.labour.lar.activity.SalaryManagerActivity;
 import com.labour.lar.activity.SettingActivity;
+import com.labour.lar.activity.ShowQRCodeActivity;
 import com.labour.lar.activity.ShowQRCodeActivity1;
 import com.labour.lar.activity.SubOperationActivity;
 import com.labour.lar.activity.TrainActivity;
@@ -119,7 +120,8 @@ public class MineFrag extends BaseFragment {
                     startActivity(new Intent(context, MyInfoActivity.class));
                 } else if(item.equals("工程项目")){
                     showProjectFrag();
-                } else if(item.equals("加入班组") || item.equals("加入作业队") || item.equals("加入项目部")){
+                } else if(item.equals("班组二维码") ||item.equals("扫码加入班组")
+                        || item.equals("扫码加入作业队") || item.equals("扫码加入项目")){
                     showClassteam();
                 } else if(item.equals("银行卡管理")){
                     startActivity(new Intent(context, BankcardAddActivity.class));
@@ -225,15 +227,18 @@ public class MineFrag extends BaseFragment {
         if (userInfo != null){
             String prole = userInfo.getProle();
 
-            if (prole.equals("classteam_manager") || prole.equals("employee")){
-                list.add("加入班组");
-                imgList.add(R.mipmap.team_icon);
-            } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-                list.add("加入作业队");
-                imgList.add(R.mipmap.team_icon);
-            } else if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-                list.add("加入项目部");
-                imgList.add(R.mipmap.team_icon);
+            if (prole.equals("classteam_manager")){
+                list.add("班组二维码");
+                imgList.add(R.mipmap.qr_code_icon);
+            } else if (prole.equals("employee")){
+                list.add("扫码加入班组");
+                imgList.add(R.mipmap.qr_code_icon);
+            } else if (prole.equals("staff")){
+                list.add("扫码加入作业队");
+                imgList.add(R.mipmap.qr_code_icon);
+            } else if (prole.equals("manager")){
+                list.add("扫码加入项目");
+                imgList.add(R.mipmap.qr_code_icon);
             }
 
             if (prole.equals("classteam_manager")
@@ -251,8 +256,10 @@ public class MineFrag extends BaseFragment {
                 list.add("员工审核");
                 imgList.add(R.mipmap.approval_icon);
 
-                list.add("项目及人员管理");
-                imgList.add(R.mipmap.organization);
+                if (!prole.equals("classteam_manager")) {
+                    list.add("项目及人员管理");
+                    imgList.add(R.mipmap.organization);
+                }
             }
         }
         list.add("岗前安全培训");
@@ -277,9 +284,7 @@ public class MineFrag extends BaseFragment {
 
         String prole = user.getProle();
 
-        if (prole.equals("classteam_manager")
-                || prole.equals("operteam_manager") || prole.equals("operteam_quota")
-                || prole.equals("project_manager") || prole.equals("project_quota") ){
+        if (prole.equals("classteam_manager")){
             showQRCode(user);
         } else {
             showScan();
@@ -301,42 +306,65 @@ public class MineFrag extends BaseFragment {
         startActivityForResult(intent, REQUEST_CODE);
     }
 
+    // 显示二维码
     private void showQRCode(User user) {
-        String id = "";
         String title = "";
-        String prole = user.getProle();
-        JSONObject jsonObject = new JSONObject();
+        int type = 3;
+        int id = 0;
 
-        if (prole.equals("classteam_manager")){
-            User.Classteam classteam = user.getClassteam();
-            if (classteam != null) {
-                id = classteam.getId()+"";
-            }
+        User.Classteam classteam = user.getClassteam();
+        if (classteam != null) {
+            id = classteam.getOperteam().getId();
 
-            title = "加入班组";
-            jsonObject.put("classteam_id", id);
-        } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-            User.Operteam operteam = user.getOperteam();
-            if (operteam != null) {
-                id = operteam.getId()+"";
-            }
-            title = "加入作业队";
-            jsonObject.put("operteam_id", id);
-        } else if (prole.equals("project_manager") || prole.equals("project_quota")){
-            User.Project project = user.getProject();
-            if (project != null){
-                id = project.getId()+"";
-            }
-            title = "加入项目部";
-            jsonObject.put("project_id", id);
+            title = classteam.getOperteam().getProject().getEnt().getName() + "\n"
+                    + classteam.getOperteam().getProject().getName() + "\n"
+                    + classteam.getOperteam().getName();
         }
 
-        String content = jsonObject.toJSONString();
-        Intent intent = new Intent(getContext(), ShowQRCodeActivity1.class);
-        intent.putExtra("content", content);
+        Intent intent = new Intent(getContext(), ShowQRCodeActivity.class);
+        intent.putExtra("id", id);
+        intent.putExtra("classteamId", classteam.getId());
+        intent.putExtra("type", type);
         intent.putExtra("title", title);
         startActivity(intent);
     }
+
+//    private void showQRCode(User user) {
+//        String id = "";
+//        String title = "";
+//        String prole = user.getProle();
+//        JSONObject jsonObject = new JSONObject();
+//
+//        if (prole.equals("classteam_manager")){
+//            User.Classteam classteam = user.getClassteam();
+//            if (classteam != null) {
+//                id = classteam.getId()+"";
+//            }
+//
+//            title = "加入班组";
+//            jsonObject.put("classteam_id", id);
+//        } else if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+//            User.Operteam operteam = user.getOperteam();
+//            if (operteam != null) {
+//                id = operteam.getId()+"";
+//            }
+//            title = "加入作业队";
+//            jsonObject.put("operteam_id", id);
+//        } else if (prole.equals("project_manager") || prole.equals("project_quota")){
+//            User.Project project = user.getProject();
+//            if (project != null){
+//                id = project.getId()+"";
+//            }
+//            title = "加入项目部";
+//            jsonObject.put("project_id", id);
+//        }
+//
+//        String content = jsonObject.toJSONString();
+//        Intent intent = new Intent(getContext(), ShowQRCodeActivity1.class);
+//        intent.putExtra("content", content);
+//        intent.putExtra("title", title);
+//        startActivity(intent);
+//    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 扫描二维码/条码回传

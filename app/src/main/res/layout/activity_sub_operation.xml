@@ -10,7 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="200dp">
         <com.labour.lar.widget.NoScrollGridView
             android:id="@+id/main_gridview"
             android:layout_width="match_parent"

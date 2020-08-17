@@ -59,6 +59,7 @@ public class ShowQRCodeActivity extends BaseActivity {
     private List<Integer> ids = new ArrayList<>();
     private String title = "";
     private int type;
+    private int classteamId;
 
     @Override
     public int getActivityLayoutId() {
@@ -69,6 +70,7 @@ public class ShowQRCodeActivity extends BaseActivity {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
         int id = intent.getIntExtra("id", 0);
+        classteamId = intent.getIntExtra("classteamId", 0);
         title = intent.getStringExtra("title");
 
         txt_title.setText(title);
@@ -142,7 +144,7 @@ public class ShowQRCodeActivity extends BaseActivity {
                 break;
             case 3:
                 title_tv.setText("班组二维码");
-                getClassteam(id, 0);
+                getClassteam(id, classteamId);
                 break;
         }
     }

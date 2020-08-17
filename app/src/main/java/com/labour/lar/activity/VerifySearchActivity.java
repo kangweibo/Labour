@@ -17,7 +17,6 @@ import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
-import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
@@ -73,7 +72,7 @@ public class VerifySearchActivity extends BaseActivity {
     public void afterInitLayout() {
         title_tv.setText("待审核员工查询");
         ly_select.setVisibility(View.GONE);
-        getAuditusers();
+        search();
 
         verifyAdapter = new VerifyAdapter(this);
         listView.setAdapter(verifyAdapter);
@@ -81,10 +80,11 @@ public class VerifySearchActivity extends BaseActivity {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getAuditusers();
+                search();
             }
         });
 
+        //list_refresh.setEnableRefresh(false);
         list_refresh.setEnableLoadMore(false);
 
         verifyAdapter.setList(verifyList);
@@ -109,7 +109,7 @@ public class VerifySearchActivity extends BaseActivity {
         }
     }
 
-    public void showSelectView() {
+    private void showSelectView() {
         if (ly_select.getVisibility() == View.VISIBLE){
             ly_select.setVisibility(View.GONE);
         } else {
@@ -117,38 +117,78 @@ public class VerifySearchActivity extends BaseActivity {
         }
     }
 
-    public void search() {
-        showSelectView();
+    private void search() {
+        ly_select.setVisibility(View.GONE);
+
+        StringBuilder sb = new StringBuilder();
         if (cb_id_card.isChecked()){
-
+            sb.append("身份验证未通过/");
         }
-
         if (cb_exam.isChecked()){
-
+            sb.append("培训考试未通过/");
         }
-
         if (cb_bank_card.isChecked()){
-
+            sb.append("银行卡验证未通过/");
         }
+
+        String value;
+        if (sb.length() > 0) {
+            value = sb.substring(0, sb.length() - 1);
+        } else {
+            value = "请选择查询条件";
+        }
+        txt_select.setText(value);
+
+        int qpara = 0;
+        if (cb_id_card.isChecked() && cb_exam.isChecked() && cb_bank_card.isChecked()){
+            qpara = 0;
+        }
+
+        if (cb_id_card.isChecked() && !cb_exam.isChecked() && !cb_bank_card.isChecked()){
+            qpara = 1;
+        }
+
+        if (!cb_id_card.isChecked() && cb_exam.isChecked() && !cb_bank_card.isChecked()){
+            qpara = 2;
+        }
+
+        if (!cb_id_card.isChecked() && !cb_exam.isChecked() && cb_bank_card.isChecked()){
+            qpara = 3;
+        }
+
+        if (cb_id_card.isChecked() && cb_exam.isChecked() && !cb_bank_card.isChecked()){
+            qpara = 4;
+        }
+
+        if (!cb_id_card.isChecked() && cb_exam.isChecked() && cb_bank_card.isChecked()){
+            qpara = 5;
+        }
+
+        if (cb_id_card.isChecked() && !cb_exam.isChecked() && cb_bank_card.isChecked()){
+            qpara = 6;
+        }
+
+        getAuditusers(qpara);
     }
 
     /**
      * 获取数据
+     * @param qpara
+     * 0 所有待岗
+     * 1 身份验证未通过
+     * 2 培训考试未通过
+     * 3 银行卡号未录入
+     * 4 (1，2)
+     * 5 (2，3)
+     * 6 (1，3)
      */
-    private void getAuditusers() {
+    private void getAuditusers(int qpara) {
         UserInfo userInfo = UserInfoCache.getInstance(this).get();
         if (userInfo == null) {
             return;
         }
 
         String prole = userInfo.getProle();
-
-        if (prole == null){
-            return;
-        }
-
-        int qpara = 0;
-
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
         param.put("prole",prole);

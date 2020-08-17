@@ -3,6 +3,7 @@ package com.labour.lar.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -12,14 +13,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.adapter.EmployeeListAdapter;
 import com.labour.lar.adapter.MemberAdapter;
-import com.labour.lar.cache.UserCache;
-import com.labour.lar.module.Classteam;
 import com.labour.lar.module.Employee;
-import com.labour.lar.module.Operteam;
-import com.labour.lar.module.Project;
-import com.labour.lar.module.User;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
@@ -28,9 +23,6 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,10 +53,11 @@ public class MemberManagerActivity extends BaseActivity {
     private MemberAdapter memberAdapter;
 
     private List<Employee> employeeList = new ArrayList<>();
-    private List<MemberAdapter.ListItem> list = new ArrayList<>();;
+    private List<MemberAdapter.ListItem> list = new ArrayList<>();
 
+    private int id;
+    private int type;// 企业：0；项目：1；作业队：2；班组 3；
     private String title;
-    private int type;
 
     @Override
     public int getActivityLayoutId() {
@@ -75,7 +68,7 @@ public class MemberManagerActivity extends BaseActivity {
     public void afterInitLayout() {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
-        int id = intent.getIntExtra("id", 0);
+        id = intent.getIntExtra("id", 0);
         title = intent.getStringExtra("title");
 
         txt_title.setText(title);
@@ -90,17 +83,27 @@ public class MemberManagerActivity extends BaseActivity {
         memberAdapter = new MemberAdapter(this);
         listView.setAdapter(memberAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Employee employee = employeeList.get(position);
+                updateMember(employee, type, MemberManagerActivity.this.id);
+            }
+        });
         list_refresh.setEnableRefresh(false);
         list_refresh.setEnableLoadMore(false);
         memberAdapter.setList(list);
         memberAdapter.notifyDataSetChanged();
     }
 
-    @OnClick({R.id.back_iv})
+    @OnClick({R.id.back_iv,R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
                 finish();
+                break;
+            case R.id.right_header_btn:
+                addMember(type, id);
                 break;
         }
     }
@@ -243,5 +246,28 @@ public class MemberManagerActivity extends BaseActivity {
         }
 
         memberAdapter.notifyDataSetChanged();
+    }
+
+    private void addMember(int type ,int id) {
+        Intent intent = new Intent(this, MemberAddActivity.class);
+        intent.putExtra("type", type);
+        intent.putExtra("id", id+"");
+        intent.putExtra("state", 0);
+        intent.putExtra("title", title);
+        startActivityForResult(intent, Constants.RELOAD);
+    }
+
+    private void updateMember(Employee person,int type ,int id) {
+        if (person == null){
+            return;
+        }
+
+        Intent intent = new Intent(this, MemberAddActivity.class);
+        intent.putExtra("type", type);
+        intent.putExtra("id", id+"");
+        intent.putExtra("member", person);
+        intent.putExtra("state", 1);
+        intent.putExtra("title", title);
+        startActivityForResult(intent, Constants.RELOAD);
     }
 }
