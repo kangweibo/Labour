@@ -6,9 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.labour.lar.BaseAdapter;
-import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.module.Project;
 import com.labour.lar.widget.RoundImageView;
@@ -32,7 +30,6 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
 
     @Override
     protected void fillView(int position, Project item, ItemHolder holder) {
-        //Glide.with(mContext).load(Constants.IMAGE_HTTP_BASE + item.getAvatar()).into(holder.photo_iv);
         holder.photo_iv.setImageResource(R.mipmap.picture);
         if (!TextUtils.isEmpty(item.getName())){
             holder.name_tv.setText(item.getName());
@@ -52,7 +49,7 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         }
 
         if (!TextUtils.isEmpty(item.getEntname())){
-            holder.txt_time_scale.setText("比例：" + "86%100");
+            holder.txt_time_scale.setText("比例：" + "86%");
         } else {
             holder.txt_time_scale.setText("比例：");
         }
@@ -64,17 +61,26 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         }
 
         if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_work_hours.setText(item.getBuildaera());
+            holder.txt_work_hours.setText("累计工时：" + item.getBuildaera());
         } else {
-            holder.txt_work_hours.setText("");
+            holder.txt_work_hours.setText("累计工时：");
         }
 
         if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_number_people.setText(item.getBuildaera());
+            holder.txt_money.setText("发放总额：" + item.getBuildaera());
         } else {
-            holder.txt_number_people.setText("");
+            holder.txt_money.setText("发放总额：");
         }
-//        holder.mianji_tv.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(item.getBuildaera())){
+            holder.txt_money_total.setText("合同总额：" + item.getBuildaera());
+        } else {
+            holder.txt_money_total.setText("合同总额：");
+        }
+        if (!TextUtils.isEmpty(item.getBuildaera())){
+            holder.txt_money_scale.setText("发放比例：" + item.getBuildaera());
+        } else {
+            holder.txt_money_scale.setText("发放比例：");
+        }
     }
 
     class ItemHolder {

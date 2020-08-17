@@ -21,6 +21,7 @@ import com.labour.lar.event.EventManager;
 import com.labour.lar.fragment.KaoqinFrag;
 import com.labour.lar.fragment.MessageFrag;
 import com.labour.lar.fragment.MineFrag;
+import com.labour.lar.fragment.PartyBuildFrag;
 import com.labour.lar.fragment.ProjectFrag;
 import com.labour.lar.keepalive.KeepLive;
 import com.labour.lar.keepalive.config.ForegroundNotification;
@@ -119,6 +120,7 @@ public class MainActivity extends BaseActivity {
         frgs.add(new MessageFrag());
         frgs.add(new MineFrag());
         frgs.add(new KaoqinFrag());
+        frgs.add(new PartyBuildFrag());
 
         fragmentPagerAdapter = new FragmentViewPagerAdapter(fm,mainViewpager,frgs);
 

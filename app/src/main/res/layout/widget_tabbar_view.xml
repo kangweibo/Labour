@@ -46,5 +46,15 @@
         android:textSize="@dimen/home_tab_text_size"
         android:drawablePadding="5dp"
         android:textAlignment="center"/>
+    <CheckedTextView
+        android:id="@+id/tabBar_btn5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableTop="@drawable/selector_tab_dj"
+        android:text="@string/main_tab_party_build"
+        android:textColor="@drawable/main_tabbar_textcolor"
+        android:textSize="@dimen/home_tab_text_size"
+        android:drawablePadding="5dp"
+        android:textAlignment="center"/>
 
 </LinearLayout>

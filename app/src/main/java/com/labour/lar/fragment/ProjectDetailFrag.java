@@ -37,18 +37,35 @@ public class ProjectDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    @BindView(R.id.name_tv)
-    TextView name_tv;
-    @BindView(R.id.company_tv)
-    TextView company_tv;
-    @BindView(R.id.type_tv)
-    TextView type_tv;
-    @BindView(R.id.mianji_tv)
-    TextView mianji_tv;
+//    @BindView(R.id.name_tv)
+//    TextView name_tv;
+//    @BindView(R.id.company_tv)
+//    TextView company_tv;
+//    @BindView(R.id.type_tv)
+//    TextView type_tv;
+//    @BindView(R.id.mianji_tv)
+//    TextView mianji_tv;
+//
+//    @BindView(R.id.photo_iv)
+//    RoundImageView photo_iv;
 
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
-
+    @BindView(R.id.txt_start_date)
+    TextView txt_start_date;
+    @BindView(R.id.txt_end_date)
+    TextView txt_end_date;
+    @BindView(R.id.txt_time_scale)
+    TextView txt_time_scale;
+    @BindView(R.id.txt_number_people)
+    TextView txt_number_people;
+    @BindView(R.id.txt_work_hours)
+    TextView txt_work_hours;
+    @BindView(R.id.txt_money)
+    TextView txt_money;
+    @BindView(R.id.txt_money_total)
+    TextView txt_money_total;
+    @BindView(R.id.txt_money_scale)
+    TextView txt_money_scale;
+    
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
     @BindView(R.id.vp_content)
@@ -73,29 +90,77 @@ public class ProjectDetailFrag extends BaseFragment {
         title_tv.setText("项目详情");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
-        photo_iv.setImageResource(R.mipmap.picture);
+        //photo_iv.setImageResource(R.mipmap.picture);
 
         if (project!= null){
             if (!TextUtils.isEmpty(project.getName())){
-                name_tv.setText(project.getName());
-            } else {
-                name_tv.setText("");
-            }
-            if (!TextUtils.isEmpty(project.getEntname())){
-                company_tv.setText(project.getEntname());
-            } else {
-                company_tv.setText("");
+                title_tv.setText(project.getName() + "项目详情");
             }
             if (!TextUtils.isEmpty(project.getStartdate())){
-                type_tv.setText("开工日期：" + project.getStartdate());
+                txt_start_date.setText("开工日期：" + project.getStartdate());
             } else {
-                type_tv.setText("开工日期：无");
+                txt_start_date.setText("开工日期：无");
             }
-            if (!TextUtils.isEmpty(project.getAll_num())){
-                mianji_tv.setText("工人总数：" + project.getAll_num() + "人");
+            if (!TextUtils.isEmpty(project.getStartdate())){
+                txt_start_date.setText("结束日期：" + project.getStartdate());
             } else {
-                mianji_tv.setText("工人总数：0人");
+                txt_start_date.setText("结束日期：无");
             }
+
+            if (!TextUtils.isEmpty(project.getEntname())){
+                txt_time_scale.setText("比例：" + "86%");
+            } else {
+                txt_time_scale.setText("比例：");
+            }
+
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                txt_number_people.setText("上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")");
+            } else {
+                txt_number_people.setText("上岗人数：");
+            }
+
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                txt_work_hours.setText("累计工时：" + project.getBuildaera());
+            } else {
+                txt_work_hours.setText("累计工时：");
+            }
+
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                txt_money.setText("发放总额：" + project.getBuildaera());
+            } else {
+                txt_money.setText("发放总额：");
+            }
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                txt_money_total.setText("合同总额：" + project.getBuildaera());
+            } else {
+                txt_money_total.setText("合同总额：");
+            }
+            if (!TextUtils.isEmpty(project.getBuildaera())){
+                txt_money_scale.setText("发放比例：" + project.getBuildaera());
+            } else {
+                txt_money_scale.setText("发放比例：");
+            }
+//            if (!TextUtils.isEmpty(project.getName())){
+//                name_tv.setText(project.getName());
+//            } else {
+//                name_tv.setText("");
+//            }
+
+//            if (!TextUtils.isEmpty(project.getEntname())){
+//                company_tv.setText(project.getEntname());
+//            } else {
+//                company_tv.setText("");
+//            }
+//            if (!TextUtils.isEmpty(project.getStartdate())){
+//                type_tv.setText("开工日期：" + project.getStartdate());
+//            } else {
+//                type_tv.setText("开工日期：无");
+//            }
+//            if (!TextUtils.isEmpty(project.getAll_num())){
+//                mianji_tv.setText("工人总数：" + project.getAll_num() + "人");
+//            } else {
+//                mianji_tv.setText("工人总数：0人");
+//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
