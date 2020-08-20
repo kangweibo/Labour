@@ -28,6 +28,8 @@ public class BanZuAddActivity extends BaseActivity {
     @BindView(R.id.title_tv)
     TextView title_tv;
 
+    @BindView(R.id.txt_title)
+    TextView txt_title;
     @BindView(R.id.edt_name)
     EditText edt_name;
     @BindView(R.id.edt_memo)
@@ -48,6 +50,8 @@ public class BanZuAddActivity extends BaseActivity {
         type = intent.getIntExtra("type", 0);
         classteam_id = intent.getStringExtra("classteam_id");
         operteam_id = intent.getStringExtra("operteam_id");
+        String title = intent.getStringExtra("title");
+        txt_title.setText(title);
 
         if (type == 0) {
             title_tv.setText("创建班组");

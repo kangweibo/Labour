@@ -13,11 +13,17 @@ public class Operteam implements Serializable {
     private String duty;//
     private String created_at;//:  "2020-05-13T03:02:29.000Z",
     private String updated_at;//:  "2020-05-13T03:02:29.000Z",
+    private String startdate;//: "2020-05-13T01:36:29.000Z",
+    private String enddate;//: "2020-05-13T01:36:29.000Z",
     private String projectname;//:  "南花园C座"
     private String staff_num;//:  成员人数
     private String classteam_num;//:  班组数
     private String all_num;//项目总人数
     private String pm;//作业队长名称
+    private String ondutynum;//上岗人数
+    private String onjobnum;//在岗人数
+    private String duration;//工期
+    private String budget;//预算金额
 
     public int getId() {
         return id;
@@ -113,5 +119,53 @@ public class Operteam implements Serializable {
 
     public void setPm(String pm) {
         this.pm = pm;
+    }
+
+    public String getOndutynum() {
+        return ondutynum;
+    }
+
+    public void setOndutynum(String ondutynum) {
+        this.ondutynum = ondutynum;
+    }
+
+    public String getOnjobnum() {
+        return onjobnum;
+    }
+
+    public void setOnjobnum(String onjobnum) {
+        this.onjobnum = onjobnum;
+    }
+
+    public String getStartdate() {
+        return startdate;
+    }
+
+    public void setStartdate(String startdate) {
+        this.startdate = startdate;
+    }
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getBudget() {
+        return budget;
+    }
+
+    public void setBudget(String budget) {
+        this.budget = budget;
     }
 }

@@ -81,6 +81,9 @@ public class BanZuDetailFrag extends BaseFragment {
 
         if (classteam!= null){
             if (!TextUtils.isEmpty(classteam.getName())){
+                title_tv.setText(classteam.getOperteamname()+"-"+classteam.getName() + "详情");
+            }
+            if (!TextUtils.isEmpty(classteam.getName())){
                 name_tv.setText(classteam.getName());
             } else {
                 name_tv.setText("");

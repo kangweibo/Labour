@@ -12,10 +12,11 @@ public class Project implements Serializable {
     private String designer;//: "工程设计有限公司",
     private String projectfunction;//: "写字楼",
     private String buildaera;//: "288000平方米",
-    private String budget;//: null,
+    private String budget;//: 预算金额,
     private String created_at;//: "2020-05-13T01:36:29.000Z",
     private String updated_at;//: "2020-05-13T01:36:29.000Z",
     private String startdate;//: "2020-05-13T01:36:29.000Z",
+    private String enddate;//: "2020-05-13T01:36:29.000Z",
     private String entname;//: "方正通信建设有限公司"
     private String manager_num;//成员人数
     private String operteam_num;//作业队数量
@@ -118,6 +119,14 @@ public class Project implements Serializable {
 
     public void setStartdate(String startdate) {
         this.startdate = startdate;
+    }
+
+    public String getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(String enddate) {
+        this.enddate = enddate;
     }
 
     public String getEntname() {

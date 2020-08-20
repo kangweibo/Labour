@@ -95,23 +95,7 @@ public class SettingActivity extends BaseActivity {
         JSONObject jsonObject = new JSONObject();
 
         String prole = user.getProle();
-        String rtype = "employee";
-
-        if (prole != null){
-            if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-                rtype = "manager";
-            }
-
-            if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-                rtype = "staff";
-            }
-
-            if (prole.equals("classteam_manager") || prole.equals("employee")){
-                rtype = "employee";
-            }
-        }
-
-        jsonObject.put("rtype", rtype);
+        jsonObject.put("rtype", prole);
         jsonObject.put("userid", user.getId());
         String jsonParams =jsonObject.toJSONString();
 

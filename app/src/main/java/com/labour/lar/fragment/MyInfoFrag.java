@@ -203,15 +203,15 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
 
         MyinfoAdapter.ListItem item12 = new MyinfoAdapter.ListItem();
         item12.type = "上岗日期";
-        item12.value = userInfo.getBankcard();
+        item12.value = userInfo.getAuditdate();
 
         MyinfoAdapter.ListItem item13 = new MyinfoAdapter.ListItem();
         item13.type = "累计工时";
-        item13.value = userInfo.getBank()+"人天";
+        item13.value = userInfo.getTotalworkday()+"人天";
 
         MyinfoAdapter.ListItem item14 = new MyinfoAdapter.ListItem();
         item14.type = "发放总额";
-        item14.value = userInfo.getBank()+"元";
+        item14.value = userInfo.getTotalsalary()+"元";
 
         list.add(item11);
         list.add(item12);

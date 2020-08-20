@@ -101,8 +101,8 @@ public class ProjectDetailFrag extends BaseFragment {
             } else {
                 txt_start_date.setText("开工日期：无");
             }
-            if (!TextUtils.isEmpty(project.getStartdate())){
-                txt_start_date.setText("结束日期：" + project.getStartdate());
+            if (!TextUtils.isEmpty(project.getEnddate())){
+                txt_start_date.setText("结束日期：" + project.getEnddate());
             } else {
                 txt_start_date.setText("结束日期：无");
             }
@@ -113,7 +113,7 @@ public class ProjectDetailFrag extends BaseFragment {
                 txt_time_scale.setText("比例：");
             }
 
-            if (!TextUtils.isEmpty(project.getBuildaera())){
+            if (!TextUtils.isEmpty(project.getOndutynum())){
                 txt_number_people.setText("上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")");
             } else {
                 txt_number_people.setText("上岗人数：");

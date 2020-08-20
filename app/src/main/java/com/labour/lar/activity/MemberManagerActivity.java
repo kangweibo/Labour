@@ -241,6 +241,7 @@ public class MemberManagerActivity extends BaseActivity {
         for(Employee employee : employeeList){
             MemberAdapter.ListItem item = new MemberAdapter.ListItem();
             item.name = employee.getName();;
+            item.role = employee.getProlename();;
 
             list.add(item);
         }

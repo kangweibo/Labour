@@ -76,6 +76,9 @@ public class ManagerDetailFrag extends BaseFragment {
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (project!= null){
+            if (!TextUtils.isEmpty(project.getName())){
+                title_tv.setText(project.getName() + "-项目部详情");
+            }
             name_tv.setText("项目部");
 
             if (!TextUtils.isEmpty(project.getName())){

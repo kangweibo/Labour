@@ -54,8 +54,8 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
             holder.txt_time_scale.setText("比例：");
         }
 
-        if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "(" + item.getOnjobnum() + ")");
+        if (!TextUtils.isEmpty(item.getOndutynum())){
+            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "（" + item.getOnjobnum() + "）");
         } else {
             holder.txt_number_people.setText("上岗人数：");
         }
@@ -71,8 +71,8 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         } else {
             holder.txt_money.setText("发放总额：");
         }
-        if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_money_total.setText("合同总额：" + item.getBuildaera());
+        if (!TextUtils.isEmpty(item.getBudget())){
+            holder.txt_money_total.setText("合同总额：" + item.getBudget());
         } else {
             holder.txt_money_total.setText("合同总额：");
         }

@@ -54,9 +54,6 @@ public class MemberOrgActivity extends BaseActivity {
 
     private MemberAdapter memberAdapter;
 
-//    private List<Project> projectList = new ArrayList<>();
-//    private List<Operteam> operteamList = new ArrayList<>();
-//    private List<Classteam> classteamList = new ArrayList<>();
     private List<MemberAdapter.ListItem> list = new ArrayList<>();;
 
     private String title = "";
@@ -117,11 +114,10 @@ public class MemberOrgActivity extends BaseActivity {
             if (prole.equals("ent_manager")){
                 type = 0;
                 title_tv.setText("成员管理 项目列表");
-                getProject(prole, user.getId());
 
                 User.Ent ent = user.getEnt();
                 if (ent != null) {
-                    getOperteam(ent.getId());
+                    getProject(prole, user.getId());
 
                     title = ent.getName();
                 }

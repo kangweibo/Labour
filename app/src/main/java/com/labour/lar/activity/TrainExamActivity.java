@@ -361,26 +361,11 @@ public class TrainExamActivity extends BaseActivity {
         User user = userCache.get();
 
         String prole = user.getProle();
-        String rtype = "employee";
-
-        if (prole != null){
-            if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-                rtype = "manager";
-            }
-
-            if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-                rtype = "staff";
-            }
-
-            if (prole.equals("classteam_manager") || prole.equals("employee")){
-                rtype = "employee";
-            }
-        }
 
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
         param.put("examid",exam.getId());
-        param.put("rtype",rtype);
+        param.put("rtype",prole);
         param.put("employeeid",user.getId());
         param.put("answer",getAnswer());
         String jsonParams = param.toJSONString();

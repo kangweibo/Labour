@@ -33,7 +33,9 @@ public class UserInfo implements Serializable {
     private int clockinfence;// 签到对应围栏id
     private int clockoutfence;// 签退对应围栏id
     private String examstatus;//“通过”，null为未通过
-
+    private String auditdate;//上岗日期
+    private String totalworkday;//累计工时
+    private String totalsalary;//发放总额
     //项目部: 项目-->企业
     private Project project;
 
@@ -249,6 +251,30 @@ public class UserInfo implements Serializable {
 
     public void setClassteam(Classteam classteam) {
         this.classteam = classteam;
+    }
+
+    public String getAuditdate() {
+        return auditdate;
+    }
+
+    public void setAuditdate(String auditdate) {
+        this.auditdate = auditdate;
+    }
+
+    public String getTotalworkday() {
+        return totalworkday;
+    }
+
+    public void setTotalworkday(String totalworkday) {
+        this.totalworkday = totalworkday;
+    }
+
+    public String getTotalsalary() {
+        return totalsalary;
+    }
+
+    public void setTotalsalary(String totalsalary) {
+        this.totalsalary = totalsalary;
     }
 
     //企业

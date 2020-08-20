@@ -18,7 +18,6 @@ import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.User;
-import com.labour.lar.widget.RoundImageView;
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,16 +39,22 @@ public class TaskTeamDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
-    @BindView(R.id.name_tv)
-    TextView name_tv;
-    @BindView(R.id.company_tv)
-    TextView company_tv;
-    @BindView(R.id.type_tv)
-    TextView type_tv;
-    @BindView(R.id.classteam_tv)
-    TextView classteam_tv;
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
+    @BindView(R.id.txt_start_date)
+    TextView txt_start_date;
+    @BindView(R.id.txt_end_date)
+    TextView txt_end_date;
+    @BindView(R.id.txt_time_scale)
+    TextView txt_time_scale;
+    @BindView(R.id.txt_number_people)
+    TextView txt_number_people;
+    @BindView(R.id.txt_work_hours)
+    TextView txt_work_hours;
+    @BindView(R.id.txt_money)
+    TextView txt_money;
+    @BindView(R.id.txt_money_total)
+    TextView txt_money_total;
+    @BindView(R.id.txt_money_scale)
+    TextView txt_money_scale;
 
     private MyFragmentPagerAdapter fragmentPagerAdapter;
     private ArrayList<Fragment> frgs = new ArrayList<Fragment>();
@@ -70,25 +75,55 @@ public class TaskTeamDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-        photo_iv.setImageResource(R.mipmap.picture);
-
         if (operteam!= null){
             if (!TextUtils.isEmpty(operteam.getName())){
-                name_tv.setText(operteam.getName());
-            } else {
-                name_tv.setText("");
+                title_tv.setText(operteam.getProjectname()+"-"+operteam.getName() + "详情");
             }
-            if (!TextUtils.isEmpty(operteam.getProjectname())){
-                company_tv.setText(operteam.getProjectname());
+
+            if (!TextUtils.isEmpty(operteam.getStartdate())){
+                txt_start_date.setText("开工日期：" + operteam.getStartdate());
             } else {
-                company_tv.setText("");
+                txt_start_date.setText("开工日期：无");
             }
-            if (!TextUtils.isEmpty(operteam.getAll_num())){
-                type_tv.setText("工人总数：" + operteam.getAll_num() + "个");
+            if (!TextUtils.isEmpty(operteam.getEnddate())){
+                txt_start_date.setText("结束日期：" + operteam.getEnddate());
             } else {
-                type_tv.setText("工人总数：0个");
+                txt_start_date.setText("结束日期：无");
             }
-            classteam_tv.setText("");
+
+            if (!TextUtils.isEmpty(operteam.getDuration())){
+                txt_time_scale.setText("比例：" + "86%");
+            } else {
+                txt_time_scale.setText("比例：");
+            }
+
+            if (!TextUtils.isEmpty(operteam.getOndutynum())){
+                txt_number_people.setText("上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")");
+            } else {
+                txt_number_people.setText("上岗人数：");
+            }
+
+//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
+//                txt_work_hours.setText("累计工时：" + operteam.getBuildaera());
+//            } else {
+//                txt_work_hours.setText("累计工时：");
+//            }
+//
+//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
+//                txt_money.setText("发放总额：" + operteam.getBuildaera());
+//            } else {
+//                txt_money.setText("发放总额：");
+//            }
+            if (!TextUtils.isEmpty(operteam.getBudget())){
+                txt_money_total.setText("合同总额：" + operteam.getBudget());
+            } else {
+                txt_money_total.setText("合同总额：");
+            }
+//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
+//                txt_money_scale.setText("发放比例：" + operteam.getBuildaera());
+//            } else {
+//                txt_money_scale.setText("发放比例：");
+//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);

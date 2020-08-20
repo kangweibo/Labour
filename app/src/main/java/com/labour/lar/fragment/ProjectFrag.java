@@ -148,25 +148,10 @@ public class ProjectFrag extends BaseFragment {
         User user = userCache.get();
 
         String prole = user.getProle();
-        String rtype = "employee";
-
-        if (prole != null){
-            if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-                rtype = "manager";
-            }
-
-            if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-                rtype = "staff";
-            }
-
-            if (prole.equals("classteam_manager") || prole.equals("employee")){
-                rtype = "employee";
-            }
-        }
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("token","063d91b4f57518ff");
-        jsonObject.put("dtype",rtype);
+        jsonObject.put("dtype",prole);
         jsonObject.put("userid",user.getId());
         String jsonParams =jsonObject.toJSONString();
 

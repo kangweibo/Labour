@@ -261,26 +261,11 @@ public class TrainActivity extends BaseActivity {
         }
 
         String prole = user.getProle();
-        String rtype = "employee";
-
-        if (prole != null){
-            if (prole.equals("project_manager") || prole.equals("project_quota") || prole.equals("manager")){
-                rtype = "manager";
-            }
-
-            if (prole.equals("operteam_manager") || prole.equals("operteam_quota") || prole.equals("staff")){
-                rtype = "staff";
-            }
-
-            if (prole.equals("classteam_manager") || prole.equals("employee")){
-                rtype = "employee";
-            }
-        }
 
         final Map<String,String> param = new HashMap<>();
         param.put("token","063d91b4f57518ff");
         param.put("employeeid",user.getId()+"");
-        param.put("rtype",rtype);
+        param.put("rtype",prole);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/examresults";

@@ -33,11 +33,17 @@ public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAda
         } else {
             holder.txt_name.setText("");
         }
+        if (!TextUtils.isEmpty(item.role)){
+            holder.txt_role.setText(item.role);
+        } else {
+            holder.txt_role.setText("");
+        }
     }
 
     public static class ListItem {
         public int id;
         public String name;
+        public String role;
     }
 
     class ItemHolder {
@@ -47,5 +53,7 @@ public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAda
 
         @BindView(R.id.txt_name)
         TextView txt_name;
+        @BindView(R.id.txt_role)
+        TextView txt_role;
     }
 }

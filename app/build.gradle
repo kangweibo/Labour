@@ -107,4 +107,7 @@ dependencies {
     implementation 'com.github.zhangke3016:MultilevelTreeList:1.0.2'
     // 图像轮播
     implementation 'com.youth.banner:banner:1.4.10'
+
+    // web
+    implementation 'com.just.agentweb:agentweb:4.1.2'
 }

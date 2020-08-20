@@ -80,6 +80,9 @@ public class StaffDetailFrag extends BaseFragment {
         photo_iv.setImageResource(R.mipmap.picture);
 
         if (operteam!= null){
+            if (!TextUtils.isEmpty(operteam.getName())){
+                title_tv.setText(operteam.getName() + "-队部详情");
+            }
             name_tv.setText("队部");
 
             if (!TextUtils.isEmpty(operteam.getName())){

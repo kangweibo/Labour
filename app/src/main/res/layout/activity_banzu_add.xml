@@ -6,98 +6,75 @@
     android:orientation="vertical">
 
     <include layout="@layout/layout_header"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginRight="@dimen/common_margin_right"
-        android:background="@drawable/login_input_bg"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/xingming_icon"
-            android:textSize="@dimen/text_size_16"
-            android:textColor="#8a8a8a"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone"/>
-        <EditText android:id="@+id/edt_name"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textColor="@color/black"
-            android:hint="请输入班组名"
-            android:textColorHint="@color/text_input_tip"
-            android:background="@color/white"
-            android:textSize="@dimen/text_size_16"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="10dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginRight="@dimen/common_margin_right"
-        android:background="@drawable/login_input_bg"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@mipmap/phone_icon"
-            android:textSize="@dimen/text_size_16"
-            android:textColor="#8a8a8a"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginRight="@dimen/common_margin_right"
-        android:background="@drawable/login_input_bg"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_16"
-            android:drawableLeft="@mipmap/password_icon"
-            android:textColor="#8a8a8a"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:visibility="gone"/>
-        <EditText android:id="@+id/edt_memo"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textColor="@color/black"
-            android:hint="请输入备注"
-            android:textColorHint="@color/text_input_tip"
-            android:background="@color/white"
-            android:textSize="@dimen/text_size_16"
-            android:layout_marginTop="1dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="10dp"/>
-    </LinearLayout>
 
-    <Button android:id="@+id/btn_submit"
+    <TextView
+        android:id="@+id/txt_title"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:textColor="@color/white"
-        android:background="@drawable/selector_button"
-        android:text="确认"
-        android:textSize="@dimen/text_size_16"
-        android:layout_marginRight="@dimen/common_margin_right"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:layout_marginTop="25dp"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginVertical="20dp"
+        android:lineSpacingMultiplier ="1.2"
+        android:text="标题"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_16" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="班组名称"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16" />
+
+            <EditText android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textColor="@color/black"
+                android:hint="请输入班组名称"
+                android:textColorHint="@color/text_input_tip"
+                android:background="@drawable/common_input_bg"
+                android:textSize="@dimen/text_size_16"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="备注"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_16" />
+            <EditText android:id="@+id/edt_memo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textColor="@color/black"
+                android:hint="请输入备注"
+                android:textColorHint="@color/text_input_tip"
+                android:background="@drawable/common_input_bg"
+                android:textSize="@dimen/text_size_16"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+            <Button android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:textColor="@color/white"
+                android:background="@drawable/selector_button"
+                android:text="提交"
+                android:textSize="@dimen/text_size_16"
+                android:layout_marginRight="@dimen/common_margin_right"
+                android:layout_marginLeft="@dimen/common_margin_left"
+                android:layout_marginVertical="15dp"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

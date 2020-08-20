@@ -143,8 +143,42 @@ public class ProjectManagerActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    private String getShowTitle() {
+        String title = "";
+
+        User user = UserCache.getInstance(this).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole.equals("ent_manager")) {
+                User.Ent ent = user.getEnt();
+                if (ent != null) {
+                    title = ent.getName();
+                }
+            }
+
+            if (prole.equals("project_manager")) {
+                User.Project project = user.getProject();
+                if (project != null) {
+                    title = project.getEnt().getName() + "\n" + project.getName();
+                }
+            }
+
+            if (prole.equals("operteam_manager")) {
+                User.Operteam operteam = user.getOperteam();
+                if (operteam != null) {
+                    title = operteam.getProject().getEnt().getName() + "\n"
+                            + operteam.getProject().getName() + "\n"
+                            + operteam.getName();
+                }
+            }
+        }
+
+        return title;
+    }
+
     private void addProject() {
         Intent intent = new Intent(this, ProjectAddActivity.class);
+        intent.putExtra("title", getShowTitle());
         startActivity(intent);
     }
 
@@ -157,6 +191,7 @@ public class ProjectManagerActivity extends BaseActivity {
                 Intent intent = new Intent(this, TaskTeamAddActivity.class);
                 intent.putExtra("type", 0);
                 intent.putExtra("project_id", project_id+"");
+                intent.putExtra("title", getShowTitle());
                 startActivityForResult(intent, Constants.RELOAD);
             }
         }
@@ -171,6 +206,7 @@ public class ProjectManagerActivity extends BaseActivity {
                 Intent intent = new Intent(this, BanZuAddActivity.class);
                 intent.putExtra("type", 0);
                 intent.putExtra("operteam_id", operteam_id + "");
+                intent.putExtra("title", getShowTitle());
                 startActivityForResult(intent, Constants.RELOAD);
             }
         }

@@ -16,6 +16,8 @@ public class Classteam implements Serializable {
     private String employees_num;//班工人数量
     private String ecounts;//班组总人数
     private String pm;//班组长名称
+    private String ondutynum;//上岗人数
+    private String onjobnum;//在岗人数
 
     public int getId() {
         return id;
@@ -95,5 +97,21 @@ public class Classteam implements Serializable {
 
     public void setPm(String pm) {
         this.pm = pm;
+    }
+
+    public String getOndutynum() {
+        return ondutynum;
+    }
+
+    public void setOndutynum(String ondutynum) {
+        this.ondutynum = ondutynum;
+    }
+
+    public String getOnjobnum() {
+        return onjobnum;
+    }
+
+    public void setOnjobnum(String onjobnum) {
+        this.onjobnum = onjobnum;
     }
 }

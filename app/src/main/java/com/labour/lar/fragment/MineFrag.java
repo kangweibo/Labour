@@ -241,7 +241,7 @@ public class MineFrag extends BaseFragment {
                 imgList.add(R.mipmap.qr_code_icon);
             }
 
-            if (prole.equals("classteam_manager")
+            if (prole.equals("ent_manager") || prole.equals("classteam_manager")
                     || prole.equals("operteam_manager") || prole.equals("operteam_quota")
                     || prole.equals("project_manager")|| prole.equals("project_quota")){
 //                list.add("代员工身份验证");

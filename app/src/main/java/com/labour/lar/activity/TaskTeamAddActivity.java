@@ -10,12 +10,17 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
+import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Response;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,12 +33,16 @@ public class TaskTeamAddActivity extends BaseActivity {
     @BindView(R.id.title_tv)
     TextView title_tv;
 
+    @BindView(R.id.txt_title)
+    TextView txt_title;
     @BindView(R.id.edt_name)
     EditText edt_name;
-    @BindView(R.id.edt_duty)
-    EditText edt_duty;
-    @BindView(R.id.edt_memo)
-    EditText edt_memo;
+    @BindView(R.id.edt_project_time)
+    EditText edt_project_time;
+    @BindView(R.id.txt_start_time)
+    TextView txt_start_time;
+    @BindView(R.id.txt_end_time)
+    TextView txt_end_time;
 
     private int type;// 0：添加；1：更新
     private String operteam_id;
@@ -50,6 +59,8 @@ public class TaskTeamAddActivity extends BaseActivity {
         type = intent.getIntExtra("type", 0);
         operteam_id = intent.getStringExtra("operteam_id");
         project_id = intent.getStringExtra("project_id");
+        String title = intent.getStringExtra("title");
+        txt_title.setText(title);
 
         if (type == 0) {
             title_tv.setText("创建作业队");
@@ -58,7 +69,7 @@ public class TaskTeamAddActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.back_iv,R.id.btn_submit})
+    @OnClick({R.id.back_iv,R.id.btn_submit,R.id.txt_start_time,R.id.txt_end_time})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -66,6 +77,12 @@ public class TaskTeamAddActivity extends BaseActivity {
                 break;
             case R.id.btn_submit:
                 submit();
+                break;
+            case R.id.txt_start_time:
+                selectStartTime();
+                break;
+            case R.id.txt_end_time:
+                selectEndTime();
                 break;
         }
     }
@@ -80,11 +97,12 @@ public class TaskTeamAddActivity extends BaseActivity {
 
     private void addOperteam() {
         String name = edt_name.getText().toString();
-        String duty = edt_duty.getText().toString();
-        String memo = edt_memo.getText().toString();
+        String project_time = edt_project_time.getText().toString();
+        String start_time = txt_start_time.getText().toString();
+        String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty)
-                || StringUtils.isBlank(memo)){
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(project_time)
+                || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
             AppToast.show(this,"请填写完整作业队信息！");
             return;
         }
@@ -98,8 +116,8 @@ public class TaskTeamAddActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
         param.put("project_id",project_id);
         param.put("name",name);
-        param.put("duty",duty);
-        param.put("memo",memo);
+//        param.put("duty",duty);
+//        param.put("memo",memo);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/operteam_new";
@@ -129,11 +147,12 @@ public class TaskTeamAddActivity extends BaseActivity {
 
     private void updateOperteam() {
         String name = edt_name.getText().toString();
-        String duty = edt_duty.getText().toString();
-        String memo = edt_memo.getText().toString();
+        String project_time = edt_project_time.getText().toString();
+        String start_time = txt_start_time.getText().toString();
+        String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty)
-                || StringUtils.isBlank(memo)){
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(project_time)
+                || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
             AppToast.show(this,"请填写完整作业队信息！");
             return;
         }
@@ -147,8 +166,8 @@ public class TaskTeamAddActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
         param.put("id",operteam_id);
         param.put("name",name);
-        param.put("duty",duty);
-        param.put("memo",memo);
+//        param.put("duty",duty);
+//        param.put("memo",memo);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/operteam_update";
@@ -172,6 +191,40 @@ public class TaskTeamAddActivity extends BaseActivity {
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(TaskTeamAddActivity.this,"作业队修改出错!");
+            }
+        });
+    }
+
+    public void selectStartTime() {
+        DialogUtil.showDateDialog(this,null,
+                new DialogUtil.OnDialogListener<Calendar>() {
+            @Override
+            public void onPositiveButtonClick(Calendar calendar) {
+                String time = new SimpleDateFormat("yyyy-MM-dd",
+                        Locale.getDefault()).format(calendar.getTime());
+                txt_start_time.setText(time);
+            }
+
+            @Override
+            public void onNegativeButtonClick(Calendar calendar) {
+
+            }
+        });
+    }
+
+    public void selectEndTime() {
+        DialogUtil.showDateDialog(this,null,
+                new DialogUtil.OnDialogListener<Calendar>() {
+            @Override
+            public void onPositiveButtonClick(Calendar calendar) {
+                String time = new SimpleDateFormat("yyyy-MM-dd",
+                        Locale.getDefault()).format(calendar.getTime());
+                txt_end_time.setText(time);
+            }
+
+            @Override
+            public void onNegativeButtonClick(Calendar calendar) {
+
             }
         });
     }

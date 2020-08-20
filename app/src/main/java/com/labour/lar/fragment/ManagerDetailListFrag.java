@@ -346,7 +346,7 @@ public class ManagerDetailListFrag extends BaseFragment {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("token","063d91b4f57518ff");
-        jsonObject.put("rtype","manager");
+        jsonObject.put("rtype",person.getProle());
         jsonObject.put("employeeid",person.getId());
         String jsonParams =jsonObject.toJSONString();
 
