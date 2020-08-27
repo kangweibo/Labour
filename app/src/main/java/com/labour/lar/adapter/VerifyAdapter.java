@@ -41,7 +41,11 @@ public class VerifyAdapter extends BaseAdapter<Employee, VerifyAdapter.ItemHolde
 
     @Override
     protected void fillView(int position, Employee item, ItemHolder holder) {
-        Glide.with(mContext).load(Constants.IMAGE_HTTP_BASE + item.getPic().getUrl()).into(holder.photo_iv);
+        if (!TextUtils.isEmpty(item.getPic().getUrl())) {
+            Glide.with(mContext).load(Constants.HTTP_BASE + item.getPic().getUrl()).into(holder.photo_iv);
+        } else {
+            holder.photo_iv.setImageResource(R.mipmap.worker_icon);
+        }
 
         if (!TextUtils.isEmpty(item.getName())){
             holder.txt_field1.setText(item.getName());

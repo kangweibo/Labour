@@ -9,7 +9,7 @@ public interface Constants {
 
         public static final String HTTP_BASE = "http://lhok.natapp4.cc";
     //public static final String HTTP_BASE = "http://124.70.43.185:8080";
-    public static final String IMAGE_HTTP_BASE = "http://xlzx.cyf666.cn/public";
+    //public static final String IMAGE_HTTP_BASE = "http://xlzx.cyf666.cn/public";
 
     public static final int DELAY_TIMES = 1200;
     public static final String PULLTYPE_DOWN = "pulldown";
