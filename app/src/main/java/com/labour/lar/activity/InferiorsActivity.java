@@ -13,7 +13,8 @@ import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
-import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.ProjectDetailListAdapter1;
+import com.labour.lar.adapter.ProjectListItemWarp1;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.Employee;
 import com.labour.lar.module.User;
@@ -52,9 +53,9 @@ public class InferiorsActivity extends BaseActivity {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectDetailListAdapter projectAdapter;
+    ProjectDetailListAdapter1 projectAdapter;
     private List<Employee> employeeList = new ArrayList<>();
-    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
+    private List<ProjectListItemWarp1.ListItem> list = new ArrayList<>();
 
     @Override
     public int getActivityLayoutId() {
@@ -67,7 +68,7 @@ public class InferiorsActivity extends BaseActivity {
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectDetailListAdapter(this);
+        projectAdapter = new ProjectDetailListAdapter1(this);
         listView.setAdapter(projectAdapter);
 
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
@@ -247,7 +248,7 @@ public class InferiorsActivity extends BaseActivity {
     private void showEmployees() {
         list.clear();
         for(Employee employee : employeeList){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            ProjectListItemWarp1.ListItem item = new ProjectListItemWarp1.ListItem();
             item.field1 = employee.getName();;
             item.field1Content = "";
             item.field2 = "手机号：" + employee.getPhone();

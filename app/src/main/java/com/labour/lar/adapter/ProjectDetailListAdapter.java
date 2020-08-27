@@ -3,15 +3,9 @@ package com.labour.lar.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.labour.lar.BaseAdapter;
 import com.labour.lar.R;
-import com.labour.lar.module.Project;
-import com.labour.lar.widget.RoundImageView;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ProjectDetailListAdapter extends BaseAdapter<ProjectListItemWarp.ListItem, ProjectListItemWarp.ItemHolder> {
 
@@ -29,7 +23,19 @@ public class ProjectDetailListAdapter extends BaseAdapter<ProjectListItemWarp.Li
 
     @Override
     protected void fillView(int position, ProjectListItemWarp.ListItem item, ProjectListItemWarp.ItemHolder holder) {
-        ProjectListItemWarp.showOneOrTwo(holder,item);
-
+        switch (item.type) {
+            case 1:
+                ProjectListItemWarp.showOne(holder, item);
+                break;
+            case 2:
+                ProjectListItemWarp.showTwo(holder, item);
+                break;
+            case 3:
+                ProjectListItemWarp.showThree(holder, item);
+                break;
+            case 4:
+                ProjectListItemWarp.showFour(holder, item);
+                break;
+        }
     }
 }

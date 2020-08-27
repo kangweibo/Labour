@@ -18,7 +18,12 @@ import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.User;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -77,25 +82,34 @@ public class TaskTeamDetailFrag extends BaseFragment {
 
         if (operteam!= null){
             if (!TextUtils.isEmpty(operteam.getName())){
-                title_tv.setText(operteam.getProjectname()+"-"+operteam.getName() + "详情");
+                title_tv.setText(operteam.getProjectname()+"-"+operteam.getName() + "的详情");
             }
 
             if (!TextUtils.isEmpty(operteam.getStartdate())){
                 txt_start_date.setText("开工日期：" + operteam.getStartdate());
             } else {
-                txt_start_date.setText("开工日期：无");
+                txt_start_date.setText("开工日期：");
             }
             if (!TextUtils.isEmpty(operteam.getEnddate())){
-                txt_start_date.setText("结束日期：" + operteam.getEnddate());
+                txt_end_date.setText("结束日期：" + operteam.getEnddate());
             } else {
-                txt_start_date.setText("结束日期：无");
+                txt_end_date.setText("结束日期：");
             }
 
-            if (!TextUtils.isEmpty(operteam.getDuration())){
-                txt_time_scale.setText("比例：" + "86%");
-            } else {
-                txt_time_scale.setText("比例：");
+            DecimalFormat df = new DecimalFormat("0.0");
+            String time_scale = "0.0";
+            String strDate = operteam.getStartdate();
+            String duration = operteam.getDuration();
+            try {
+                double dDuratio = Double.parseDouble(duration);
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+                Date now = new Date();
+                double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+                time_scale = df.format(s);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            txt_time_scale.setText("比例：" + time_scale + "%");
 
             if (!TextUtils.isEmpty(operteam.getOndutynum())){
                 txt_number_people.setText("上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")");
@@ -103,42 +117,52 @@ public class TaskTeamDetailFrag extends BaseFragment {
                 txt_number_people.setText("上岗人数：");
             }
 
-//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
-//                txt_work_hours.setText("累计工时：" + operteam.getBuildaera());
-//            } else {
-//                txt_work_hours.setText("累计工时：");
-//            }
-//
-//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
-//                txt_money.setText("发放总额：" + operteam.getBuildaera());
-//            } else {
-//                txt_money.setText("发放总额：");
-//            }
+            if (!TextUtils.isEmpty(operteam.getTotalworkday())){
+                txt_work_hours.setText("累计工时：" + operteam.getTotalworkday());
+            } else {
+                txt_work_hours.setText("累计工时：");
+            }
+
+            if (!TextUtils.isEmpty(operteam.getTotalsalary())){
+                txt_money.setText("发放总额：" + operteam.getTotalsalary());
+            } else {
+                txt_money.setText("发放总额：");
+            }
+
             if (!TextUtils.isEmpty(operteam.getBudget())){
                 txt_money_total.setText("合同总额：" + operteam.getBudget());
             } else {
                 txt_money_total.setText("合同总额：");
             }
-//            if (!TextUtils.isEmpty(operteam.getBuildaera())){
-//                txt_money_scale.setText("发放比例：" + operteam.getBuildaera());
-//            } else {
-//                txt_money_scale.setText("发放比例：");
-//            }
+
+            String totalsalary = operteam.getTotalsalary();
+            String budget = operteam.getBudget();
+            String scale = "0.0";
+            try {
+                double dSalary = Double.parseDouble(totalsalary);
+                double dBudget = Double.parseDouble(budget);
+                double s = dSalary * 100 / dBudget;
+                scale = df.format(s);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            txt_money_scale.setText("发放比例：" + scale + "%");
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-            String prole = user.getProle();
-            if (prole != null){
-                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                    User.Operteam operteam = user.getOperteam();
-                    if (operteam != null && operteam.getId() == this.operteam.getId()){
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
+//            String prole = user.getProle();
+//            if (prole != null){
+//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+//                    User.Operteam operteam = user.getOperteam();
+//                    if (operteam != null && operteam.getId() == this.operteam.getId()){
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
         }
     }
 
@@ -172,6 +196,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
         });
         updateTextStyle(vpContent.getCurrentItem());
     }
+
     private void updateTextStyle(int position) {
         LinearLayout tabsContainer = (LinearLayout) pstsIndicator.getChildAt(0);
         for (int i = 0; i < tabsContainer.getChildCount(); i++) {
@@ -185,6 +210,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
             }
         }
     }
+
     @OnClick({R.id.back_iv,R.id.right_header_btn})
     public void onClick(View view) {
         switch (view.getId()) {

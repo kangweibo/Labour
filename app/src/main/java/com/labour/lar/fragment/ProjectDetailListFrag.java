@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -39,7 +38,11 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import butterknife.BindView;
 
@@ -223,28 +226,81 @@ public class ProjectDetailListFrag extends BaseFragment {
         list.clear();
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
-        item0.field1 = "项目部";
-        item0.field1Content = "项目经理："+ project.getPm();
-        item0.field2 = "人数：" + project.getManager_num() + "个";
-        item0.field2Content = "作业队："+ project.getOperteam_num() + "个";
-        item0.field3 = "";
-        item0.field3Content = "";
+        item0.field_1_1 = "项目部";
+        item0.field_1_2 = "项目经理："+ project.getPm();
+        item0.field_1_3 = "作业队："+ project.getOperteam_num() + "个";
+        item0.field_2_1 = "开工日期：" + project.getStartdate();
+        item0.field_2_2 = "结束日期：" + project.getEnddate();
+
+        DecimalFormat df = new DecimalFormat("0.0");
+        String time_scale = "0.0";
+        String strDate = project.getStartdate();
+        String duration = project.getDuration();
+        try {
+            double dDuratio = Double.parseDouble(duration);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+            Date now = new Date();
+            double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+            time_scale = df.format(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        item0.field_2_3 = "比例：" + time_scale + "%";
+        item0.field_3_1 = "上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")";
+        item0.field_3_2 = "累计工时："+ project.getPm();
+        item0.field_3_3 = "";
+        item0.field_4_1 = "发放总额：" + project.getTotalsalary();
+        item0.field_4_2 = "";
+        item0.field_4_3 = "";
         item0.isShowArraw = true;
-        item0.isShowTwo = false;
+        item0.type = 4;
 
         list.add(item0);
 
         for(Operteam operteam : operteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = operteam.getName();
-            if (!TextUtils.isEmpty(operteam.getPm())){
-                item.field1Content = "队长："+ operteam.getPm();
-            } else {
-                item.field1Content = "队长：无";
+            item.field_1_1 = operteam.getName();
+            item.field_1_2 = "队长："+ operteam.getPm();
+            item.field_1_3 = "班组：" + operteam.getClassteam_num() +"个";
+            item.field_2_1 = "开工日期：" + operteam.getStartdate();
+            item.field_2_2 = "结束日期：" + operteam.getEnddate();
+
+            time_scale = "0.0";
+            strDate = operteam.getStartdate();
+            duration = operteam.getDuration();
+            try {
+                double dDuratio = Double.parseDouble(duration);
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+                Date now = new Date();
+                double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+                time_scale = df.format(s);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            item.field2 = "人数："+ operteam.getAll_num() +"人";
-            item.field2Content = "班组：" + operteam.getClassteam_num() +"个";
+
+            item.field_2_3 = "比例：" + time_scale + "%";
+            item.field_3_1 = "上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")";
+            item.field_3_2 = "累计工时："+ operteam.getPm();
+            item.field_3_3 = "";
+            item.field_4_1 = "发放总额：" + operteam.getTotalsalary();
+            item.field_4_2 = "合同总额：" + operteam.getBudget();
+
+            String totalsalary = operteam.getTotalsalary();
+            String budget = operteam.getBudget();
+            String scale = "0.0";
+            try {
+                double dSalary = Double.parseDouble(totalsalary);
+                double dBudget = Double.parseDouble(budget);
+                double s = dSalary * 100 / dBudget;
+                scale = df.format(s);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            item.field_4_3 = "比例：" + scale + "%";
             item.isShowArraw = true;
+            item.type = 4;
 
             list.add(item);
         }

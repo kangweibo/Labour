@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
-import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.ProjectDetailListAdapter1;
+import com.labour.lar.adapter.ProjectListItemWarp1;
 import com.labour.lar.module.Employee;
 import com.labour.lar.widget.LoadingView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -38,7 +39,7 @@ public class GongRenDetailListFrag extends BaseFragment {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectDetailListAdapter projectAdapter;
+    ProjectDetailListAdapter1 projectAdapter;
 
     private Employee employee;
 
@@ -52,7 +53,7 @@ public class GongRenDetailListFrag extends BaseFragment {
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectDetailListAdapter(getContext());
+        projectAdapter = new ProjectDetailListAdapter1(getContext());
         listView.setAdapter(projectAdapter);
     }
 
@@ -74,7 +75,7 @@ public class GongRenDetailListFrag extends BaseFragment {
         list_refresh.setEnableLoadMore(false);
 
         //测试
-        List<ProjectListItemWarp.ListItem> list = new ArrayList<>();
+        List<ProjectListItemWarp1.ListItem> list = new ArrayList<>();
 //        for(int i=0;i<10;i++){
 //            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
 //            item.field1 = "南苑花园c座" + i;

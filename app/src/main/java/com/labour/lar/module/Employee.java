@@ -33,6 +33,8 @@ public class Employee implements Serializable {
     private String duty;//":": 职务
     private String bankcard;
     private String examstatus;
+    private String totalworkday;//	累计工时
+    private String totalsalary;//	发放总额
 
     public static class Pic implements Serializable {
         private String url;
@@ -228,5 +230,21 @@ public class Employee implements Serializable {
 
     public void setExamstatus(String examstatus) {
         this.examstatus = examstatus;
+    }
+
+    public String getTotalworkday() {
+        return totalworkday;
+    }
+
+    public void setTotalworkday(String totalworkday) {
+        this.totalworkday = totalworkday;
+    }
+
+    public String getTotalsalary() {
+        return totalsalary;
+    }
+
+    public void setTotalsalary(String totalsalary) {
+        this.totalsalary = totalsalary;
     }
 }

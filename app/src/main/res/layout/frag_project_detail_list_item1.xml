@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:gravity="center_vertical"
     android:paddingBottom="10dp"
     android:paddingTop="10dp">
     <LinearLayout
@@ -31,7 +30,7 @@
             <TextView android:id="@+id/field1_content_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/content"
+                android:textColor="@color/common_blue"
                 android:textSize="@dimen/text_size_16"
                 android:text="共：500人"
                 android:layout_alignParentRight="true"/>
@@ -47,7 +46,7 @@
             <TextView android:id="@+id/field2_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/content"
+                android:textColor="@color/content2"
                 android:textSize="@dimen/text_size_16"
                 android:text="项目部"
                 android:singleLine="true"
@@ -56,23 +55,37 @@
             <TextView android:id="@+id/field2_content_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/content"
+                android:textColor="@color/content2"
+                android:textSize="@dimen/text_size_16"
+                android:text="共：500人"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout android:id="@+id/field3_rl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/common_margin_right"
+            android:layout_marginLeft="@dimen/common_margin_left"
+            android:layout_marginTop="3dp">
+
+            <TextView android:id="@+id/field3_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/content2"
+                android:textSize="@dimen/text_size_16"
+                android:text="项目部"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+            <TextView android:id="@+id/field3_content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/content2"
                 android:textSize="@dimen/text_size_16"
                 android:text="共：500人"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
     </LinearLayout>
-
-    <Button android:id="@+id/btn_examine"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:textColor="@color/white"
-        android:background="@drawable/selector_button"
-        android:text="上岗审核"
-        android:textSize="@dimen/text_size_14"
-        android:layout_marginLeft="@dimen/common_margin_left"
-        android:visibility="gone"/>
-
     <ImageView android:id="@+id/arraw_iv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

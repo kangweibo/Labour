@@ -37,17 +37,26 @@ public class ManagerDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    @BindView(R.id.name_tv)
-    TextView name_tv;
-    @BindView(R.id.company_tv)
-    TextView company_tv;
-    @BindView(R.id.type_tv)
-    TextView type_tv;
-    @BindView(R.id.txt_team)
-    TextView txt_team;
+//    @BindView(R.id.name_tv)
+//    TextView name_tv;
+//    @BindView(R.id.company_tv)
+//    TextView company_tv;
+//    @BindView(R.id.type_tv)
+//    TextView type_tv;
+//    @BindView(R.id.txt_team)
+//    TextView txt_team;
+//
+//    @BindView(R.id.photo_iv)
+//    RoundImageView photo_iv;
 
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
+    @BindView(R.id.txt_number_people)
+    TextView txt_number_people;
+    @BindView(R.id.txt_work_hours)
+    TextView txt_work_hours;
+    @BindView(R.id.txt_money)
+    TextView txt_money;
+    @BindView(R.id.txt_pm)
+    TextView txt_pm;
 
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
@@ -73,46 +82,49 @@ public class ManagerDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-        photo_iv.setImageResource(R.mipmap.picture);
+//        photo_iv.setImageResource(R.mipmap.picture);
 
         if (project!= null){
-            if (!TextUtils.isEmpty(project.getName())){
-                title_tv.setText(project.getName() + "-项目部详情");
-            }
-            name_tv.setText("项目部");
+            title_tv.setText(project.getName() + "-项目部详情");
+            txt_number_people.setText("上岗人数：" + project.getOndutynum_xmb() + "(" + project.getOnjobnum_xmb() + ")");
+            txt_work_hours.setText("累计工时：" + project.getTotalworkday_xmb());
+            txt_money.setText("发放总额：" + project.getTotalsalary_xmb());
+            txt_pm.setText("项目经理：" + project.getPm());
 
-            if (!TextUtils.isEmpty(project.getName())){
-                txt_team.setText(project.getName());
-            } else {
-                txt_team.setText("");
-            }
-
-            if (!TextUtils.isEmpty(project.getPm())){
-                company_tv.setText("项目经理：" + project.getPm());
-            } else {
-                company_tv.setText("项目经理：");
-            }
-
-            if (!TextUtils.isEmpty(project.getManager_num())){
-                type_tv.setText("花名册：" + project.getManager_num() + "人");
-            } else {
-                type_tv.setText("花名册：0人");
-            }
+//            name_tv.setText("项目部");
+//
+//            if (!TextUtils.isEmpty(project.getName())){
+//                txt_team.setText(project.getName());
+//            } else {
+//                txt_team.setText("");
+//            }
+//
+//            if (!TextUtils.isEmpty(project.getPm())){
+//                company_tv.setText("项目经理：" + project.getPm());
+//            } else {
+//                company_tv.setText("项目经理：");
+//            }
+//
+//            if (!TextUtils.isEmpty(project.getManager_num())){
+//                type_tv.setText("花名册：" + project.getManager_num() + "人");
+//            } else {
+//                type_tv.setText("花名册：0人");
+//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-            String prole = user.getProle();
-            if (prole != null) {
-                if (prole.equals("project_manager") || prole.equals("project_quota")) {
-                    User.Project project = user.getProject();
-                    if (project != null && project.getId() == this.project.getId()) {
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
+//            String prole = user.getProle();
+//            if (prole != null) {
+//                if (prole.equals("project_manager") || prole.equals("project_quota")) {
+//                    User.Project project = user.getProject();
+//                    if (project != null && project.getId() == this.project.getId()) {
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
         }
     }
 

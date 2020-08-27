@@ -5,8 +5,12 @@
     <dimen name="common_margin_left">15dp</dimen>
     <dimen name="common_margin_right">15dp</dimen>
 
+    <dimen name="common_details_margin_left">10dp</dimen>
+
     <dimen name="text_size_16">16sp</dimen>
     <dimen name="text_size_15">15sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_12">12sp</dimen>
+
+    <dimen name="text_size_details_item">12sp</dimen>
 </resources>

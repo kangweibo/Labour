@@ -11,6 +11,10 @@ import com.labour.lar.R;
 import com.labour.lar.module.Project;
 import com.labour.lar.widget.RoundImageView;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -40,34 +44,43 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         if (!TextUtils.isEmpty(item.getStartdate())){
             holder.txt_start_date.setText("开工日期：" + item.getStartdate());
         } else {
-            holder.txt_start_date.setText("开工日期：无");
+            holder.txt_start_date.setText("开工日期：");
         }
-        if (!TextUtils.isEmpty(item.getStartdate())){
-            holder.txt_start_date.setText("结束日期：" + item.getStartdate());
+        if (!TextUtils.isEmpty(item.getEnddate())){
+            holder.txt_end_date.setText("结束日期：" + item.getEnddate());
         } else {
-            holder.txt_start_date.setText("结束日期：无");
+            holder.txt_end_date.setText("结束日期：");
         }
 
-        if (!TextUtils.isEmpty(item.getEntname())){
-            holder.txt_time_scale.setText("比例：" + "86%");
-        } else {
-            holder.txt_time_scale.setText("比例：");
+        DecimalFormat df = new DecimalFormat("0.0");
+        String time_scale = "0.0";
+        String strDate = item.getStartdate();
+        String duration = item.getDuration();
+        try {
+            double dDuratio = Double.parseDouble(duration);
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+            Date now = new Date();
+            double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+            time_scale = df.format(s);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        holder.txt_time_scale.setText("比例：" + time_scale + "%");
 
         if (!TextUtils.isEmpty(item.getOndutynum())){
-            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "（" + item.getOnjobnum() + "）");
+            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "(" + item.getOnjobnum() + ")");
         } else {
             holder.txt_number_people.setText("上岗人数：");
         }
 
-        if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_work_hours.setText("累计工时：" + item.getBuildaera());
+        if (!TextUtils.isEmpty(item.getTotalworkday())){
+            holder.txt_work_hours.setText("累计工时：" + item.getTotalworkday());
         } else {
             holder.txt_work_hours.setText("累计工时：");
         }
 
-        if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_money.setText("发放总额：" + item.getBuildaera());
+        if (!TextUtils.isEmpty(item.getTotalsalary())){
+            holder.txt_money.setText("发放总额：" + item.getTotalsalary());
         } else {
             holder.txt_money.setText("发放总额：");
         }
@@ -76,11 +89,20 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         } else {
             holder.txt_money_total.setText("合同总额：");
         }
-        if (!TextUtils.isEmpty(item.getBuildaera())){
-            holder.txt_money_scale.setText("发放比例：" + item.getBuildaera());
-        } else {
-            holder.txt_money_scale.setText("发放比例：");
+
+        String totalsalary = item.getTotalsalary();
+        String budget = item.getBudget();
+        String scale = "0.0";
+        try {
+            double dSalary = Double.parseDouble(totalsalary);
+            double dBudget = Double.parseDouble(budget);
+            double s = dSalary * 100 / dBudget;
+            scale = df.format(s);
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
+        holder.txt_money_scale.setText("发放比例：" + scale + "%");
     }
 
     class ItemHolder {

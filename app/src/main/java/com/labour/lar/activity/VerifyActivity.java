@@ -12,7 +12,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
-import com.labour.lar.adapter.EmployeeListAdapter;
 import com.labour.lar.adapter.VerifyAdapter;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Employee;

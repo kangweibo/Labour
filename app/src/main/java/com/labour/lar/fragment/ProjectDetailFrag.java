@@ -21,7 +21,12 @@ import com.labour.lar.module.Project;
 import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.widget.RoundImageView;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -99,19 +104,28 @@ public class ProjectDetailFrag extends BaseFragment {
             if (!TextUtils.isEmpty(project.getStartdate())){
                 txt_start_date.setText("开工日期：" + project.getStartdate());
             } else {
-                txt_start_date.setText("开工日期：无");
+                txt_start_date.setText("开工日期：");
             }
             if (!TextUtils.isEmpty(project.getEnddate())){
-                txt_start_date.setText("结束日期：" + project.getEnddate());
+                txt_end_date.setText("结束日期：" + project.getEnddate());
             } else {
-                txt_start_date.setText("结束日期：无");
+                txt_end_date.setText("结束日期：");
             }
 
-            if (!TextUtils.isEmpty(project.getEntname())){
-                txt_time_scale.setText("比例：" + "86%");
-            } else {
-                txt_time_scale.setText("比例：");
+            DecimalFormat df = new DecimalFormat("0.0");
+            String time_scale = "0.0";
+            String strDate = project.getStartdate();
+            String duration = project.getDuration();
+            try {
+                double dDuratio = Double.parseDouble(duration);
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+                Date now = new Date();
+                double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+                time_scale = df.format(s);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            txt_time_scale.setText("比例：" + time_scale + "%");
 
             if (!TextUtils.isEmpty(project.getOndutynum())){
                 txt_number_people.setText("上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")");
@@ -119,63 +133,51 @@ public class ProjectDetailFrag extends BaseFragment {
                 txt_number_people.setText("上岗人数：");
             }
 
-            if (!TextUtils.isEmpty(project.getBuildaera())){
-                txt_work_hours.setText("累计工时：" + project.getBuildaera());
+            if (!TextUtils.isEmpty(project.getTotalworkday())){
+                txt_work_hours.setText("累计工时：" + project.getTotalworkday());
             } else {
                 txt_work_hours.setText("累计工时：");
             }
 
-            if (!TextUtils.isEmpty(project.getBuildaera())){
-                txt_money.setText("发放总额：" + project.getBuildaera());
+            if (!TextUtils.isEmpty(project.getTotalsalary())){
+                txt_money.setText("发放总额：" + project.getTotalsalary());
             } else {
                 txt_money.setText("发放总额：");
             }
-            if (!TextUtils.isEmpty(project.getBuildaera())){
-                txt_money_total.setText("合同总额：" + project.getBuildaera());
+            if (!TextUtils.isEmpty(project.getBudget())){
+                txt_money_total.setText("合同总额：" + project.getBudget());
             } else {
                 txt_money_total.setText("合同总额：");
             }
-            if (!TextUtils.isEmpty(project.getBuildaera())){
-                txt_money_scale.setText("发放比例：" + project.getBuildaera());
-            } else {
-                txt_money_scale.setText("发放比例：");
-            }
-//            if (!TextUtils.isEmpty(project.getName())){
-//                name_tv.setText(project.getName());
-//            } else {
-//                name_tv.setText("");
-//            }
 
-//            if (!TextUtils.isEmpty(project.getEntname())){
-//                company_tv.setText(project.getEntname());
-//            } else {
-//                company_tv.setText("");
-//            }
-//            if (!TextUtils.isEmpty(project.getStartdate())){
-//                type_tv.setText("开工日期：" + project.getStartdate());
-//            } else {
-//                type_tv.setText("开工日期：无");
-//            }
-//            if (!TextUtils.isEmpty(project.getAll_num())){
-//                mianji_tv.setText("工人总数：" + project.getAll_num() + "人");
-//            } else {
-//                mianji_tv.setText("工人总数：0人");
-//            }
+            String totalsalary = project.getTotalsalary();
+            String budget = project.getBudget();
+            String scale = "0.0";
+            try {
+                double dSalary = Double.parseDouble(totalsalary);
+                double dBudget = Double.parseDouble(budget);
+                double s = dSalary * 100 / dBudget;
+                scale = df.format(s);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            txt_money_scale.setText("发放比例：" + scale + "%");
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-            String prole = user.getProle();
-            if (prole != null) {
-                if (prole.equals("project_manager") || prole.equals("project_quota")) {
-                    User.Project project = user.getProject();
-                    if (project != null && project.getId() == this.project.getId()) {
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
+//            String prole = user.getProle();
+//            if (prole != null) {
+//                if (prole.equals("project_manager") || prole.equals("project_quota")) {
+//                    User.Project project = user.getProject();
+//                    if (project != null && project.getId() == this.project.getId()) {
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
         }
     }
 

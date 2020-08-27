@@ -12,7 +12,7 @@ public class Project implements Serializable {
     private String designer;//: "工程设计有限公司",
     private String projectfunction;//: "写字楼",
     private String buildaera;//: "288000平方米",
-    private String budget;//: 预算金额,
+    private String budget;//: 合同总额,
     private String created_at;//: "2020-05-13T01:36:29.000Z",
     private String updated_at;//: "2020-05-13T01:36:29.000Z",
     private String startdate;//: "2020-05-13T01:36:29.000Z",
@@ -22,8 +22,15 @@ public class Project implements Serializable {
     private String operteam_num;//作业队数量
     private String all_num;//项目总人数
     private String pm;//项目经理名称
+    private String duration;//工期
     private String ondutynum;//上岗人数
     private String onjobnum;//在岗人数
+    private String totalworkday;//	累计工时
+    private String totalsalary;//	发放总额
+    private String onjobnum_xmb;// 项目部上岗人数
+    private String ondutynum_xmb;// 项目部在岗人数
+    private String totalworkday_xmb;// 项目部累计工时
+    private String totalsalary_xmb;// 项目部发放总额
 
     public int getId() {
         return id;
@@ -183,5 +190,61 @@ public class Project implements Serializable {
 
     public void setOnjobnum(String onjobnum) {
         this.onjobnum = onjobnum;
+    }
+
+    public String getTotalworkday() {
+        return totalworkday;
+    }
+
+    public void setTotalworkday(String totalworkday) {
+        this.totalworkday = totalworkday;
+    }
+
+    public String getTotalsalary() {
+        return totalsalary;
+    }
+
+    public void setTotalsalary(String totalsalary) {
+        this.totalsalary = totalsalary;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public String getOnjobnum_xmb() {
+        return onjobnum_xmb;
+    }
+
+    public void setOnjobnum_xmb(String onjobnum_xmb) {
+        this.onjobnum_xmb = onjobnum_xmb;
+    }
+
+    public String getOndutynum_xmb() {
+        return ondutynum_xmb;
+    }
+
+    public void setOndutynum_xmb(String ondutynum_xmb) {
+        this.ondutynum_xmb = ondutynum_xmb;
+    }
+
+    public String getTotalworkday_xmb() {
+        return totalworkday_xmb;
+    }
+
+    public void setTotalworkday_xmb(String totalworkday_xmb) {
+        this.totalworkday_xmb = totalworkday_xmb;
+    }
+
+    public String getTotalsalary_xmb() {
+        return totalsalary_xmb;
+    }
+
+    public void setTotalsalary_xmb(String totalsalary_xmb) {
+        this.totalsalary_xmb = totalsalary_xmb;
     }
 }

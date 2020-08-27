@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -193,31 +192,33 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         list.clear();
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
-        item0.field1 = "队部";
-        if (!TextUtils.isEmpty(operteam.getPm())){
-            item0.field1Content = "队长：" + operteam.getPm();
-        } else {
-            item0.field1Content = "队长：无";
-        }
-
-        item0.field2 = "人数：" + operteam.getStaff_num() + "个";
-        item0.field2Content =  "班组：" + operteam.getClassteam_num() +"个";
+        item0.field_1_1 = "作业队队部";;
+        item0.field_1_2 = "班组数：" + operteam.getClassteam_num() +"个";
+        item0.field_1_3 = "";
+        item0.field_2_1 = "上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")";
+        item0.field_2_2 = "累计工时："+ operteam.getTotalworkday();
+        item0.field_2_3 = "";
+        item0.field_3_1 = "发放总额：" + operteam.getTotalsalary();
+        item0.field_3_2 = "";
+        item0.field_3_3 = "";
         item0.isShowArraw = true;
+        item0.type = 3;
 
         list.add(item0);
 
         for(Classteam classteam : classteamList){
             ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
-            item.field1 = classteam.getName();;
-            item.field1Content = "";
-            item.field2 = "人数：" + classteam.getEmployees_num() + "人";
-            if (!TextUtils.isEmpty(classteam.getPm())){
-                item.field2Content = "班组长：" + classteam.getPm();
-            } else {
-                item.field2Content = "班组长：无";
-            }
-
+            item.field_1_1 = classteam.getName();
+            item.field_1_2 = "";
+            item.field_1_3 = "";
+            item.field_2_1 = "上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")";
+            item.field_2_2 = "累计工时："+ classteam.getTotalworkday();
+            item.field_2_3 = "";
+            item.field_3_1 = "发放总额：" + classteam.getTotalsalary();
+            item.field_3_2 = "班组长：" + classteam.getPm();
+            item.field_3_3 = "";
             item.isShowArraw = true;
+            item.type = 3;
 
             list.add(item);
         }

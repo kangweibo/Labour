@@ -2,52 +2,91 @@ package com.labour.lar.adapter;
 
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.labour.lar.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProjectListItemWarp {
 
     public static void showOne(ItemHolder itemHolder,ListItem item){
-        itemHolder.field3_rl.setVisibility(View.GONE);
-        itemHolder.field1_tv.setText(item.field1);
-        itemHolder.field1_content_tv.setText(item.field1Content);
-        itemHolder.field2_tv.setText(item.field2);
-        itemHolder.field2_content_tv.setText(item.field2Content);
+        itemHolder.field_r2.setVisibility(View.GONE);
+        itemHolder.field_r3.setVisibility(View.GONE);
+        itemHolder.field_r4.setVisibility(View.GONE);
+
+        itemHolder.field_1_1_tv.setText(item.field_1_1);
+        itemHolder.field_1_2_tv.setText(item.field_1_2);
+        itemHolder.field_1_3_tv.setText(item.field_1_3);
+
         itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
     }
     public static void showTwo(ItemHolder itemHolder,ListItem item){
-        itemHolder.field1_tv.setText(item.field1);
-        itemHolder.field1_content_tv.setText(item.field1Content);
-        itemHolder.field2_tv.setText(item.field2);
-        itemHolder.field2_content_tv.setText(item.field2Content);
-        itemHolder.field3_tv.setText(item.field3);
-        itemHolder.field3_content_tv.setText(item.field3Content);
+        itemHolder.field_r3.setVisibility(View.GONE);
+        itemHolder.field_r4.setVisibility(View.GONE);
+
+        itemHolder.field_1_1_tv.setText(item.field_1_1);
+        itemHolder.field_1_2_tv.setText(item.field_1_2);
+        itemHolder.field_1_3_tv.setText(item.field_1_3);
+        itemHolder.field_2_1_tv.setText(item.field_2_1);
+        itemHolder.field_2_2_tv.setText(item.field_2_2);
+        itemHolder.field_2_3_tv.setText(item.field_2_3);
+
         itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
     }
-    public static void showOneOrTwo(ItemHolder itemHolder,ListItem item){
-        itemHolder.field1_tv.setText(item.field1);
-        itemHolder.field1_content_tv.setText(item.field1Content);
-        itemHolder.field2_tv.setText(item.field2);
-        itemHolder.field2_content_tv.setText(item.field2Content);
-        itemHolder.field3_tv.setText(item.field3);
-        itemHolder.field3_content_tv.setText(item.field3Content);
+
+    public static void showThree(ItemHolder itemHolder,ListItem item){
+        itemHolder.field_r4.setVisibility(View.GONE);
+
+        itemHolder.field_1_1_tv.setText(item.field_1_1);
+        itemHolder.field_1_2_tv.setText(item.field_1_2);
+        itemHolder.field_1_3_tv.setText(item.field_1_3);
+        itemHolder.field_2_1_tv.setText(item.field_2_1);
+        itemHolder.field_2_2_tv.setText(item.field_2_2);
+        itemHolder.field_2_3_tv.setText(item.field_2_3);
+        itemHolder.field_3_1_tv.setText(item.field_3_1);
+        itemHolder.field_3_2_tv.setText(item.field_3_2);
+        itemHolder.field_3_3_tv.setText(item.field_3_3);
+
         itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
-        itemHolder.field3_rl.setVisibility(item.isShowTwo?View.VISIBLE:View.GONE);
+    }
+
+    public static void showFour(ItemHolder itemHolder,ListItem item){
+        itemHolder.field_1_1_tv.setText(item.field_1_1);
+        itemHolder.field_1_2_tv.setText(item.field_1_2);
+        itemHolder.field_1_3_tv.setText(item.field_1_3);
+        itemHolder.field_2_1_tv.setText(item.field_2_1);
+        itemHolder.field_2_2_tv.setText(item.field_2_2);
+        itemHolder.field_2_3_tv.setText(item.field_2_3);
+        itemHolder.field_3_1_tv.setText(item.field_3_1);
+        itemHolder.field_3_2_tv.setText(item.field_3_2);
+        itemHolder.field_3_3_tv.setText(item.field_3_3);
+        itemHolder.field_4_1_tv.setText(item.field_4_1);
+        itemHolder.field_4_2_tv.setText(item.field_4_2);
+        itemHolder.field_4_3_tv.setText(item.field_4_3);
+
+        itemHolder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
     }
 
     public static class ListItem {
-        public String field1;
-        public String field1Content;
-        public String field2;
-        public String field2Content;
-        public String field3;
-        public String field3Content;
+        public String field_1_1;
+        public String field_1_2;
+        public String field_1_3;
+
+        public String field_2_1;
+        public String field_2_2;
+        public String field_2_3;
+
+        public String field_3_1;
+        public String field_3_2;
+        public String field_3_3;
+
+        public String field_4_1;
+        public String field_4_2;
+        public String field_4_3;
 
         public boolean isShowArraw;
-        public boolean isShowTwo;
         public int type;
     }
 
@@ -56,26 +95,41 @@ public class ProjectListItemWarp {
             ButterKnife.bind(this, view);
         }
 
-        @BindView(R.id.field1_rl)
-        RelativeLayout field1_rl;
-        @BindView(R.id.field1_tv)
-        TextView field1_tv;
-        @BindView(R.id.field1_content_tv)
-        TextView field1_content_tv;
+        @BindView(R.id.field_rl)
+        View field_rl;
+        @BindView(R.id.field_1_1_tv)
+        TextView field_1_1_tv;
+        @BindView(R.id.field_1_2_tv)
+        TextView field_1_2_tv;
+        @BindView(R.id.field_1_3_tv)
+        TextView field_1_3_tv;
 
-        @BindView(R.id.field2_rl)
-        RelativeLayout field2_rl;
-        @BindView(R.id.field2_tv)
-        TextView field2_tv;
-        @BindView(R.id.field2_content_tv)
-        TextView field2_content_tv;
+        @BindView(R.id.field_r2)
+        View field_r2;
+        @BindView(R.id.field_2_1_tv)
+        TextView field_2_1_tv;
+        @BindView(R.id.field_2_2_tv)
+        TextView field_2_2_tv;
+        @BindView(R.id.field_2_3_tv)
+        TextView field_2_3_tv;
 
-        @BindView(R.id.field3_rl)
-        RelativeLayout field3_rl;
-        @BindView(R.id.field3_tv)
-        TextView field3_tv;
-        @BindView(R.id.field3_content_tv)
-        TextView field3_content_tv;
+        @BindView(R.id.field_r3)
+        View field_r3;
+        @BindView(R.id.field_3_1_tv)
+        TextView field_3_1_tv;
+        @BindView(R.id.field_3_2_tv)
+        TextView field_3_2_tv;
+        @BindView(R.id.field_3_3_tv)
+        TextView field_3_3_tv;
+
+        @BindView(R.id.field_r4)
+        View field_r4;
+        @BindView(R.id.field_4_1_tv)
+        TextView field_4_1_tv;
+        @BindView(R.id.field_4_2_tv)
+        TextView field_4_2_tv;
+        @BindView(R.id.field_4_3_tv)
+        TextView field_4_3_tv;
 
         @BindView(R.id.arraw_iv)
         ImageView arraw_iv;

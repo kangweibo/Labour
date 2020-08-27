@@ -18,6 +18,8 @@ public class Classteam implements Serializable {
     private String pm;//班组长名称
     private String ondutynum;//上岗人数
     private String onjobnum;//在岗人数
+    private String totalworkday;//	累计工时
+    private String totalsalary;//	发放总额
 
     public int getId() {
         return id;
@@ -113,5 +115,21 @@ public class Classteam implements Serializable {
 
     public void setOnjobnum(String onjobnum) {
         this.onjobnum = onjobnum;
+    }
+
+    public String getTotalworkday() {
+        return totalworkday;
+    }
+
+    public void setTotalworkday(String totalworkday) {
+        this.totalworkday = totalworkday;
+    }
+
+    public String getTotalsalary() {
+        return totalsalary;
+    }
+
+    public void setTotalsalary(String totalsalary) {
+        this.totalsalary = totalsalary;
     }
 }

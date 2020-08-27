@@ -41,17 +41,26 @@ public class StaffDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    @BindView(R.id.name_tv)
-    TextView name_tv;
-    @BindView(R.id.company_tv)
-    TextView company_tv;
-    @BindView(R.id.type_tv)
-    TextView type_tv;
-    @BindView(R.id.txt_team)
-    TextView txt_team;
+//    @BindView(R.id.name_tv)
+//    TextView name_tv;
+//    @BindView(R.id.company_tv)
+//    TextView company_tv;
+//    @BindView(R.id.type_tv)
+//    TextView type_tv;
+//    @BindView(R.id.txt_team)
+//    TextView txt_team;
+//
+//    @BindView(R.id.photo_iv)
+//    RoundImageView photo_iv;
 
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
+    @BindView(R.id.txt_number_people)
+    TextView txt_number_people;
+    @BindView(R.id.txt_work_hours)
+    TextView txt_work_hours;
+    @BindView(R.id.txt_money)
+    TextView txt_money;
+    @BindView(R.id.txt_pm)
+    TextView txt_pm;
 
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
@@ -77,53 +86,56 @@ public class StaffDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-        photo_iv.setImageResource(R.mipmap.picture);
+//        photo_iv.setImageResource(R.mipmap.picture);
 
         if (operteam!= null){
-            if (!TextUtils.isEmpty(operteam.getName())){
-                title_tv.setText(operteam.getName() + "-队部详情");
-            }
-            name_tv.setText("队部");
+            title_tv.setText(operteam.getName() + "-队部详情");
+            txt_number_people.setText("上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")");
+            txt_work_hours.setText("累计工时：" + operteam.getTotalworkday_db());
+            txt_money.setText("发放总额：" + operteam.getTotalsalary_db());
+            txt_pm.setText("队长：" + operteam.getPm());
 
-            if (!TextUtils.isEmpty(operteam.getName())){
-                txt_team.setText(operteam.getName());
-            } else {
-                txt_team.setText("");
-            }
-
-            if (!TextUtils.isEmpty(operteam.getPm())){
-                company_tv.setText("队长：" + operteam.getPm());
-            } else {
-                company_tv.setText("队长：");
-            }
-
-            if (!TextUtils.isEmpty(operteam.getStaff_num())){
-                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
-            } else {
-                type_tv.setText("花名册：0人");
-            }
+//            name_tv.setText("队部");
+//
+//            if (!TextUtils.isEmpty(operteam.getName())){
+//                txt_team.setText(operteam.getName());
+//            } else {
+//                txt_team.setText("");
+//            }
+//
+//            if (!TextUtils.isEmpty(operteam.getPm())){
+//                company_tv.setText("队长：" + operteam.getPm());
+//            } else {
+//                company_tv.setText("队长：");
+//            }
+//
+//            if (!TextUtils.isEmpty(operteam.getStaff_num())){
+//                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
+//            } else {
+//                type_tv.setText("花名册：0人");
+//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-            String prole = user.getProle();
-            if (prole != null) {
-                if (prole.equals("project_manager") || prole.equals("project_quota")) {
-                    User.Project project = user.getProject();
-                    if (project != null && project.getId() == this.operteam.getProject_id()) {
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                    User.Operteam operteam = user.getOperteam();
-                    if (operteam != null && operteam.getId() == this.operteam.getId()){
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
+//            String prole = user.getProle();
+//            if (prole != null) {
+//                if (prole.equals("project_manager") || prole.equals("project_quota")) {
+//                    User.Project project = user.getProject();
+//                    if (project != null && project.getId() == this.operteam.getProject_id()) {
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//
+//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+//                    User.Operteam operteam = user.getOperteam();
+//                    if (operteam != null && operteam.getId() == this.operteam.getId()){
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
         }
     }
 

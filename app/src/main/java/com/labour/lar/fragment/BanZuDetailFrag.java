@@ -40,17 +40,26 @@ public class BanZuDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-    @BindView(R.id.name_tv)
-    TextView name_tv;
-    @BindView(R.id.company_tv)
-    TextView company_tv;
-    @BindView(R.id.type_tv)
-    TextView type_tv;
-    @BindView(R.id.txt_team)
-    TextView txt_team;
+//    @BindView(R.id.name_tv)
+//    TextView name_tv;
+//    @BindView(R.id.company_tv)
+//    TextView company_tv;
+//    @BindView(R.id.type_tv)
+//    TextView type_tv;
+//    @BindView(R.id.txt_team)
+//    TextView txt_team;
+//
+//    @BindView(R.id.photo_iv)
+//    RoundImageView photo_iv;
 
-    @BindView(R.id.photo_iv)
-    RoundImageView photo_iv;
+    @BindView(R.id.txt_number_people)
+    TextView txt_number_people;
+    @BindView(R.id.txt_work_hours)
+    TextView txt_work_hours;
+    @BindView(R.id.txt_money)
+    TextView txt_money;
+    @BindView(R.id.txt_pm)
+    TextView txt_pm;
 
     @BindView(R.id.psts_indicator)
     PagerSlidingTabStrip pstsIndicator;
@@ -77,54 +86,60 @@ public class BanZuDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-        photo_iv.setImageResource(R.mipmap.picture);
+//        photo_iv.setImageResource(R.mipmap.picture);
 
         if (classteam!= null){
-            if (!TextUtils.isEmpty(classteam.getName())){
-                title_tv.setText(classteam.getOperteamname()+"-"+classteam.getName() + "详情");
-            }
-            if (!TextUtils.isEmpty(classteam.getName())){
-                name_tv.setText(classteam.getName());
-            } else {
-                name_tv.setText("");
-            }
-            if (!TextUtils.isEmpty(classteam.getOperteamname())){
-                txt_team.setText(classteam.getOperteamname());
-            } else {
-                txt_team.setText("");
-            }
-            if (!TextUtils.isEmpty(classteam.getPm())){
-                company_tv.setText("班组长：" + classteam.getPm());
-            } else {
-                company_tv.setText("班组长：");
-            }
-            if (!TextUtils.isEmpty(classteam.getEmployees_num())){
-                type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");
-            } else {
-                type_tv.setText("花名册：0人");
-            }
+            title_tv.setText(classteam.getName() + "的详情");
+            txt_number_people.setText("上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")");
+            txt_work_hours.setText("累计工时：" + classteam.getTotalworkday());
+            txt_money.setText("发放总额：" + classteam.getTotalsalary());
+            txt_pm.setText("班组长：" + classteam.getPm());
+
+//            if (!TextUtils.isEmpty(classteam.getName())){
+//                title_tv.setText(classteam.getOperteamname()+"-"+classteam.getName() + "详情");
+//            }
+//            if (!TextUtils.isEmpty(classteam.getName())){
+//                name_tv.setText(classteam.getName());
+//            } else {
+//                name_tv.setText("");
+//            }
+//            if (!TextUtils.isEmpty(classteam.getOperteamname())){
+//                txt_team.setText(classteam.getOperteamname());
+//            } else {
+//                txt_team.setText("");
+//            }
+//            if (!TextUtils.isEmpty(classteam.getPm())){
+//                company_tv.setText("班组长：" + classteam.getPm());
+//            } else {
+//                company_tv.setText("班组长：");
+//            }
+//            if (!TextUtils.isEmpty(classteam.getEmployees_num())){
+//                type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");
+//            } else {
+//                type_tv.setText("花名册：0人");
+//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-            String prole = user.getProle();
-            if (prole != null){
-                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                    User.Operteam operteam = user.getOperteam();
-                    if (operteam != null && operteam.getId() == classteam.getOperteam_id()){
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (prole.equals("classteam_manager")){
-                    User.Classteam team = user.getClassteam();
-                    if (team != null && team.getId() == classteam.getId()) {
-                        right_header_btn.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
+//            String prole = user.getProle();
+//            if (prole != null){
+//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+//                    User.Operteam operteam = user.getOperteam();
+//                    if (operteam != null && operteam.getId() == classteam.getOperteam_id()){
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//
+//                if (prole.equals("classteam_manager")){
+//                    User.Classteam team = user.getClassteam();
+//                    if (team != null && team.getId() == classteam.getId()) {
+//                        right_header_btn.setVisibility(View.VISIBLE);
+//                    }
+//                }
+//            }
         }
     }
 

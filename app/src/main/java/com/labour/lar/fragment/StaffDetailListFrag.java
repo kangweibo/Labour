@@ -193,9 +193,9 @@ public class StaffDetailListFrag extends BaseFragment {
         for(Employee employee : employeeList){
             EmployeeListAdapter.ListItem item = new EmployeeListAdapter.ListItem();
             item.field1 = employee.getName();;
-            item.field1Content = "";
-            item.field2 = "手机号：" + employee.getPhone();
-            item.field2Content = "";
+            item.field1Content = "电话：" + employee.getPhone();
+            item.field2 = "累计工时：" + employee.getTotalworkday();
+            item.field2Content =  "发放总额：" + employee.getTotalsalary();
             item.isShowArraw = true;
 
             UserCache userCache = UserCache.getInstance(getContext());

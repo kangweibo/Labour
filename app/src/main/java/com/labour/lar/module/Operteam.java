@@ -23,7 +23,15 @@ public class Operteam implements Serializable {
     private String ondutynum;//上岗人数
     private String onjobnum;//在岗人数
     private String duration;//工期
-    private String budget;//预算金额
+    private String budget;//合同总额
+    private String totalworkday;//	累计工时
+    private String totalsalary;//	发放总额
+
+    private String onjobnum_db;// 队部上岗人数
+    private String ondutynum_db;// 队部在岗人数
+    private String totalworkday_db;// 队部部累计工时
+    private String totalsalary_db;// 队部发放总额
+
 
     public int getId() {
         return id;
@@ -167,5 +175,53 @@ public class Operteam implements Serializable {
 
     public void setBudget(String budget) {
         this.budget = budget;
+    }
+
+    public String getTotalworkday() {
+        return totalworkday;
+    }
+
+    public void setTotalworkday(String totalworkday) {
+        this.totalworkday = totalworkday;
+    }
+
+    public String getTotalsalary() {
+        return totalsalary;
+    }
+
+    public void setTotalsalary(String totalsalary) {
+        this.totalsalary = totalsalary;
+    }
+
+    public String getOnjobnum_db() {
+        return onjobnum_db;
+    }
+
+    public void setOnjobnum_db(String onjobnum_db) {
+        this.onjobnum_db = onjobnum_db;
+    }
+
+    public String getOndutynum_db() {
+        return ondutynum_db;
+    }
+
+    public void setOndutynum_db(String ondutynum_db) {
+        this.ondutynum_db = ondutynum_db;
+    }
+
+    public String getTotalworkday_db() {
+        return totalworkday_db;
+    }
+
+    public void setTotalworkday_db(String totalworkday_db) {
+        this.totalworkday_db = totalworkday_db;
+    }
+
+    public String getTotalsalary_db() {
+        return totalsalary_db;
+    }
+
+    public void setTotalsalary_db(String totalsalary_db) {
+        this.totalsalary_db = totalsalary_db;
     }
 }
