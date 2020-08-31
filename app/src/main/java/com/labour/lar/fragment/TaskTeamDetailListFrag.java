@@ -195,10 +195,10 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         item0.field_1_1 = "作业队队部";;
         item0.field_1_2 = "班组数：" + operteam.getClassteam_num() +"个";
         item0.field_1_3 = "";
-        item0.field_2_1 = "上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")";
-        item0.field_2_2 = "累计工时："+ operteam.getTotalworkday();
+        item0.field_2_1 = "上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")";
+        item0.field_2_2 = "累计工时："+ operteam.getTotalworkday_db();
         item0.field_2_3 = "";
-        item0.field_3_1 = "发放总额：" + operteam.getTotalsalary();
+        item0.field_3_1 = "发放总额：" + operteam.getTotalsalary_db();
         item0.field_3_2 = "";
         item0.field_3_3 = "";
         item0.isShowArraw = true;

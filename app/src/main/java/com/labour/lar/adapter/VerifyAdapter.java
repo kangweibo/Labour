@@ -58,8 +58,6 @@ public class VerifyAdapter extends BaseAdapter<Employee, VerifyAdapter.ItemHolde
             holder.txt_field2.setText("");
         }
 
-        holder.txt_field3.setText("手机:");
-
         if (!TextUtils.isEmpty(item.getPhone())){
             holder.txt_field4.setText(item.getPhone());
         } else {

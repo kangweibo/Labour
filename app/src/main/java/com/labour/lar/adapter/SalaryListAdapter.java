@@ -32,18 +32,26 @@ public class SalaryListAdapter extends BaseAdapter<Salary, SalaryListAdapter.Ite
 
         if (!TextUtils.isEmpty(item.getCreated_at())){
             holder.txt_option1.setText("日期：" + item.getCreated_at());
+        } else {
+            holder.txt_option1.setText("日期：");
         }
 
         if (!TextUtils.isEmpty(item.getCardno())){
             holder.txt_option2.setText("卡号：" + item.getCardno());
+        } else {
+            holder.txt_option2.setText("卡号：");
         }
 
         if (!TextUtils.isEmpty(item.getAmount())){
             holder.txt_option3.setText("金额：" + item.getAmount());
+        } else {
+            holder.txt_option3.setText("金额：");
         }
 
         if (!TextUtils.isEmpty(item.getMemo())){
             holder.txt_option4.setText("备注：" + item.getMemo());
+        } else {
+            holder.txt_option4.setText("备注：");
         }
     }
 
