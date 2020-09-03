@@ -16,8 +16,8 @@ public class Classteam implements Serializable {
     private String employees_num;//班工人数量
     private String ecounts;//班组总人数
     private String pm;//班组长名称
-    private String ondutynum;//上岗人数
-    private String onjobnum;//在岗人数
+    private String onjobnum;//上岗人数
+    private String ondutynum;//在岗人数
     private String totalworkday;//	累计工时
     private String totalsalary;//	发放总额
 

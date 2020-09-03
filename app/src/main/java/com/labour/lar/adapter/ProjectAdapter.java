@@ -68,7 +68,7 @@ public class ProjectAdapter extends BaseAdapter<Project, ProjectAdapter.ItemHold
         holder.txt_time_scale.setText("比例：" + time_scale + "%");
 
         if (!TextUtils.isEmpty(item.getOndutynum())){
-            holder.txt_number_people.setText("上岗人数：" + item.getOndutynum() + "(" + item.getOnjobnum() + ")");
+            holder.txt_number_people.setText("上岗人数：" + item.getOnjobnum() + "(" + item.getOndutynum() + ")");
         } else {
             holder.txt_number_people.setText("上岗人数：");
         }

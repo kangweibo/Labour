@@ -90,7 +90,7 @@ public class BanZuDetailFrag extends BaseFragment {
 
         if (classteam!= null){
             title_tv.setText(classteam.getName() + "的详情");
-            txt_number_people.setText("上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")");
+            txt_number_people.setText("上岗人数：" + classteam.getOnjobnum() + "(" + classteam.getOndutynum() + ")");
             txt_work_hours.setText("累计工时：" + classteam.getTotalworkday());
             txt_money.setText("发放总额：" + classteam.getTotalsalary());
             txt_pm.setText("班组长：" + classteam.getPm());

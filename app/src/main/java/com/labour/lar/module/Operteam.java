@@ -20,8 +20,8 @@ public class Operteam implements Serializable {
     private String classteam_num;//:  班组数
     private String all_num;//项目总人数
     private String pm;//作业队长名称
-    private String ondutynum;//上岗人数
-    private String onjobnum;//在岗人数
+    private String onjobnum;//上岗人数
+    private String ondutynum;//在岗人数
     private String duration;//工期
     private String budget;//合同总额
     private String totalworkday;//	累计工时

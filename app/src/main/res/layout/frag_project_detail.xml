@@ -91,15 +91,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/txt_time_scale"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_14"
-                    android:layout_marginTop="3dp"
-                    android:text="比例" />
-                <TextView
                     android:id="@+id/txt_money_scale"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -108,6 +99,15 @@
                     android:textSize="@dimen/text_size_14"
                     android:layout_marginTop="3dp"
                     android:text="发放比例" />
+                <TextView
+                    android:id="@+id/txt_time_scale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_14"
+                    android:layout_marginTop="3dp"
+                    android:text="时间比例" />
             </LinearLayout>
         </LinearLayout>
 <!--        <com.labour.lar.widget.RoundImageView-->

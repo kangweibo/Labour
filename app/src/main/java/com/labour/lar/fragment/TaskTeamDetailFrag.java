@@ -109,10 +109,10 @@ public class TaskTeamDetailFrag extends BaseFragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            txt_time_scale.setText("比例：" + time_scale + "%");
+            txt_time_scale.setText("时间比例：" + time_scale + "%");
 
             if (!TextUtils.isEmpty(operteam.getOndutynum())){
-                txt_number_people.setText("上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")");
+                txt_number_people.setText("上岗人数：" + operteam.getOnjobnum() + "(" + operteam.getOndutynum() + ")");
             } else {
                 txt_number_people.setText("上岗人数：");
             }

@@ -90,7 +90,7 @@ public class StaffDetailFrag extends BaseFragment {
 
         if (operteam!= null){
             title_tv.setText(operteam.getName() + "-队部详情");
-            txt_number_people.setText("上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")");
+            txt_number_people.setText("上岗人数：" + operteam.getOnjobnum_db() + "(" + operteam.getOndutynum_db() + ")");
             txt_work_hours.setText("累计工时：" + operteam.getTotalworkday_db());
             txt_money.setText("发放总额：" + operteam.getTotalsalary_db());
             txt_pm.setText("队长：" + operteam.getPm());

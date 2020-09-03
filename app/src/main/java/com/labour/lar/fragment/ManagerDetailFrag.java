@@ -86,7 +86,7 @@ public class ManagerDetailFrag extends BaseFragment {
 
         if (project!= null){
             title_tv.setText(project.getName() + "-项目部详情");
-            txt_number_people.setText("上岗人数：" + project.getOndutynum_xmb() + "(" + project.getOnjobnum_xmb() + ")");
+            txt_number_people.setText("上岗人数：" + project.getOnjobnum_xmb() + "(" + project.getOndutynum_xmb() + ")");
             txt_work_hours.setText("累计工时：" + project.getTotalworkday_xmb());
             txt_money.setText("发放总额：" + project.getTotalsalary_xmb());
             txt_pm.setText("项目经理：" + project.getPm());

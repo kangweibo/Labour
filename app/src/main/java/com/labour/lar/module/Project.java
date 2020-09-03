@@ -23,8 +23,8 @@ public class Project implements Serializable {
     private String all_num;//项目总人数
     private String pm;//项目经理名称
     private String duration;//工期
-    private String ondutynum;//上岗人数
-    private String onjobnum;//在岗人数
+    private String onjobnum;//上岗人数
+    private String ondutynum;//在岗人数
     private String totalworkday;//	累计工时
     private String totalsalary;//	发放总额
     private String onjobnum_xmb;// 项目部上岗人数

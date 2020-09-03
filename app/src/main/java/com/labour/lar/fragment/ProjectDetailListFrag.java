@@ -247,7 +247,7 @@ public class ProjectDetailListFrag extends BaseFragment {
         }
 
         item0.field_2_3 = "比例：" + time_scale + "%";
-        item0.field_3_1 = "上岗人数：" + project.getOndutynum_xmb() + "(" + project.getOnjobnum_xmb() + ")";
+        item0.field_3_1 = "上岗人数：" + project.getOnjobnum_xmb() + "(" + project.getOndutynum_xmb() + ")";
         item0.field_3_2 = "累计工时："+ project.getTotalworkday_xmb();
         item0.field_3_3 = "";
         item0.field_4_1 = "发放总额：" + project.getTotalsalary_xmb();
@@ -280,7 +280,7 @@ public class ProjectDetailListFrag extends BaseFragment {
             }
 
             item.field_2_3 = "比例：" + time_scale + "%";
-            item.field_3_1 = "上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")";
+            item.field_3_1 = "上岗人数：" + operteam.getOnjobnum() + "(" + operteam.getOndutynum() + ")";
             item.field_3_2 = "累计工时："+ operteam.getTotalworkday();
             item.field_3_3 = "";
             item.field_4_1 = "发放总额：" + operteam.getTotalsalary();

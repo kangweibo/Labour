@@ -5,10 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -38,6 +44,8 @@ public class PartyContentDetailsFrag extends BaseFragment {
         if (title != null) {
             title_tv.setText(title);
         }
+
+        web_container.setWebViewClient(new WebViewClient());
     }
 
     @Override
@@ -58,6 +66,8 @@ public class PartyContentDetailsFrag extends BaseFragment {
     private void showHtml(String detailHtml) {
         web_container.loadDataWithBaseURL(null,detailHtml,
                 "text/html", "UTF-8", null);
+//        web_container.loadDataWithBaseURL(null,getNewContent(detailHtml),
+//                "text/html", "UTF-8", null);
     }
 
     @OnClick({R.id.back_iv})
@@ -80,5 +90,22 @@ public class PartyContentDetailsFrag extends BaseFragment {
     public void onResume() {
         web_container.onResume();
         super.onResume();
+    }
+
+    /**
+     * 将html文本内容中包含img标签的图片，宽度变为屏幕宽度，高度根据宽度比例自适应
+     **/
+    public static String getNewContent(String htmltext){
+        try {
+            Document doc= Jsoup.parse(htmltext);
+            Elements elements=doc.getElementsByTag("img");
+            for (Element element : elements) {
+                element.attr("width","100%").attr("height","auto");
+            }
+
+            return doc.toString();
+        } catch (Exception e) {
+            return htmltext;
+        }
     }
 }
