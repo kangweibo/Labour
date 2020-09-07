@@ -44,6 +44,8 @@ public class TaskTeamDetailFrag extends BaseFragment {
     @BindView(R.id.vp_content)
     ViewPager vpContent;
 
+    @BindView(R.id.ly_secret)
+    View ly_secret;
     @BindView(R.id.txt_start_date)
     TextView txt_start_date;
     @BindView(R.id.txt_end_date)
@@ -111,11 +113,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
             }
             txt_time_scale.setText("时间比例：" + time_scale + "%");
 
-            if (!TextUtils.isEmpty(operteam.getOndutynum())){
-                txt_number_people.setText("上岗人数：" + operteam.getOnjobnum() + "(" + operteam.getOndutynum() + ")");
-            } else {
-                txt_number_people.setText("上岗人数：");
-            }
+            txt_number_people.setText("上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")");
 
             if (!TextUtils.isEmpty(operteam.getTotalworkday())){
                 txt_work_hours.setText("累计工时：" + operteam.getTotalworkday());
@@ -151,18 +149,17 @@ public class TaskTeamDetailFrag extends BaseFragment {
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
+        ly_secret.setVisibility(View.GONE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-//            String prole = user.getProle();
-//            if (prole != null){
-//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-//                    User.Operteam operteam = user.getOperteam();
-//                    if (operteam != null && operteam.getId() == this.operteam.getId()){
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")) {
+                    ly_secret.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 

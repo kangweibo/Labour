@@ -7,9 +7,16 @@
 
     <include layout="@layout/layout_header"/>
 
-    <WebView
-        android:id="@+id/web_container"
+<!--    <WebView-->
+<!--        android:id="@+id/web_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
+    <LinearLayout
+        android:id="@+id/ly_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
 
 </LinearLayout>

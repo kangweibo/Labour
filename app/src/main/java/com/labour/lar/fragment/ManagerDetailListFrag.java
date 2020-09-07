@@ -67,6 +67,7 @@ public class ManagerDetailListFrag extends BaseFragment {
     private Project project;
     private Employee employeeSelect;
     private BottomSelectDialog dialog;
+    private boolean isShowSecret;
 
     @Override
     public int getFragmentLayoutId() {
@@ -80,6 +81,17 @@ public class ManagerDetailListFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         projectAdapter = new EmployeeListAdapter(getContext());
         listView.setAdapter(projectAdapter);
+
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager")
+                        || prole.equals("project_manager") || prole.equals("project_quota")) {
+                    isShowSecret = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -111,6 +123,9 @@ public class ManagerDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!isShowSecret){
+                    return;
+                }
                 Employee employee = employeeList.get(position);
 
                 Intent intent = new Intent(context, GongRenDetailActivity.class);
@@ -122,19 +137,19 @@ public class ManagerDetailListFrag extends BaseFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                employeeSelect = employeeList.get(position);
-                UserCache userCache = UserCache.getInstance(getContext());
-                User user = userCache.get();
-
-                if (user != null) {
-                    String prole = user.getProle();
-
-                    if (prole != null){
-                        if (prole.equals("project_manager") || prole.equals("project_quota")){
-                            showMoreDialog();
-                        }
-                    }
-                }
+//                employeeSelect = employeeList.get(position);
+//                UserCache userCache = UserCache.getInstance(getContext());
+//                User user = userCache.get();
+//
+//                if (user != null) {
+//                    String prole = user.getProle();
+//
+//                    if (prole != null){
+//                        if (prole.equals("project_manager") || prole.equals("project_quota")){
+//                            showMoreDialog();
+//                        }
+//                    }
+//                }
 
                 return true;
             }
@@ -193,25 +208,31 @@ public class ManagerDetailListFrag extends BaseFragment {
             item.field2Content =  "发放总额：" + employee.getTotalsalary();
             item.isShowArraw = true;
 
-            UserCache userCache = UserCache.getInstance(getContext());
-            User user = userCache.get();
-
-            if (user != null) {
-                User.Project myProject = user.getProject();
-                if (myProject != null){
-                    int myProjectId = myProject.getId();
-                    int projectId = project.getId();
-                    String prole = user.getProle();
-
-                    // 本作业队队长
-                    if (prole != null && (prole.equals("project_manager") || prole.equals("project_quota"))
-                            && myProjectId == projectId){
-                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
-                            item.isShowPass = true;
-                        }
-                    }
-                }
+            if (isShowSecret){
+                item.type = 2;
+            } else {
+                item.type = 1;
             }
+
+//            UserCache userCache = UserCache.getInstance(getContext());
+//            User user = userCache.get();
+//
+//            if (user != null) {
+//                User.Project myProject = user.getProject();
+//                if (myProject != null){
+//                    int myProjectId = myProject.getId();
+//                    int projectId = project.getId();
+//                    String prole = user.getProle();
+//
+//                    // 本作业队队长
+//                    if (prole != null && (prole.equals("project_manager") || prole.equals("project_quota"))
+//                            && myProjectId == projectId){
+//                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
+//                            item.isShowPass = true;
+//                        }
+//                    }
+//                }
+//            }
 
             list.add(item);
         }

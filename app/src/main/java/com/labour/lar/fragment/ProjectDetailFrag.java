@@ -54,6 +54,8 @@ public class ProjectDetailFrag extends BaseFragment {
 //    @BindView(R.id.photo_iv)
 //    RoundImageView photo_iv;
 
+    @BindView(R.id.ly_secret)
+    View ly_secret;
     @BindView(R.id.txt_start_date)
     TextView txt_start_date;
     @BindView(R.id.txt_end_date)
@@ -127,11 +129,7 @@ public class ProjectDetailFrag extends BaseFragment {
             }
             txt_time_scale.setText("时间比例：" + time_scale + "%");
 
-            if (!TextUtils.isEmpty(project.getOndutynum())){
-                txt_number_people.setText("上岗人数：" + project.getOnjobnum() + "(" + project.getOndutynum() + ")");
-            } else {
-                txt_number_people.setText("上岗人数：");
-            }
+            txt_number_people.setText("上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")");
 
             if (!TextUtils.isEmpty(project.getTotalworkday())){
                 txt_work_hours.setText("累计工时：" + project.getTotalworkday());
@@ -166,18 +164,16 @@ public class ProjectDetailFrag extends BaseFragment {
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
+        ly_secret.setVisibility(View.GONE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-//            String prole = user.getProle();
-//            if (prole != null) {
-//                if (prole.equals("project_manager") || prole.equals("project_quota")) {
-//                    User.Project project = user.getProject();
-//                    if (project != null && project.getId() == this.project.getId()) {
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
+            String prole = user.getProle();
+            if (prole != null) {
+                if (prole.equals("ent_manager") ||prole.equals("project_manager") || prole.equals("project_quota")) {
+                    ly_secret.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 

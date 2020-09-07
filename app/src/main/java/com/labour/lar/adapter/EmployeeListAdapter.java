@@ -35,6 +35,12 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
         holder.field2_tv.setText(item.field2);
         holder.field2_content_tv.setText(item.field2Content);
 
+        if (item.type == 1){
+            holder.field2_rl.setVisibility(View.GONE);
+        } else {
+            holder.field2_rl.setVisibility(View.VISIBLE);
+        }
+
         holder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
 //        holder.btn_examine.setVisibility(item.isShowPass?View.VISIBLE:View.GONE);
 
@@ -56,6 +62,7 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
 
         public boolean isShowArraw;
         public boolean isShowPass;
+        public int type;
     }
 
     class ItemHolder {

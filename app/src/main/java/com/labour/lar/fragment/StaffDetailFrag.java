@@ -41,18 +41,8 @@ public class StaffDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-//    @BindView(R.id.name_tv)
-//    TextView name_tv;
-//    @BindView(R.id.company_tv)
-//    TextView company_tv;
-//    @BindView(R.id.type_tv)
-//    TextView type_tv;
-//    @BindView(R.id.txt_team)
-//    TextView txt_team;
-//
-//    @BindView(R.id.photo_iv)
-//    RoundImageView photo_iv;
-
+    @BindView(R.id.ly_secret)
+    View ly_secret;
     @BindView(R.id.txt_number_people)
     TextView txt_number_people;
     @BindView(R.id.txt_work_hours)
@@ -90,52 +80,25 @@ public class StaffDetailFrag extends BaseFragment {
 
         if (operteam!= null){
             title_tv.setText(operteam.getName() + "-队部详情");
-            txt_number_people.setText("上岗人数：" + operteam.getOnjobnum_db() + "(" + operteam.getOndutynum_db() + ")");
+            txt_number_people.setText("上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")");
             txt_work_hours.setText("累计工时：" + operteam.getTotalworkday_db());
             txt_money.setText("发放总额：" + operteam.getTotalsalary_db());
             txt_pm.setText("队长：" + operteam.getPm());
-
-//            name_tv.setText("队部");
-//
-//            if (!TextUtils.isEmpty(operteam.getName())){
-//                txt_team.setText(operteam.getName());
-//            } else {
-//                txt_team.setText("");
-//            }
-//
-//            if (!TextUtils.isEmpty(operteam.getPm())){
-//                company_tv.setText("队长：" + operteam.getPm());
-//            } else {
-//                company_tv.setText("队长：");
-//            }
-//
-//            if (!TextUtils.isEmpty(operteam.getStaff_num())){
-//                type_tv.setText("花名册：" + operteam.getStaff_num() + "人");
-//            } else {
-//                type_tv.setText("花名册：0人");
-//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
 
         User user = UserCache.getInstance(getContext()).get();
+        ly_secret.setVisibility(View.GONE);
+
         if (user != null) {
-//            String prole = user.getProle();
-//            if (prole != null) {
-//                if (prole.equals("project_manager") || prole.equals("project_quota")) {
-//                    User.Project project = user.getProject();
-//                    if (project != null && project.getId() == this.operteam.getProject_id()) {
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//
-//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-//                    User.Operteam operteam = user.getOperteam();
-//                    if (operteam != null && operteam.getId() == this.operteam.getId()){
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")) {
+                    ly_secret.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 

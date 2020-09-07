@@ -21,10 +21,12 @@ import com.labour.lar.activity.TaskTeamAddActivity;
 import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Manager;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.Project;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
@@ -67,6 +69,8 @@ public class ProjectDetailListFrag extends BaseFragment {
     private Operteam operteamSelect;
 
     private BottomSelectDialog dialog;
+    private boolean isShowProjectSecret;
+    private boolean isShowOperteamSecret;
 
     @Override
     public int getFragmentLayoutId() {
@@ -80,6 +84,21 @@ public class ProjectDetailListFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         projectAdapter = new ProjectDetailListAdapter(getContext());
         listView.setAdapter(projectAdapter);
+
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null) {
+                if (prole.equals("ent_manager") ||prole.equals("project_manager") || prole.equals("project_quota")) {
+                    isShowProjectSecret = true;
+                    isShowOperteamSecret = true;
+                }
+
+                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                    isShowOperteamSecret = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -119,29 +138,29 @@ public class ProjectDetailListFrag extends BaseFragment {
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (position == 0) {
+//
+//                } else {
+//                    operteamSelect = operteamList.get(position-1);
+//                    UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+//                    if (userInfo != null) {
+//                        String prole = userInfo.getProle();
+//
+//                        if (prole != null){
+//                            if (prole.equals("project_manager") || prole.equals("project_quota")){
+//                                showMoreDialog();
+//                            }
+//                        }
+//                    }
+//                }
+//                return true;
+//            }
+//        });
 
-                } else {
-                    operteamSelect = operteamList.get(position-1);
-                    UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
-                    if (userInfo != null) {
-                        String prole = userInfo.getProle();
-
-                        if (prole != null){
-                            if (prole.equals("project_manager") || prole.equals("project_quota")){
-                                showMoreDialog();
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        });
-
-        getManagers();
+//        getManagers();
         getOperteam();
     }
 
@@ -149,48 +168,52 @@ public class ProjectDetailListFrag extends BaseFragment {
         this.project = project;
     }
 
-    private void getManagers() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id",project.getId());
-        String jsonParams =jsonObject.toJSONString();
-
-        String url = Constants.HTTP_BASE + "/api/managers";
-        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
-        dialog.show();
-
-        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-            @Override
-            public void onSuccess(Response<String> response) {
-                dialog.dismiss();
-                AjaxResult jr = new AjaxResult(response.body());
-                if(jr.getSuccess() == 1){
-                    list_refresh.finishRefresh(true);
-
-                    JSONArray jsonArray = jr.getJSONArrayData();
-                    List<Manager> managers = JSON.parseArray(JSON.toJSONString(jsonArray), Manager.class);
-
-                    managerList.clear();
-                    managerList.addAll(managers);
-                    showOperteams();
-                } else {
-                    list_refresh.finishRefresh(false);
-                    AppToast.show(getContext(),"获取项目部信息失败!");
-                }
-            }
-            @Override
-            public void onError(Response<String> response) {
-                dialog.dismiss();
-                list_refresh.finishRefresh(false);
-                AppToast.show(getContext(),"获取项目部信息出错!");
-            }
-        });
-    }
+//    private void getManagers() {
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("id",project.getId());
+//        String jsonParams =jsonObject.toJSONString();
+//
+//        String url = Constants.HTTP_BASE + "/api/managers";
+//        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+//        dialog.show();
+//
+//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+//            @Override
+//            public void onSuccess(Response<String> response) {
+//                dialog.dismiss();
+//                AjaxResult jr = new AjaxResult(response.body());
+//                if(jr.getSuccess() == 1){
+//                    list_refresh.finishRefresh(true);
+//
+//                    JSONArray jsonArray = jr.getJSONArrayData();
+//                    List<Manager> managers = JSON.parseArray(JSON.toJSONString(jsonArray), Manager.class);
+//
+//                    managerList.clear();
+//                    managerList.addAll(managers);
+//                    showOperteams();
+//                } else {
+//                    list_refresh.finishRefresh(false);
+//                    AppToast.show(getContext(),"获取项目部信息失败!");
+//                }
+//            }
+//            @Override
+//            public void onError(Response<String> response) {
+//                dialog.dismiss();
+//                list_refresh.finishRefresh(false);
+//                AppToast.show(getContext(),"获取项目部信息出错!");
+//            }
+//        });
+//    }
     private void getOperteam() {
+        User user = UserCache.getInstance(getContext()).get();
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",project.getId());
+        jsonObject.put("userid",user.getId());
+        jsonObject.put("dtype",user.getProle());
         String jsonParams =jsonObject.toJSONString();
 
-        String url = Constants.HTTP_BASE + "/api/operteams";
+        String url = Constants.HTTP_BASE + "/api/user_operteams";
         ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
         dialog.show();
 
@@ -246,15 +269,18 @@ public class ProjectDetailListFrag extends BaseFragment {
             e.printStackTrace();
         }
 
-        item0.field_2_3 = "比例：" + time_scale + "%";
-        item0.field_3_1 = "上岗人数：" + project.getOnjobnum_xmb() + "(" + project.getOndutynum_xmb() + ")";
+        item0.field_3_1 = "上岗人数：" + project.getOndutynum_xmb() + "(" + project.getOnjobnum_xmb() + ")";
         item0.field_3_2 = "累计工时："+ project.getTotalworkday_xmb();
-        item0.field_3_3 = "";
-        item0.field_4_1 = "发放总额：" + project.getTotalsalary_xmb();
-        item0.field_4_2 = "";
-        item0.field_4_3 = "";
+
+        item0.field_4_1 = "时间比例：" + time_scale + "%";
+        item0.field_4_2 = "发放总额：" + project.getTotalsalary_xmb();
         item0.isShowArraw = true;
-        item0.type = 4;
+
+        if (isShowProjectSecret){
+            item0.type = 4;
+        } else {
+            item0.type = 2;
+        }
 
         list.add(item0);
 
@@ -279,12 +305,11 @@ public class ProjectDetailListFrag extends BaseFragment {
                 e.printStackTrace();
             }
 
-            item.field_2_3 = "比例：" + time_scale + "%";
-            item.field_3_1 = "上岗人数：" + operteam.getOnjobnum() + "(" + operteam.getOndutynum() + ")";
+            item.field_3_1 = "上岗人数：" + operteam.getOndutynum() + "(" + operteam.getOnjobnum() + ")";
             item.field_3_2 = "累计工时："+ operteam.getTotalworkday();
-            item.field_3_3 = "";
-            item.field_4_1 = "发放总额：" + operteam.getTotalsalary();
-            item.field_4_2 = "合同总额：" + operteam.getBudget();
+
+            item.field_4_1 = "合同总额：" + operteam.getBudget();
+            item.field_4_2 = "发放总额：" + operteam.getTotalsalary();
 
             String totalsalary = operteam.getTotalsalary();
             String budget = operteam.getBudget();
@@ -298,9 +323,14 @@ public class ProjectDetailListFrag extends BaseFragment {
                 e.printStackTrace();
             }
 
-            item.field_4_3 = "比例：" + scale + "%";
+            item.field_5_1 = "时间比例：" + time_scale + "%";
+            item.field_5_2 = "发放比例：" + scale + "%";
             item.isShowArraw = true;
-            item.type = 4;
+            if (isShowOperteamSecret){
+                item.type = 5;
+            } else {
+                item.type = 2;
+            }
 
             list.add(item);
         }

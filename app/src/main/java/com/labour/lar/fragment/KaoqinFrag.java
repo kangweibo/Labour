@@ -86,6 +86,9 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
      */
     private int signState;
 
+    // 是否在正在检测中
+    private boolean isChecking = false;
+
     // 是否在围栏中
     private boolean insideFence = false;
     // 是否匹配人脸
@@ -371,6 +374,11 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             return;
         }
 
+        if(isChecking){
+            AppToast.show(context,"正在检测围栏，请稍后！");
+            return;
+        }
+
         if(insideFence){
             AppToast.show(context,"当前位置不在围栏内！");
             return;
@@ -381,17 +389,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         String clockintime = sf2.format(new Date());
 
         int userId =userInfo.getId();
-//        String role = user.getProle();
-//        int employee_id = userId;
-//        int staff_id = 0;
-//        int manager_id = 0;
-//        if(role == Constants.ROLE.employee){//工人
-//            employee_id = 0;
-//        } else if(role == Constants.ROLE.staff){
-//            staff_id = 0;
-//        } else if(role == Constants.ROLE.manager){
-//            manager_id = 0;
-//        }
 
         final Map<String,String> param = new HashMap<>();
         param.put("usertype",userInfo.getProle());
@@ -399,9 +396,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         param.put("clockdate",clockdate);
         param.put("clockintime",clockintime);
         param.put("clockingeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
-//        param.put("employee_id",employee_id+"");//工人id
-//        param.put("staff_id",staff_id+"");//作业队成员id
-//        param.put("manager_id",manager_id+"");//项目成员id
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/clockin";
@@ -600,6 +594,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         String url = Constants.HTTP_BASE + "/api/if_infence";
         ProgressDialog dialog = ProgressDialog.createDialog(context);
         dialog.show();
+        isChecking = true;
 
         OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
             @Override
@@ -622,11 +617,14 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                     AppToast.show(context,"围栏检测失败!");
                     AppToast.show(context,jr.getMsg());
                 }
+
+                isChecking = false;
             }
             @Override
             public void onError(Response<String> response) {
                 dialog.dismiss();
                 AppToast.show(context,"围栏检测错误!");
+                isChecking = false;
             }
         });
     }

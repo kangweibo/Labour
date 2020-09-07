@@ -22,9 +22,11 @@ import com.labour.lar.activity.BanZuDetailActivity;
 import com.labour.lar.activity.StaffDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
 import com.labour.lar.module.Operteam;
+import com.labour.lar.module.User;
 import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
@@ -68,6 +70,9 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     private Operteam operteam;
     private BottomSelectDialog dialog;
 
+    private boolean isShowOperteamSecret;
+    private boolean isShowClassteamSecret;
+
     @Override
     public int getFragmentLayoutId() {
         return R.layout.frag_project_detail_list;
@@ -80,6 +85,22 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         projectAdapter = new ProjectDetailListAdapter(getContext());
         listView.setAdapter(projectAdapter);
+
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager") ||prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")) {
+                    isShowOperteamSecret = true;
+                    isShowClassteamSecret = true;
+                }
+
+                if (prole.equals("classteam_manager")){
+                    isShowClassteamSecret = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -148,15 +169,19 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     }
 
     private void getClassteam() {
+        User user = UserCache.getInstance(getContext()).get();
+
         if (operteam == null){
             return;
         }
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",operteam.getId());
+        jsonObject.put("userid",user.getId());
+        jsonObject.put("dtype",user.getProle());
         String jsonParams =jsonObject.toJSONString();
 
-        String url = Constants.HTTP_BASE + "/api/classteams";
+        String url = Constants.HTTP_BASE + "/api/user_classteams";
         ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
         dialog.show();
 
@@ -193,17 +218,19 @@ public class TaskTeamDetailListFrag extends BaseFragment {
 
         ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
         item0.field_1_1 = "作业队队部";;
-        item0.field_1_2 = "班组数：" + operteam.getClassteam_num() +"个";
-        item0.field_1_3 = "";
-        item0.field_2_1 = "上岗人数：" + operteam.getOnjobnum_db() + "(" + operteam.getOndutynum_db() + ")";
+        item0.field_1_2 = "队长：" + operteam.getPm();
+        item0.field_1_3 = "班组数：" + operteam.getClassteam_num() +"个";
+        item0.field_2_1 = "上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")";
         item0.field_2_2 = "累计工时："+ operteam.getTotalworkday_db();
-        item0.field_2_3 = "";
         item0.field_3_1 = "发放总额：" + operteam.getTotalsalary_db();
         item0.field_3_2 = "";
-        item0.field_3_3 = "";
         item0.isShowArraw = true;
-        item0.type = 3;
 
+        if (isShowOperteamSecret){
+            item0.type = 3;
+        } else {
+            item0.type = 2;
+        }
         list.add(item0);
 
         for(Classteam classteam : classteamList){
@@ -211,14 +238,16 @@ public class TaskTeamDetailListFrag extends BaseFragment {
             item.field_1_1 = classteam.getName();
             item.field_1_2 = "";
             item.field_1_3 = "";
-            item.field_2_1 = "上岗人数：" + classteam.getOnjobnum() + "(" + classteam.getOndutynum() + ")";
-            item.field_2_2 = "累计工时："+ classteam.getTotalworkday();
-            item.field_2_3 = "";
+            item.field_2_1 = "上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")";
+            item.field_2_2 = "班组长：" + classteam.getPm();
             item.field_3_1 = "发放总额：" + classteam.getTotalsalary();
-            item.field_3_2 = "班组长：" + classteam.getPm();
-            item.field_3_3 = "";
+            item.field_3_2 = "累计工时："+ classteam.getTotalworkday();
             item.isShowArraw = true;
-            item.type = 3;
+            if (isShowClassteamSecret){
+                item.type = 3;
+            } else {
+                item.type = 2;
+            }
 
             list.add(item);
         }

@@ -151,7 +151,6 @@ public class MemberAddActivity extends BaseActivity {
             if (prole.equals("project_manager") || prole.equals("project_quota")){
                 proles.add("作业队长");
                 proles.add("作业队定额员");
-            } else {
                 proles.add("作业队成员");
             }
 

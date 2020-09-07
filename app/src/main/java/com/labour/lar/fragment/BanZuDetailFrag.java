@@ -7,24 +7,17 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.astuetz.PagerSlidingTabStrip;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MyFragmentPagerAdapter;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
 import com.labour.lar.module.User;
-import com.labour.lar.module.UserInfo;
-import com.labour.lar.widget.RoundImageView;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -40,18 +33,8 @@ public class BanZuDetailFrag extends BaseFragment {
     @BindView(R.id.right_header_btn)
     TextView right_header_btn;
 
-//    @BindView(R.id.name_tv)
-//    TextView name_tv;
-//    @BindView(R.id.company_tv)
-//    TextView company_tv;
-//    @BindView(R.id.type_tv)
-//    TextView type_tv;
-//    @BindView(R.id.txt_team)
-//    TextView txt_team;
-//
-//    @BindView(R.id.photo_iv)
-//    RoundImageView photo_iv;
-
+    @BindView(R.id.ly_secret)
+    View ly_secret;
     @BindView(R.id.txt_number_people)
     TextView txt_number_people;
     @BindView(R.id.txt_work_hours)
@@ -86,60 +69,31 @@ public class BanZuDetailFrag extends BaseFragment {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-//        photo_iv.setImageResource(R.mipmap.picture);
-
         if (classteam!= null){
             title_tv.setText(classteam.getName() + "的详情");
-            txt_number_people.setText("上岗人数：" + classteam.getOnjobnum() + "(" + classteam.getOndutynum() + ")");
+            txt_number_people.setText("上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")");
             txt_work_hours.setText("累计工时：" + classteam.getTotalworkday());
             txt_money.setText("发放总额：" + classteam.getTotalsalary());
             txt_pm.setText("班组长：" + classteam.getPm());
-
-//            if (!TextUtils.isEmpty(classteam.getName())){
-//                title_tv.setText(classteam.getOperteamname()+"-"+classteam.getName() + "详情");
-//            }
-//            if (!TextUtils.isEmpty(classteam.getName())){
-//                name_tv.setText(classteam.getName());
-//            } else {
-//                name_tv.setText("");
-//            }
-//            if (!TextUtils.isEmpty(classteam.getOperteamname())){
-//                txt_team.setText(classteam.getOperteamname());
-//            } else {
-//                txt_team.setText("");
-//            }
-//            if (!TextUtils.isEmpty(classteam.getPm())){
-//                company_tv.setText("班组长：" + classteam.getPm());
-//            } else {
-//                company_tv.setText("班组长：");
-//            }
-//            if (!TextUtils.isEmpty(classteam.getEmployees_num())){
-//                type_tv.setText("花名册：" + classteam.getEmployees_num() + "人");
-//            } else {
-//                type_tv.setText("花名册：0人");
-//            }
         }
 
         right_header_btn.setVisibility(View.INVISIBLE);
+        ly_secret.setVisibility(View.GONE);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
-//            String prole = user.getProle();
-//            if (prole != null){
-//                if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-//                    User.Operteam operteam = user.getOperteam();
-//                    if (operteam != null && operteam.getId() == classteam.getOperteam_id()){
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//
-//                if (prole.equals("classteam_manager")){
-//                    User.Classteam team = user.getClassteam();
-//                    if (team != null && team.getId() == classteam.getId()) {
-//                        right_header_btn.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager")
+                        || prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")
+                        || prole.equals("classteam_manager")) {
+                    User.Project project = user.getProject();
+                    if (project != null && String.valueOf(project.getId()).equals(project_id)) {
+                        ly_secret.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
         }
     }
 
@@ -149,6 +103,7 @@ public class BanZuDetailFrag extends BaseFragment {
         fm = this.getChildFragmentManager();
         banZuDetailListFrag = new BanZuDetailListFrag();
         banZuDetailListFrag.setClassteam(classteam);
+        banZuDetailListFrag.setProjectId(project_id);
 
         GisMapFrag gisMapFrag = new GisMapFrag();
         gisMapFrag.setProjectId(project_id);

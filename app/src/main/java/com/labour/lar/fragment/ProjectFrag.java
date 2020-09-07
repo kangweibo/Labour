@@ -34,7 +34,11 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -60,8 +64,9 @@ public class ProjectFrag extends BaseFragment {
 
     ProjectAdapter projectAdapter;
     List<Project> projectList = new ArrayList<>();
+    private List<ProjectAdapter.ListItem> list = new ArrayList<>();;
     Handler handler;
-
+    boolean isShowSecret;
 
     @Override
     public int getFragmentLayoutId() {
@@ -86,10 +91,8 @@ public class ProjectFrag extends BaseFragment {
             String prole = user.getProle();
 
             if (prole != null){
-                if ((prole.equals("project_manager") || prole.equals("root"))){
-                    right_header_btn.setVisibility(View.VISIBLE);
-                } else {
-                    right_header_btn.setVisibility(View.INVISIBLE);
+                if (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota")){
+                    isShowSecret = true;
                 }
             }
         }
@@ -112,7 +115,7 @@ public class ProjectFrag extends BaseFragment {
         });
         list_refresh.setEnableLoadMore(false);
 
-        projectAdapter.setList(projectList);
+        projectAdapter.setList(list);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -172,7 +175,8 @@ public class ProjectFrag extends BaseFragment {
 
                     projectList.clear();
                     projectList.addAll(projects);
-                    projectAdapter.notifyDataSetChanged();
+
+                    showProjects();
                 } else {
                     list_refresh.finishRefresh(false);
                     AppToast.show(getContext(),"获取项目信息失败!");
@@ -187,6 +191,64 @@ public class ProjectFrag extends BaseFragment {
         });
     }
 
+    private void showProjects() {
+        list.clear();
+        DecimalFormat df = new DecimalFormat("0.0");
+        String time_scale = "0.0";
+
+        for(Project project : projectList){
+            ProjectAdapter.ListItem item = new ProjectAdapter.ListItem();
+            item.field_1_1 = project.getName();
+            item.field_1_2 = "在建";
+            item.field_2_1 = "开工日期：" + project.getStartdate();
+            item.field_2_2 = "结束日期：" + project.getEnddate();
+
+            time_scale = "0.0";
+            String strDate = project.getStartdate();
+            String duration = project.getDuration();
+
+            try {
+                double dDuratio = Double.parseDouble(duration);
+                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(strDate);
+                Date now = new Date();
+                double s = (now.getTime() - date.getTime()) / (24 * 60 * 60 * 1000.0) / dDuratio;
+                time_scale = df.format(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            item.field_3_1 = "上岗人数：" + project.getOndutynum() + "(" + project.getOnjobnum() + ")";
+            item.field_3_2 = "累计工时："+ project.getTotalworkday();
+
+            item.field_4_1 = "合同总额：" + project.getBudget();
+            item.field_4_2 = "发放总额：" + project.getTotalsalary();
+
+            String totalsalary = project.getTotalsalary();
+            String budget = project.getBudget();
+            String scale = "0.0";
+            try {
+                double dSalary = Double.parseDouble(totalsalary);
+                double dBudget = Double.parseDouble(budget);
+                double s = dSalary * 100 / dBudget;
+                scale = df.format(s);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            item.field_5_1 = "时间比例：" + time_scale + "%";
+            item.field_5_2 = "发放比例：" + scale + "%";
+
+            if (isShowSecret){
+                item.type = 5;
+            } else {
+                item.type = 3;
+            }
+
+            list.add(item);
+        }
+
+        projectAdapter.notifyDataSetChanged();
+    }
     private void addProject() {
         Intent intent = new Intent(context, ProjectAddActivity.class);
         startActivity(intent);

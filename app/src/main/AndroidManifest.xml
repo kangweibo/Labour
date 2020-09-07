@@ -251,8 +251,9 @@
         <activity
             android:name="com.labour.lar.activity.PartyContentDetailActivity"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"
-            android:hardwareAccelerated="true"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
 
         <activity android:name="com.baidu.ocr.ui.camera.CameraActivity"
             android:configChanges="screenSize|orientation"

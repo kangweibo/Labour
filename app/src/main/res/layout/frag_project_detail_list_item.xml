@@ -40,7 +40,7 @@
             <TextView android:id="@+id/field_1_3_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2.6"
+                android:layout_weight="2.9"
                 android:textColor="@color/content"
                 android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"/>
@@ -70,13 +70,6 @@
                 android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"/>
 
-            <TextView android:id="@+id/field_2_3_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:textColor="@color/content"
-                android:textSize="@dimen/text_size_details_item"
-                android:text="共：500人"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/field_r3"
@@ -99,14 +92,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4.0"
-                android:textColor="@color/content"
-                android:textSize="@dimen/text_size_details_item"
-                android:text="共：500人"/>
-
-            <TextView android:id="@+id/field_3_3_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:textColor="@color/content"
                 android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"/>
@@ -136,13 +121,31 @@
                 android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"/>
 
-            <TextView android:id="@+id/field_4_3_tv"
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/field_r5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="@dimen/common_details_margin_left">
+
+            <TextView android:id="@+id/field_5_1_tv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="4.0"
                 android:textColor="@color/content"
                 android:textSize="@dimen/text_size_details_item"
-                android:text="比例：80%"/>
+                android:text="项目部"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+
+            <TextView android:id="@+id/field_5_2_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4.0"
+                android:textColor="@color/content"
+                android:textSize="@dimen/text_size_details_item"
+                android:text="共：500人"/>
         </LinearLayout>
     </LinearLayout>
 

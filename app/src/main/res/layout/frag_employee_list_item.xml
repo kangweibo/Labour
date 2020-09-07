@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/common_blue"
-                android:textSize="@dimen/text_size_16"
+                android:textSize="@dimen/text_size_details_item"
                 android:text="项目部"
                 android:singleLine="true"
                 android:ellipsize="end"/>
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/content"
-                android:textSize="@dimen/text_size_16"
+                android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/content"
-                android:textSize="@dimen/text_size_16"
+                android:textSize="@dimen/text_size_details_item"
                 android:text="项目部"
                 android:singleLine="true"
                 android:ellipsize="end"/>
@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/content"
-                android:textSize="@dimen/text_size_16"
+                android:textSize="@dimen/text_size_details_item"
                 android:text="共：500人"
                 android:layout_alignParentRight="true"/>
         </RelativeLayout>

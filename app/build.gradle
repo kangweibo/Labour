@@ -8,8 +8,8 @@ android {
         applicationId "com.labour.lar"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
-        versionName "v2.0.2"
+        versionCode 5
+        versionName "v2.0.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -110,4 +110,6 @@ dependencies {
 
     // web
     implementation 'com.just.agentweb:agentweb:4.1.2'
+
+    implementation 'org.jsoup:jsoup:1.10.2'
 }

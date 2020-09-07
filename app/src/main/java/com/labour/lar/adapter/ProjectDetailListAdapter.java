@@ -36,6 +36,9 @@ public class ProjectDetailListAdapter extends BaseAdapter<ProjectListItemWarp.Li
             case 4:
                 ProjectListItemWarp.showFour(holder, item);
                 break;
+            case 5:
+                ProjectListItemWarp.showFive(holder, item);
+                break;
         }
     }
 }

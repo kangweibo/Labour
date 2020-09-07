@@ -67,6 +67,7 @@ public class StaffDetailListFrag extends BaseFragment {
     private Operteam operteam;
     private Employee employeeSelect;
     private BottomSelectDialog dialog;
+    private boolean isShowSecret;
 
     @Override
     public int getFragmentLayoutId() {
@@ -80,6 +81,17 @@ public class StaffDetailListFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         projectAdapter = new EmployeeListAdapter(getContext());
         listView.setAdapter(projectAdapter);
+
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")) {
+                    isShowSecret = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -111,6 +123,10 @@ public class StaffDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!isShowSecret){
+                    return;
+                }
+
                 Employee employee = employeeList.get(position);
 
                 Intent intent = new Intent(context, GongRenDetailActivity.class);
@@ -122,24 +138,24 @@ public class StaffDetailListFrag extends BaseFragment {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                employeeSelect = employeeList.get(position);
-
-                UserCache userCache = UserCache.getInstance(getContext());
-                User user = userCache.get();
-                if (user != null) {
-                    String prole = user.getProle();
-                    String personProle = employeeSelect.getProle();
-
-                    if (prole != null && personProle != null){
-                        if ((prole.equals("project_manager") || prole.equals("project_quota"))
-                            && (personProle.equals("operteam_manager") || personProle.equals("operteam_quota"))){
-                            showMoreDialog();
-                        } else if ((prole.equals("operteam_manager") || prole.equals("operteam_quota"))
-                                && personProle.equals("staff")) {
-                            showMoreDialog();
-                        }
-                    }
-                }
+//                employeeSelect = employeeList.get(position);
+//
+//                UserCache userCache = UserCache.getInstance(getContext());
+//                User user = userCache.get();
+//                if (user != null) {
+//                    String prole = user.getProle();
+//                    String personProle = employeeSelect.getProle();
+//
+//                    if (prole != null && personProle != null){
+//                        if ((prole.equals("project_manager") || prole.equals("project_quota"))
+//                            && (personProle.equals("operteam_manager") || personProle.equals("operteam_quota"))){
+//                            showMoreDialog();
+//                        } else if ((prole.equals("operteam_manager") || prole.equals("operteam_quota"))
+//                                && personProle.equals("staff")) {
+//                            showMoreDialog();
+//                        }
+//                    }
+//                }
 
                 return true;
             }
@@ -198,25 +214,31 @@ public class StaffDetailListFrag extends BaseFragment {
             item.field2Content =  "发放总额：" + employee.getTotalsalary();
             item.isShowArraw = true;
 
-            UserCache userCache = UserCache.getInstance(getContext());
-            User user = userCache.get();
-
-            if (user != null) {
-                User.Operteam myOperteam = user.getOperteam();
-                if (myOperteam != null){
-                    int myOperteamId = myOperteam.getId();
-                    int operteamId = operteam.getId();
-                    String prole = user.getProle();
-
-                    // 本作业队队长
-                    if (prole != null && (prole.equals("operteam_manager") || prole.equals("operteam_quota"))
-                            && myOperteamId == operteamId){
-                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
-                            item.isShowPass = true;
-                        }
-                    }
-                }
+            if (isShowSecret){
+                item.type = 2;
+            } else {
+                item.type = 1;
             }
+
+//            UserCache userCache = UserCache.getInstance(getContext());
+//            User user = userCache.get();
+//
+//            if (user != null) {
+//                User.Operteam myOperteam = user.getOperteam();
+//                if (myOperteam != null){
+//                    int myOperteamId = myOperteam.getId();
+//                    int operteamId = operteam.getId();
+//                    String prole = user.getProle();
+//
+//                    // 本作业队队长
+//                    if (prole != null && (prole.equals("operteam_manager") || prole.equals("operteam_quota"))
+//                            && myOperteamId == operteamId){
+//                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
+//                            item.isShowPass = true;
+//                        }
+//                    }
+//                }
+//            }
 
             list.add(item);
         }

@@ -62,9 +62,11 @@ public class BanZuDetailListFrag extends BaseFragment {
     private List<Employee> employeeList = new ArrayList<>();
     private List<EmployeeListAdapter.ListItem> list = new ArrayList<>();
 
+    private String project_id;
     private Classteam classteam;
     private Employee employeeSelect;
     private BottomSelectDialog dialog;
+    private boolean isShowSecret;
 
     @Override
     public int getFragmentLayoutId() {
@@ -77,6 +79,19 @@ public class BanZuDetailListFrag extends BaseFragment {
         noresult_view.setVisibility(View.GONE);
         employeeListAdapter = new EmployeeListAdapter(getContext());
         listView.setAdapter(employeeListAdapter);
+
+        User user = UserCache.getInstance(getContext()).get();
+        if (user != null) {
+            String prole = user.getProle();
+            if (prole != null){
+                if (prole.equals("ent_manager")
+                        ||prole.equals("project_manager") || prole.equals("project_quota")
+                        || prole.equals("operteam_manager") || prole.equals("operteam_quota")
+                        || prole.equals("classteam_manager")) {
+                    isShowSecret = true;
+                }
+            }
+        }
     }
 
     @Override
@@ -109,6 +124,10 @@ public class BanZuDetailListFrag extends BaseFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (!isShowSecret){
+                    return;
+                }
+
                 Employee employee = employeeList.get(position);
 
                 Intent intent = new Intent(context, GongRenDetailActivity.class);
@@ -196,25 +215,31 @@ public class BanZuDetailListFrag extends BaseFragment {
             item.field2Content =  "发放总额：" + employee.getTotalsalary();
             item.isShowArraw = true;
 
-            UserCache userCache = UserCache.getInstance(getContext());
-            User user = userCache.get();
-
-            if (user != null) {
-                User.Classteam myClassteam = user.getClassteam();
-                if (myClassteam != null){
-                    int myClassteamId = myClassteam.getId();
-                    int classteamId = classteam.getId();
-                    String prole = user.getProle();
-
-                    // 本班组组长
-                    if (prole != null && prole.equals("classteam_manager")
-                            && myClassteamId == classteamId){
-                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
-                            item.isShowPass = true;
-                        }
-                    }
-                }
+            if (isShowSecret){
+                item.type = 2;
+            } else {
+                item.type = 1;
             }
+
+//            UserCache userCache = UserCache.getInstance(getContext());
+//            User user = userCache.get();
+//
+//            if (user != null) {
+//                User.Classteam myClassteam = user.getClassteam();
+//                if (myClassteam != null){
+//                    int myClassteamId = myClassteam.getId();
+//                    int classteamId = classteam.getId();
+//                    String prole = user.getProle();
+//
+//                    // 本班组组长
+//                    if (prole != null && prole.equals("classteam_manager")
+//                            && myClassteamId == classteamId){
+//                        if (employee.getStatus() == null || !employee.getStatus().equals("已审核")) {
+//                            item.isShowPass = true;
+//                        }
+//                    }
+//                }
+//            }
 
             list.add(item);
         }
@@ -228,6 +253,10 @@ public class BanZuDetailListFrag extends BaseFragment {
      */
     public void setClassteam(Classteam classteam) {
         this.classteam = classteam;
+    }
+
+    public void setProjectId(String project_id){
+        this.project_id = project_id;
     }
 
     private void showMoreDialog(){

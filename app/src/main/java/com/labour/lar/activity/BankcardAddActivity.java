@@ -226,8 +226,8 @@ public class BankcardAddActivity extends BaseActivity {
 
         param.put("id",user.getId()+"");
         param.put("prole",user.getProle());
-        param.put("bankcard_num",bankcard_num);
-        param.put("bankname",bankname);
+        param.put("bakncard",bankcard_num);
+        param.put("bank",bankname);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/user_bankinfo_update";

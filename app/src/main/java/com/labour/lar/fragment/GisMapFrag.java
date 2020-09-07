@@ -124,7 +124,8 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 
         if (user != null){
             String prole = user.getProle();
-            if (!TextUtils.isEmpty(prole) && (prole.equals("project_manager") || prole.equals("project_quota"))){
+            if (!TextUtils.isEmpty(prole) &&
+                    (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota"))){
                 isCanSet = true;
             } else {
                 isCanSet = false;
