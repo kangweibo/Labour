@@ -14,6 +14,7 @@ public class Safety implements Serializable {
     private String created_at;//:  "2020-05-13T03:02:29.000Z",
     private String updated_at;//:  "2020-05-13T03:02:29.000Z",
     private String safetype;//
+    private boolean isvideo;
 
     public int getId() {
         return id;
@@ -77,5 +78,13 @@ public class Safety implements Serializable {
 
     public void setSafetype(String safetype) {
         this.safetype = safetype;
+    }
+
+    public boolean isIsvideo() {
+        return isvideo;
+    }
+
+    public void setIsvideo(boolean isvideo) {
+        this.isvideo = isvideo;
     }
 }

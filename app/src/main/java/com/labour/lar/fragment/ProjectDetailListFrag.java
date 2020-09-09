@@ -22,12 +22,9 @@ import com.labour.lar.activity.TaskTeamDetailActivity;
 import com.labour.lar.adapter.ProjectDetailListAdapter;
 import com.labour.lar.adapter.ProjectListItemWarp;
 import com.labour.lar.cache.UserCache;
-import com.labour.lar.cache.UserInfoCache;
-import com.labour.lar.module.Manager;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.module.Project;
 import com.labour.lar.module.User;
-import com.labour.lar.module.UserInfo;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.LoadingView;
@@ -63,7 +60,6 @@ public class ProjectDetailListFrag extends BaseFragment {
 
     private ProjectDetailListAdapter projectAdapter;
     private Project project;
-    private List<Manager> managerList = new ArrayList<>();
     private List<Operteam> operteamList = new ArrayList<>();
     private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();;
     private Operteam operteamSelect;
@@ -107,7 +103,6 @@ public class ProjectDetailListFrag extends BaseFragment {
         list_refresh.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                //getManagers();
                 getOperteam();
             }
         });
@@ -160,7 +155,6 @@ public class ProjectDetailListFrag extends BaseFragment {
 //            }
 //        });
 
-//        getManagers();
         getOperteam();
     }
 
@@ -168,42 +162,6 @@ public class ProjectDetailListFrag extends BaseFragment {
         this.project = project;
     }
 
-//    private void getManagers() {
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("id",project.getId());
-//        String jsonParams =jsonObject.toJSONString();
-//
-//        String url = Constants.HTTP_BASE + "/api/managers";
-//        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
-//        dialog.show();
-//
-//        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
-//            @Override
-//            public void onSuccess(Response<String> response) {
-//                dialog.dismiss();
-//                AjaxResult jr = new AjaxResult(response.body());
-//                if(jr.getSuccess() == 1){
-//                    list_refresh.finishRefresh(true);
-//
-//                    JSONArray jsonArray = jr.getJSONArrayData();
-//                    List<Manager> managers = JSON.parseArray(JSON.toJSONString(jsonArray), Manager.class);
-//
-//                    managerList.clear();
-//                    managerList.addAll(managers);
-//                    showOperteams();
-//                } else {
-//                    list_refresh.finishRefresh(false);
-//                    AppToast.show(getContext(),"获取项目部信息失败!");
-//                }
-//            }
-//            @Override
-//            public void onError(Response<String> response) {
-//                dialog.dismiss();
-//                list_refresh.finishRefresh(false);
-//                AppToast.show(getContext(),"获取项目部信息出错!");
-//            }
-//        });
-//    }
     private void getOperteam() {
         User user = UserCache.getInstance(getContext()).get();
 
@@ -279,7 +237,7 @@ public class ProjectDetailListFrag extends BaseFragment {
         if (isShowProjectSecret){
             item0.type = 4;
         } else {
-            item0.type = 2;
+            item0.type = 3;
         }
 
         list.add(item0);
@@ -329,7 +287,7 @@ public class ProjectDetailListFrag extends BaseFragment {
             if (isShowOperteamSecret){
                 item.type = 5;
             } else {
-                item.type = 2;
+                item.type = 3;
             }
 
             list.add(item);

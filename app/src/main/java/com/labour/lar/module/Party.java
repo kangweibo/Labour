@@ -13,6 +13,7 @@ public class Party implements Serializable {
     private String content;//
     private String created_at;//:  "2020-05-13T03:02:29.000Z",
     private String updated_at;//:  "2020-05-13T03:02:29.000Z",
+    private boolean isvideo;
 
     public int getId() {
         return id;
@@ -68,5 +69,13 @@ public class Party implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isIsvideo() {
+        return isvideo;
+    }
+
+    public void setIsvideo(boolean isvideo) {
+        this.isvideo = isvideo;
     }
 }

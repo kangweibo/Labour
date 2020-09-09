@@ -36,6 +36,7 @@ public class PartyContentDetailsFrag extends BaseFragment {
     protected AgentWeb mAgentWeb;
     private String detailHtml;
     private String title;
+    private boolean isvideo;
 
     @Override
     public int getFragmentLayoutId() {
@@ -90,11 +91,17 @@ public class PartyContentDetailsFrag extends BaseFragment {
         this.detailHtml = detailHtml;
     }
 
+    public void setIsvideo(boolean isvideo) {
+        this.isvideo = isvideo;
+    }
+
     private void showHtml(String detailHtml) {
-        mAgentWeb.getUrlLoader().loadDataWithBaseURL(null,detailHtml,
-                "text/html", "UTF-8", null);
-//        web_container.loadDataWithBaseURL(null,getNewContent(detailHtml),
-//                "text/html", "UTF-8", null);
+        if (!isvideo) {
+            mAgentWeb.getUrlLoader().loadDataWithBaseURL(null, detailHtml,
+                    "text/html", "UTF-8", null);
+        } else {
+            mAgentWeb.getUrlLoader().loadUrl(detailHtml);
+        }
     }
 
     @OnClick({R.id.back_iv})

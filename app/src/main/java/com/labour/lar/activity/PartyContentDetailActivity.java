@@ -58,7 +58,7 @@ public class PartyContentDetailActivity extends BaseActivity {
                 if(jr.getSuccess() == 1){
                     JSONObject jsonData = jr.getData();
                     Party party = JSON.parseObject(JSON.toJSONString(jsonData), Party.class);
-                    showHtml("党建内容", party.getContent());
+                    showHtml("党建内容", party.getContent(), party.isIsvideo());
                 } else {
                     AppToast.show(PartyContentDetailActivity.this,"获取信息失败!");
                 }
@@ -90,7 +90,7 @@ public class PartyContentDetailActivity extends BaseActivity {
                 if(jr.getSuccess() == 1){
                     JSONObject jsonData = jr.getData();
                     Safety safety = JSON.parseObject(JSON.toJSONString(jsonData), Safety.class);
-                    showHtml(safety.getSafetype(), safety.getContent());
+                    showHtml(safety.getSafetype(), safety.getContent(), safety.isIsvideo());
                 } else {
                     AppToast.show(PartyContentDetailActivity.this,"获取信息失败!");
                 }
@@ -103,10 +103,11 @@ public class PartyContentDetailActivity extends BaseActivity {
         });
     }
 
-    private void showHtml(String title, String detailHtml) {
+    private void showHtml(String title, String detailHtml, boolean isvideo) {
         PartyContentDetailsFrag partyContentDetailsFrag = new PartyContentDetailsFrag();
         partyContentDetailsFrag.setTitle(title);
         partyContentDetailsFrag.setHtml(detailHtml);
+        partyContentDetailsFrag.setIsvideo(isvideo);
 
         FragmentTransaction trs = fm.beginTransaction();
         trs.add(R.id.container,partyContentDetailsFrag);

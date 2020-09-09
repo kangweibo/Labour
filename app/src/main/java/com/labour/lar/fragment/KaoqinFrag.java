@@ -379,7 +379,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             return;
         }
 
-        if(insideFence){
+        if(!insideFence){
             AppToast.show(context,"当前位置不在围栏内！");
             return;
         }
@@ -394,14 +394,19 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         param.put("usertype",userInfo.getProle());
         param.put("userid",userId+"");
         param.put("clockdate",clockdate);
-        param.put("clockintime",clockintime);
-        param.put("clockingeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
         String jsonParams = JSON.toJSONString(param);
+        String url;
 
-        String url = Constants.HTTP_BASE + "/api/clockin";
-        if(signState == 2){
+        if(signState == 1){
+            url = Constants.HTTP_BASE + "/api/clockin";
+            param.put("clockintime",clockintime);
+            param.put("clockingeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
+        } else {
             url = Constants.HTTP_BASE + "/api/clockout";
+            param.put("clockouttime",clockintime);
+            param.put("clockoutgeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
         }
+
         ProgressDialog dialog = ProgressDialog.createDialog(context);
         dialog.show();
 

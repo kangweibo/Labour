@@ -20,8 +20,8 @@ import com.labour.lar.R;
 import com.labour.lar.activity.BanZuAddActivity;
 import com.labour.lar.activity.BanZuDetailActivity;
 import com.labour.lar.activity.StaffDetailActivity;
-import com.labour.lar.adapter.ProjectDetailListAdapter;
-import com.labour.lar.adapter.ProjectListItemWarp;
+import com.labour.lar.adapter.TaskTeamDetailListAdapter;
+import com.labour.lar.adapter.TaskTeamListItemWarp;
 import com.labour.lar.cache.UserCache;
 import com.labour.lar.cache.UserInfoCache;
 import com.labour.lar.module.Classteam;
@@ -62,9 +62,9 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     @BindView(R.id.noresult_view)
     TextView noresult_view;
 
-    ProjectDetailListAdapter projectAdapter;
+    private TaskTeamDetailListAdapter taskteamAdapter;
     private List<Classteam> classteamList = new ArrayList<>();
-    private List<ProjectListItemWarp.ListItem> list = new ArrayList<>();;
+    private List<TaskTeamListItemWarp.ListItem> list = new ArrayList<>();;
 
     private Classteam classteamSelect;
     private Operteam operteam;
@@ -83,8 +83,8 @@ public class TaskTeamDetailListFrag extends BaseFragment {
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
-        projectAdapter = new ProjectDetailListAdapter(getContext());
-        listView.setAdapter(projectAdapter);
+        taskteamAdapter = new TaskTeamDetailListAdapter(getContext());
+        listView.setAdapter(taskteamAdapter);
 
         User user = UserCache.getInstance(getContext()).get();
         if (user != null) {
@@ -120,7 +120,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         });
         list_refresh.setEnableLoadMore(false);
 
-        projectAdapter.setList(list);
+        taskteamAdapter.setList(list);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -216,14 +216,13 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     private void showClassteams() {
         list.clear();
 
-        ProjectListItemWarp.ListItem item0 = new ProjectListItemWarp.ListItem();
+        TaskTeamListItemWarp.ListItem item0 = new TaskTeamListItemWarp.ListItem();
         item0.field_1_1 = "作业队队部";;
-        item0.field_1_2 = "队长：" + operteam.getPm();
-        item0.field_1_3 = "班组数：" + operteam.getClassteam_num() +"个";
+        item0.field_1_2 = "班组数：" + operteam.getClassteam_num() +"个";
         item0.field_2_1 = "上岗人数：" + operteam.getOndutynum_db() + "(" + operteam.getOnjobnum_db() + ")";
-        item0.field_2_2 = "累计工时："+ operteam.getTotalworkday_db();
-        item0.field_3_1 = "发放总额：" + operteam.getTotalsalary_db();
-        item0.field_3_2 = "";
+        item0.field_2_2 = "队长：" + operteam.getPm();
+        item0.field_3_1 = "累计工时："+ operteam.getTotalworkday_db();
+        item0.field_3_2 = "发放总额：" + operteam.getTotalsalary_db();
         item0.isShowArraw = true;
 
         if (isShowOperteamSecret){
@@ -234,14 +233,13 @@ public class TaskTeamDetailListFrag extends BaseFragment {
         list.add(item0);
 
         for(Classteam classteam : classteamList){
-            ProjectListItemWarp.ListItem item = new ProjectListItemWarp.ListItem();
+            TaskTeamListItemWarp.ListItem item = new TaskTeamListItemWarp.ListItem();
             item.field_1_1 = classteam.getName();
             item.field_1_2 = "";
-            item.field_1_3 = "";
             item.field_2_1 = "上岗人数：" + classteam.getOndutynum() + "(" + classteam.getOnjobnum() + ")";
             item.field_2_2 = "班组长：" + classteam.getPm();
-            item.field_3_1 = "发放总额：" + classteam.getTotalsalary();
-            item.field_3_2 = "累计工时："+ classteam.getTotalworkday();
+            item.field_3_1 = "累计工时："+ classteam.getTotalworkday();
+            item.field_3_2 = "发放总额：" + classteam.getTotalsalary();
             item.isShowArraw = true;
             if (isShowClassteamSecret){
                 item.type = 3;
@@ -252,7 +250,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
             list.add(item);
         }
 
-        projectAdapter.notifyDataSetChanged();
+        taskteamAdapter.notifyDataSetChanged();
     }
 
     /**
