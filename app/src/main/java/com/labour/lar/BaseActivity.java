@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.KeyEvent;
+import android.view.View;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -15,7 +16,7 @@ import butterknife.Unbinder;
  */
 
 public abstract class BaseActivity extends FragmentActivity {
-
+    protected View mRootView;
     protected FragmentManager fm;
     protected Unbinder unbinder;
     @Override
@@ -23,6 +24,7 @@ public abstract class BaseActivity extends FragmentActivity {
         super.onCreate(arg0);
         fm = getSupportFragmentManager();
         beforeInitLayout();
+        mRootView = getLayoutInflater().inflate(getActivityLayoutId(), null);
         setContentView(getActivityLayoutId());
         unbinder = ButterKnife.bind(this);
         //http://stackoverflow.com/questions/4341600/how-to-prevent-multiple-instances-of-an-activity-when-it-is-launched-with-differ/

@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.module.Classteam;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.ProgressDialog;
@@ -48,8 +49,8 @@ public class BanZuAddActivity extends BaseActivity {
     public void afterInitLayout() {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
-        classteam_id = intent.getStringExtra("classteam_id");
         operteam_id = intent.getStringExtra("operteam_id");
+        Classteam classteam = (Classteam)getIntent().getSerializableExtra("classteam");
         String title = intent.getStringExtra("title");
         txt_title.setText(title);
 
@@ -57,6 +58,11 @@ public class BanZuAddActivity extends BaseActivity {
             title_tv.setText("创建班组");
         } else {
             title_tv.setText("修改班组");
+            if (classteam != null) {
+                classteam_id = classteam.getId()+"";
+                edt_name.setText(classteam.getName());
+                edt_memo.setText(classteam.getMemo());
+            }
         }
     }
 

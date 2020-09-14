@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSON;
 import com.labour.lar.BaseActivity;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.module.Operteam;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.DialogUtil;
@@ -57,7 +58,7 @@ public class TaskTeamAddActivity extends BaseActivity {
     public void afterInitLayout() {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
-        operteam_id = intent.getStringExtra("operteam_id");
+        Operteam operteam = (Operteam)getIntent().getSerializableExtra("operteam");
         project_id = intent.getStringExtra("project_id");
         String title = intent.getStringExtra("title");
         txt_title.setText(title);
@@ -66,6 +67,13 @@ public class TaskTeamAddActivity extends BaseActivity {
             title_tv.setText("创建作业队");
         } else {
             title_tv.setText("修改作业队");
+            if (operteam != null) {
+                operteam_id = operteam.getId()+"";
+                edt_name.setText(operteam.getName());
+                edt_project_time.setText(operteam.getDuration());
+                txt_start_time.setText(operteam.getStartdate());
+                txt_end_time.setText(operteam.getEnddate());
+            }
         }
     }
 
@@ -97,11 +105,11 @@ public class TaskTeamAddActivity extends BaseActivity {
 
     private void addOperteam() {
         String name = edt_name.getText().toString();
-        String project_time = edt_project_time.getText().toString();
+        String duration = edt_project_time.getText().toString();
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(project_time)
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(duration)
                 || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
             AppToast.show(this,"请填写完整作业队信息！");
             return;
@@ -116,8 +124,9 @@ public class TaskTeamAddActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
         param.put("project_id",project_id);
         param.put("name",name);
-//        param.put("duty",duty);
-//        param.put("memo",memo);
+        param.put("duration",duration);
+        param.put("startdate",start_time);
+        param.put("enddate",end_time);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/operteam_new";
@@ -147,11 +156,11 @@ public class TaskTeamAddActivity extends BaseActivity {
 
     private void updateOperteam() {
         String name = edt_name.getText().toString();
-        String project_time = edt_project_time.getText().toString();
+        String duration = edt_project_time.getText().toString();
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(project_time)
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(duration)
                 || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
             AppToast.show(this,"请填写完整作业队信息！");
             return;
@@ -166,8 +175,9 @@ public class TaskTeamAddActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
         param.put("id",operteam_id);
         param.put("name",name);
-//        param.put("duty",duty);
-//        param.put("memo",memo);
+        param.put("duration",duration);
+        param.put("startdate",start_time);
+        param.put("enddate",end_time);
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/operteam_update";

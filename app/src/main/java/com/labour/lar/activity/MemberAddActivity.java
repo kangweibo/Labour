@@ -46,8 +46,6 @@ public class MemberAddActivity extends BaseActivity {
     EditText edt_duty;
     @BindView(R.id.edt_phone)
     EditText edt_phone;
-//    @BindView(R.id.edt_password)
-//    EditText edt_password;
     @BindView(R.id.txt_prole)
     TextView txt_prole;
 
@@ -185,7 +183,6 @@ public class MemberAddActivity extends BaseActivity {
         String name = edt_name.getText().toString();
         String duty = edt_duty.getText().toString();
         String phone = edt_phone.getText().toString();
-//        String passwd = edt_password.getText().toString();
         String prole = txt_prole.getText().toString();
         String realProle = prolesMap.get(prole);
 
@@ -205,7 +202,6 @@ public class MemberAddActivity extends BaseActivity {
         param.put("name",name);
         param.put("duty",duty);
         param.put("phone",phone);
-//        param.put("passwd",passwd);
         param.put("prole",realProle);
 
         String api;

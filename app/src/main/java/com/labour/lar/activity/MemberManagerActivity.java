@@ -1,7 +1,9 @@
 package com.labour.lar.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,7 +17,11 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MemberAdapter;
 import com.labour.lar.module.Employee;
+import com.labour.lar.module.Operteam;
 import com.labour.lar.util.AjaxResult;
+import com.labour.lar.util.StringUtils;
+import com.labour.lar.widget.BottomSelectDialog;
+import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.LoadingView;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -25,7 +31,9 @@ import com.lzy.okgo.model.Response;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,6 +67,9 @@ public class MemberManagerActivity extends BaseActivity {
     private int type;// 企业：0；项目：1；作业队：2；班组 3；
     private String title;
 
+    private BottomSelectDialog dialog;
+    private Employee memberSelect;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_member_org;
@@ -76,7 +87,7 @@ public class MemberManagerActivity extends BaseActivity {
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
 
-        getData(type, id);
+        getData();
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);
@@ -90,6 +101,16 @@ public class MemberManagerActivity extends BaseActivity {
                 updateMember(employee, type, MemberManagerActivity.this.id);
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                memberSelect = employeeList.get(position);
+                showMoreDialog();
+                return true;
+            }
+        });
+
         list_refresh.setEnableRefresh(false);
         list_refresh.setEnableLoadMore(false);
         memberAdapter.setList(list);
@@ -111,7 +132,7 @@ public class MemberManagerActivity extends BaseActivity {
     /**
      * 获取数据
      */
-    private void getData(int type ,int id) {
+    private void getData() {
         switch (type){
             case 0:
                 title_tv.setText("项目成员管理-成员列表");
@@ -270,5 +291,109 @@ public class MemberManagerActivity extends BaseActivity {
         intent.putExtra("state", 1);
         intent.putExtra("title", title);
         startActivityForResult(intent, Constants.RELOAD);
+    }
+
+    private void showMoreDialog(){
+        dialog = new BottomSelectDialog(this, new BottomSelectDialog.BottomSelectDialogListener() {
+            @Override
+            public int getLayout() {
+                return R.layout.menu_fence;
+            }
+            @Override
+            public void initView(View view) {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int id = v.getId();
+                        if(id == R.id.txt_delete){
+                            tryDeleteMember(memberSelect);
+                        }
+
+                        dialog.dismiss();
+                    }
+                };
+
+                TextView txt_see = view.findViewById(R.id.txt_see);
+                TextView txt_update = view.findViewById(R.id.txt_update);
+                TextView txt_delete = view.findViewById(R.id.txt_delete);
+                TextView txt_cancel = view.findViewById(R.id.txt_cancel);
+                txt_see.setVisibility(View.GONE);
+                txt_update.setVisibility(View.GONE);
+                txt_delete.setText("删除成员");
+
+                txt_update.setOnClickListener(onClickListener);
+                txt_delete.setOnClickListener(onClickListener);
+                txt_cancel.setOnClickListener(onClickListener);
+            }
+            @Override
+            public void onClick(Dialog dialog, int rate) {
+
+            }
+        });
+
+        dialog.showAtLocation(mRootView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+    }
+
+    private void tryDeleteMember(Employee person) {
+        DialogUtil.showConfirmDialog(this,"提示信息","确定删除本成员吗？",new DialogUtil.OnDialogEvent<Void>(){
+            @Override
+            public void onPositiveButtonClick(Void t) {
+                deleteMember(person);
+            }
+        });
+    }
+
+    private void deleteMember(Employee person) {
+        if (person == null) {
+            return;
+        }
+        String member_id = person.getId()+"";
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("token","063d91b4f57518ff");
+
+        String api;
+        if (type == 0){
+            api = "/api/manager_delete";
+            param.put("manager_id",member_id);
+        } else if (type == 1){
+            api = "/api/staff_delete";
+            param.put("staff_id",member_id);
+        } else {
+            api = "/api/employee_delete";
+            param.put("employee_id",member_id);
+        }
+
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + api;
+        ProgressDialog dialog = ProgressDialog.createDialog(this);
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    AppToast.show(MemberManagerActivity.this,"人员删除成功");
+                    getData();
+                } else {
+                    AppToast.show(MemberManagerActivity.this,"人员删除失败");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(MemberManagerActivity.this,"人员删除出错!");
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // 重新加载数据
+        if (requestCode == Constants.RELOAD && resultCode == RESULT_OK) {
+            getData();
+        }
     }
 }

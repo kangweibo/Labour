@@ -236,8 +236,20 @@
             android:name="com.labour.lar.activity.ProjectManagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+<!--        <activity-->
+<!--            android:name="com.labour.lar.activity.MemberOrgActivity"-->
+<!--            android:screenOrientation="portrait"-->
+<!--            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>-->
         <activity
-            android:name="com.labour.lar.activity.MemberOrgActivity"
+            android:name="com.labour.lar.activity.MemberOrgProjectActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.MemberOrgTaskTeamActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.MemberOrgClassTeamActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity

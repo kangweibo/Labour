@@ -21,6 +21,8 @@ import com.labour.lar.activity.BankcardAddActivity;
 import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.InferiorsActivity;
+import com.labour.lar.activity.MemberManagerActivity;
+import com.labour.lar.activity.MemberOrgClassTeamActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.ProjectManagerActivity;
 import com.labour.lar.activity.SalaryManagerActivity;
@@ -140,8 +142,10 @@ public class MineFrag extends BaseFragment {
                     startActivity(new Intent(context, TrainActivity.class));
                 } else if(item.equals("员工审核")){
                     startActivity(new Intent(context, VerifyActivity.class));
-                } else if(item.equals("项目及人员管理")){
-                    startActivity(new Intent(context, ProjectManagerActivity.class));
+                } else if(item.contains("人员管理")){
+                    Intent intent = new Intent(context, ProjectManagerActivity.class);
+                    intent.putExtra("title", item);
+                    startActivity(intent);
                 } else if(item.equals("薪酬管理")){
                     startActivity(new Intent(context, SalaryManagerActivity.class));
                 } else if(item.equals("设置")){
@@ -244,22 +248,24 @@ public class MineFrag extends BaseFragment {
             if (prole.equals("ent_manager") || prole.equals("classteam_manager")
                     || prole.equals("operteam_manager") || prole.equals("operteam_quota")
                     || prole.equals("project_manager")|| prole.equals("project_quota")){
-//                list.add("代员工身份验证");
-//                imgList.add(R.mipmap.idcard_icon);
-//                list.add("代员工银行卡认证");
-//                imgList.add(R.mipmap.bankcard_icon);
-//                list.add("代员工打卡");
-//                imgList.add(R.mipmap.tab_kaoqin_checked);
                 list.add("代员工操作");
                 imgList.add(R.mipmap.replace_icon);
 
                 list.add("员工审核");
                 imgList.add(R.mipmap.approval_icon);
+            }
 
-                if (!prole.equals("classteam_manager")) {
-                    list.add("项目及人员管理");
-                    imgList.add(R.mipmap.organization);
-                }
+            if (prole.equals("ent_manager") || prole.equals("classteam_manager")){
+                list.add("项目及人员管理");
+                imgList.add(R.mipmap.organization);
+            }
+            if (prole.equals("project_manager")|| prole.equals("project_quota")){
+                list.add("作业队及人员管理");
+                imgList.add(R.mipmap.organization);
+            }
+            if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                list.add("班组及人员管理");
+                imgList.add(R.mipmap.organization);
             }
         }
         list.add("岗前安全培训");

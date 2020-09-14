@@ -24,8 +24,6 @@ import butterknife.OnClick;
  */
 public class ProjectManagerActivity extends BaseActivity {
 
-    private int REQUEST_CODE_ClockIn = 126;
-
     @BindView(R.id.title_tv)
     TextView title_tv;
 
@@ -43,7 +41,8 @@ public class ProjectManagerActivity extends BaseActivity {
 
     @Override
     public void afterInitLayout(){
-        title_tv.setText("项目及人员管理");
+        String title = getIntent().getStringExtra("title");
+        title_tv.setText(title);
 
         mineGridViewAdapter = new MineGridViewAdapter(this);
         initData(mineGridViewAdapter);
@@ -60,7 +59,7 @@ public class ProjectManagerActivity extends BaseActivity {
                     addClassteam();
                 } else if(item.equals("二维码")){
                     showQRCode();
-                } else if(item.equals("成员管理")){
+                } else if(item.contains("成员管理")){
                     memberManager();
                 }
             }
@@ -73,25 +72,31 @@ public class ProjectManagerActivity extends BaseActivity {
             String prole = user.getProle();
 
             if (prole.equals("ent_manager")){
-                list.add("创建项目");
-                imgList.add(R.mipmap.tab_home_checked);
+//                list.add("创建项目");
+//                imgList.add(R.mipmap.tab_home_checked);
+                list.add("项目/成员管理");
+                imgList.add(R.mipmap.team_icon);
             }
 
             if (prole.equals("project_manager")){
-                list.add("创建作业队");
-                imgList.add(R.mipmap.tab_home_checked);
+//                list.add("创建作业队");
+//                imgList.add(R.mipmap.tab_home_checked);
+                list.add("作业队/成员管理");
+                imgList.add(R.mipmap.team_icon);
             }
 
             if (prole.equals("operteam_manager")){
-                list.add("创建班组");
-                imgList.add(R.mipmap.tab_home_checked);
+//                list.add("创建班组");
+//                imgList.add(R.mipmap.tab_home_checked);
+                list.add("班组/成员管理");
+                imgList.add(R.mipmap.team_icon);
             }
         }
 
         list.add("二维码");
         imgList.add(R.mipmap.qr_code_icon);
-        list.add("成员管理");
-        imgList.add(R.mipmap.team_icon);
+//        list.add("成员管理");
+//        imgList.add(R.mipmap.team_icon);
 
         String[] strs = list.toArray(new String[list.size()]);
         Integer[] imgs = imgList.toArray(new Integer[imgList.size()]);
@@ -177,9 +182,17 @@ public class ProjectManagerActivity extends BaseActivity {
     }
 
     private void addProject() {
-        Intent intent = new Intent(this, ProjectAddActivity.class);
-        intent.putExtra("title", getShowTitle());
-        startActivity(intent);
+        User user = UserCache.getInstance(this).get();
+        if (user != null) {
+            if (user.getEnt() != null){
+                int ent_id = user.getEnt().getId();
+
+                Intent intent = new Intent(this, ProjectAddActivity.class);
+                intent.putExtra("ent_id", ent_id+"");
+                intent.putExtra("title", getShowTitle());
+                startActivity(intent);
+            }
+        }
     }
 
     public void addOperteam() {
@@ -214,8 +227,59 @@ public class ProjectManagerActivity extends BaseActivity {
 
     // 成员管理
     private void memberManager() {
-        Intent intent = new Intent(ProjectManagerActivity.this,
-                MemberOrgActivity.class);
+        UserCache userCache = UserCache.getInstance(this);
+        User user = userCache.get();
+
+        String prole = user.getProle();
+        int type = 0;
+        int id = 0;
+
+        if (prole != null){
+            if (prole.equals("ent_manager")){
+                type = 0;
+                User.Ent ent = user.getEnt();
+                if (ent != null) {
+                    id = ent.getId();
+                }
+            }
+
+            if (prole.equals("project_manager") || prole.equals("project_quota")){
+                type = 1;
+                User.Project project = user.getProject();
+                if (project != null) {
+                    id = project.getId();
+                }
+            }
+
+            if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
+                type = 2;
+                User.Operteam operteam = user.getOperteam();
+                if (operteam != null) {
+                    id = operteam.getId();
+                }
+            }
+        }
+
+        Intent intent;
+
+        switch (type){
+            case 0:
+                intent = new Intent(ProjectManagerActivity.this,
+                        MemberOrgProjectActivity.class);
+                break;
+            case 1:
+                intent = new Intent(ProjectManagerActivity.this,
+                        MemberOrgTaskTeamActivity.class);
+                break;
+            default:
+                intent = new Intent(ProjectManagerActivity.this,
+                        MemberOrgClassTeamActivity.class);
+
+        }
+
+        intent.putExtra("id", id);
+        intent.putExtra("type", type);
+        intent.putExtra("title", getShowTitle());
         startActivity(intent);
     }
 
