@@ -255,7 +255,7 @@ public class MineFrag extends BaseFragment {
                 imgList.add(R.mipmap.approval_icon);
             }
 
-            if (prole.equals("ent_manager") || prole.equals("classteam_manager")){
+            if (prole.equals("ent_manager")){
                 list.add("项目及人员管理");
                 imgList.add(R.mipmap.organization);
             }

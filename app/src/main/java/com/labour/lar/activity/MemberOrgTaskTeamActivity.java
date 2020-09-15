@@ -106,12 +106,12 @@ public class MemberOrgTaskTeamActivity extends BaseActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-
-                } else {
-                    operteamSelect = operteamList.get(position-1);
+                MemberAdapter.ListItem item = list.get(position);
+                if (item.type == 1 && item.obj != null){
+                    operteamSelect = (Operteam) item.obj;
                     showMoreDialog();
                 }
+
                 return true;
             }
         });
@@ -182,6 +182,7 @@ public class MemberOrgTaskTeamActivity extends BaseActivity {
                         item.name = operteam.getName();
                         item.id = operteam.getId();
                         item.type = 1;
+                        item.obj = operteam;
                         list.add(item);
                     }
 

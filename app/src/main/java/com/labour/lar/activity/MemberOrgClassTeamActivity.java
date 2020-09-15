@@ -17,7 +17,6 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MemberAdapter;
 import com.labour.lar.module.Classteam;
-import com.labour.lar.module.Employee;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.DialogUtil;
@@ -103,7 +102,7 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                classteamSelect = classteamList.get(position-1);
+                classteamSelect = classteamList.get(position);
                 showMoreDialog();
                 return true;
             }
@@ -153,10 +152,10 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
                     list_refresh.finishRefresh(true);
 
                     JSONArray jsonArray = jr.getJSONArrayData();
-                    List<Classteam> classetams = JSON.parseArray(JSON.toJSONString(jsonArray), Classteam.class);
+                    classteamList = JSON.parseArray(JSON.toJSONString(jsonArray), Classteam.class);
 
                     list.clear();
-                    for(Classteam classetam : classetams){
+                    for(Classteam classetam : classteamList){
                         MemberAdapter.ListItem item = new MemberAdapter.ListItem();
                         item.name = classetam.getName();
                         item.id = classetam.getId();
@@ -226,8 +225,8 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
                 TextView txt_delete = view.findViewById(R.id.txt_delete);
                 TextView txt_cancel = view.findViewById(R.id.txt_cancel);
                 txt_see.setVisibility(View.GONE);
-                txt_update.setText("更新作业队");
-                txt_delete.setText("删除作业队");
+                txt_update.setText("更新班组");
+                txt_delete.setText("删除班组");
 
                 txt_update.setOnClickListener(onClickListener);
                 txt_delete.setOnClickListener(onClickListener);

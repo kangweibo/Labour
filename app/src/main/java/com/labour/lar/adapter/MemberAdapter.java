@@ -45,6 +45,7 @@ public class MemberAdapter extends BaseAdapter<MemberAdapter.ListItem, MemberAda
         public String name;
         public String role;
         public int type;
+        public Object obj;
     }
 
     class ItemHolder {
