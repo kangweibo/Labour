@@ -59,6 +59,8 @@ public class ShowQRCodeActivity extends BaseActivity {
     private List<Integer> ids = new ArrayList<>();
     private String title = "";
     private int type;
+    private int projectId;
+    private int operteamId;
     private int classteamId;
 
     @Override
@@ -70,7 +72,9 @@ public class ShowQRCodeActivity extends BaseActivity {
         Intent intent = getIntent();
         type = intent.getIntExtra("type", 0);
         int id = intent.getIntExtra("id", 0);
-        classteamId = intent.getIntExtra("classteamId", 0);
+        projectId = intent.getIntExtra("projectId", -1);
+        operteamId = intent.getIntExtra("operteamId", -1);
+        classteamId = intent.getIntExtra("classteamId", -1);
         title = intent.getStringExtra("title");
 
         txt_title.setText(title);
@@ -132,17 +136,13 @@ public class ShowQRCodeActivity extends BaseActivity {
         switch (type){
             case 0:
                 title_tv.setText("项目二维码");
-                getProject();
+                getProject(projectId);
                 break;
             case 1:
                 title_tv.setText("作业队二维码");
-                getOperteam(id);
+                getOperteam(id, operteamId);
                 break;
             case 2:
-                title_tv.setText("班组二维码");
-                getClassteam(id);
-                break;
-            case 3:
                 title_tv.setText("班组二维码");
                 getClassteam(id, classteamId);
                 break;
@@ -187,7 +187,7 @@ public class ShowQRCodeActivity extends BaseActivity {
         }
     }
 
-    private void getProject() {
+    private void getProject(int projectId) {
         UserCache userCache = UserCache.getInstance(this);
         User user = userCache.get();
 
@@ -216,14 +216,16 @@ public class ShowQRCodeActivity extends BaseActivity {
                     titles.clear();
 
                     for (Project project : projects){
-                        JSONObject jsonObject = new JSONObject();
-                        String id = project.getId()+"";
-                        jsonObject.put("project_id", id);
-                        String content = jsonObject.toJSONString();
-                        contents.add(content);
+                        if (projectId == -1 || projectId == project.getId()) {
+                            JSONObject jsonObject = new JSONObject();
+                            String id = project.getId() + "";
+                            jsonObject.put("project_id", id);
+                            String content = jsonObject.toJSONString();
+                            contents.add(content);
 
-                        ids.add(project.getId());
-                        titles.add(project.getName());
+                            ids.add(project.getId());
+                            titles.add(project.getName());
+                        }
                     }
 
                     showData(contents);
@@ -240,6 +242,10 @@ public class ShowQRCodeActivity extends BaseActivity {
     }
 
     private void getOperteam(int id) {
+        getOperteam(id, -1);
+    }
+
+    private void getOperteam(int id, int operteamId) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id",id);
         String jsonParams =jsonObject.toJSONString();
@@ -262,14 +268,16 @@ public class ShowQRCodeActivity extends BaseActivity {
                     titles.clear();
 
                     for (Operteam operteam : operteams){
-                        JSONObject jsonObject = new JSONObject();
-                        String id = operteam.getId()+"";
-                        jsonObject.put("operteam_id", id);
-                        String content = jsonObject.toJSONString();
-                        contents.add(content);
+                        if (operteamId == -1 || operteamId == operteam.getId()) {
+                            JSONObject jsonObject = new JSONObject();
+                            String id = operteam.getId() + "";
+                            jsonObject.put("operteam_id", id);
+                            String content = jsonObject.toJSONString();
+                            contents.add(content);
 
-                        ids.add(operteam.getId());
-                        titles.add(operteam.getName());
+                            ids.add(operteam.getId());
+                            titles.add(operteam.getName());
+                        }
                     }
 
                     showData(contents);
@@ -283,10 +291,6 @@ public class ShowQRCodeActivity extends BaseActivity {
                 AppToast.show(ShowQRCodeActivity.this,"获取作业队信息出错!");
             }
         });
-    }
-
-    private void getClassteam(int id) {
-        getClassteam(id, -1);
     }
 
     private void getClassteam(int id, int classetam_id) {

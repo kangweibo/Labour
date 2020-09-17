@@ -166,16 +166,16 @@ public class MemberOrgTaskTeamActivity extends BaseActivity {
                     list.clear();
 
                     // 企业管理员可以管理项目部
-                    UserCache userCache = UserCache.getInstance(MemberOrgTaskTeamActivity.this);
-                    User user = userCache.get();
-                    String prole = user.getProle();
-                    if (prole != null && prole.equals("ent_manager")) {
+//                    UserCache userCache = UserCache.getInstance(MemberOrgTaskTeamActivity.this);
+//                    User user = userCache.get();
+//                    String prole = user.getProle();
+//                    if (prole != null && prole.equals("ent_manager")) {
                         MemberAdapter.ListItem item0 = new MemberAdapter.ListItem();
                         item0.name = "项目部";
                         item0.id = projectId;
                         item0.type = 0;
                         list.add(item0);
-                    }
+//                    }
 
                     for(Operteam operteam : operteamList){
                         MemberAdapter.ListItem item = new MemberAdapter.ListItem();

@@ -260,11 +260,12 @@ public class MineFrag extends BaseFragment {
                 imgList.add(R.mipmap.organization);
             }
             if (prole.equals("project_manager")|| prole.equals("project_quota")){
-                list.add("作业队及人员管理");
+                list.add("项目及人员管理");
                 imgList.add(R.mipmap.organization);
             }
             if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
-                list.add("班组及人员管理");
+                list.add("作业队及人员管理");
+//                list.add("班组及人员管理");
                 imgList.add(R.mipmap.organization);
             }
         }
@@ -315,7 +316,7 @@ public class MineFrag extends BaseFragment {
     // 显示二维码
     private void showQRCode(User user) {
         String title = "";
-        int type = 3;
+        int type = 2;
         int id = 0;
 
         User.Classteam classteam = user.getClassteam();

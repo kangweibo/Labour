@@ -100,6 +100,13 @@ public class MemberAddActivity extends BaseActivity {
         title_tv.setText(strState + strType);
 
         initData();
+
+        for(Map.Entry<String, String> entry : prolesMap.entrySet()){
+            if (person.getProle().equals(entry.getValue())){
+                txt_prole.setText(entry.getKey());
+                break;
+            }
+        }
     }
 
     @OnClick({R.id.back_iv,R.id.txt_prole,R.id.btn_submit})
@@ -138,9 +145,15 @@ public class MemberAddActivity extends BaseActivity {
         }
 
         if (type == 0) {
-            proles.add("项目经理");
-            proles.add("项目定额员");
-            proles.add("项目成员");
+            if (prole.equals("ent_manager")){
+                proles.add("项目经理");
+                proles.add("项目定额员");
+                proles.add("项目成员");
+            }
+            if (prole.equals("project_manager") || prole.equals("project_quota")){
+                proles.add("项目定额员");
+                proles.add("项目成员");
+            }
 
             prolesMap.put("项目经理", "project_manager");
             prolesMap.put("项目定额员", "project_quota");
@@ -148,6 +161,11 @@ public class MemberAddActivity extends BaseActivity {
         } else if (type == 1){
             if (prole.equals("project_manager") || prole.equals("project_quota")){
                 proles.add("作业队长");
+                proles.add("作业队定额员");
+                proles.add("作业队成员");
+            }
+
+            if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
                 proles.add("作业队定额员");
                 proles.add("作业队成员");
             }

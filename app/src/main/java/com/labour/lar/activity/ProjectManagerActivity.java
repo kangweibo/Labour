@@ -81,14 +81,16 @@ public class ProjectManagerActivity extends BaseActivity {
             if (prole.equals("project_manager")){
 //                list.add("创建作业队");
 //                imgList.add(R.mipmap.tab_home_checked);
-                list.add("作业队/成员管理");
+//                list.add("作业队/成员管理");
+                list.add("项目/成员管理");
                 imgList.add(R.mipmap.team_icon);
             }
 
             if (prole.equals("operteam_manager")){
 //                list.add("创建班组");
 //                imgList.add(R.mipmap.tab_home_checked);
-                list.add("班组/成员管理");
+                list.add("作业队/成员管理");
+//                list.add("班组/成员管理");
                 imgList.add(R.mipmap.team_icon);
             }
         }
@@ -107,6 +109,7 @@ public class ProjectManagerActivity extends BaseActivity {
 
     // 显示二维码
     private void showQRCode() {
+        Intent intent = new Intent(this, ShowQRCodeActivity.class);
         String title = "";
         int type = 0;
         int id = 0;
@@ -122,26 +125,28 @@ public class ProjectManagerActivity extends BaseActivity {
             }
 
             if (prole.equals("project_manager")) {
-                type = 1;
+                type = 0;
                 id = user.getProject().getId();
                 User.Project project = user.getProject();
                 if (project != null) {
                     title = project.getEnt().getName() + "\n" + project.getName();
+                    intent.putExtra("projectId", project.getId());
                 }
             }
 
             if (prole.equals("operteam_manager")) {
-                type = 2;
+                type = 1;
                 id = user.getOperteam().getId();
                 User.Operteam operteam = user.getOperteam();
                 if (operteam != null) {
                     title = operteam.getProject().getEnt().getName() + "\n"
                             + operteam.getProject().getName() + "\n"
                             + operteam.getName();
+                    intent.putExtra("operteamId", operteam.getId());
                 }
             }
         }
-        Intent intent = new Intent(this, ShowQRCodeActivity.class);
+
         intent.putExtra("id", id);
         intent.putExtra("type", type);
         intent.putExtra("title", title);

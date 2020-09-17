@@ -102,8 +102,11 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                classteamSelect = classteamList.get(position);
-                showMoreDialog();
+                MemberAdapter.ListItem item = list.get(position);
+                if (item.type == 2 && item.obj != null){
+                    classteamSelect = (Classteam) item.obj;
+                    showMoreDialog();
+                }
                 return true;
             }
         });
@@ -155,11 +158,19 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
                     classteamList = JSON.parseArray(JSON.toJSONString(jsonArray), Classteam.class);
 
                     list.clear();
+
+                    MemberAdapter.ListItem item0 = new MemberAdapter.ListItem();
+                    item0.name = "队部";
+                    item0.id = operteamId;
+                    item0.type = 1;
+                    list.add(item0);
+
                     for(Classteam classetam : classteamList){
                         MemberAdapter.ListItem item = new MemberAdapter.ListItem();
                         item.name = classetam.getName();
                         item.id = classetam.getId();
                         item.type = 2;
+                        item.obj = classetam;
                         list.add(item);
                     }
 
