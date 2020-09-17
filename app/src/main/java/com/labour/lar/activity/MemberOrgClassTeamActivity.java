@@ -103,7 +103,7 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 MemberAdapter.ListItem item = list.get(position);
-                if (item.type == 2 && item.obj != null){
+                if (item.type == 3 && item.obj != null){
                     classteamSelect = (Classteam) item.obj;
                     showMoreDialog();
                 }
@@ -162,14 +162,14 @@ public class MemberOrgClassTeamActivity extends BaseActivity {
                     MemberAdapter.ListItem item0 = new MemberAdapter.ListItem();
                     item0.name = "队部";
                     item0.id = operteamId;
-                    item0.type = 1;
+                    item0.type = 2;
                     list.add(item0);
 
                     for(Classteam classetam : classteamList){
                         MemberAdapter.ListItem item = new MemberAdapter.ListItem();
                         item.name = classetam.getName();
                         item.id = classetam.getId();
-                        item.type = 2;
+                        item.type = 3;
                         item.obj = classetam;
                         list.add(item);
                     }

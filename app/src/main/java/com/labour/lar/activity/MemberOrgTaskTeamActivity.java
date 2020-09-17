@@ -107,7 +107,7 @@ public class MemberOrgTaskTeamActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 MemberAdapter.ListItem item = list.get(position);
-                if (item.type == 1 && item.obj != null){
+                if (item.type == 2 && item.obj != null){
                     operteamSelect = (Operteam) item.obj;
                     showMoreDialog();
                 }
@@ -166,22 +166,17 @@ public class MemberOrgTaskTeamActivity extends BaseActivity {
                     list.clear();
 
                     // 企业管理员可以管理项目部
-//                    UserCache userCache = UserCache.getInstance(MemberOrgTaskTeamActivity.this);
-//                    User user = userCache.get();
-//                    String prole = user.getProle();
-//                    if (prole != null && prole.equals("ent_manager")) {
-                        MemberAdapter.ListItem item0 = new MemberAdapter.ListItem();
-                        item0.name = "项目部";
-                        item0.id = projectId;
-                        item0.type = 0;
-                        list.add(item0);
-//                    }
+                    MemberAdapter.ListItem item0 = new MemberAdapter.ListItem();
+                    item0.name = "项目部";
+                    item0.id = projectId;
+                    item0.type = 1;
+                    list.add(item0);
 
                     for(Operteam operteam : operteamList){
                         MemberAdapter.ListItem item = new MemberAdapter.ListItem();
                         item.name = operteam.getName();
                         item.id = operteam.getId();
-                        item.type = 1;
+                        item.type = 2;
                         item.obj = operteam;
                         list.add(item);
                     }

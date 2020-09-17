@@ -79,6 +79,7 @@ public class ProjectFrag extends BaseFragment {
         title_tv.setText("项目");
         Drawable d = getResources().getDrawable(R.mipmap.jiahao);
         right_header_btn.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        right_header_btn.setVisibility(View.GONE);
 
         loadingView.setVisibility(View.GONE);
         noresult_view.setVisibility(View.GONE);

@@ -17,9 +17,7 @@ import com.labour.lar.Constants;
 import com.labour.lar.R;
 import com.labour.lar.adapter.MemberAdapter;
 import com.labour.lar.module.Employee;
-import com.labour.lar.module.Operteam;
 import com.labour.lar.util.AjaxResult;
-import com.labour.lar.util.StringUtils;
 import com.labour.lar.widget.BottomSelectDialog;
 import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.LoadingView;
@@ -134,15 +132,15 @@ public class MemberManagerActivity extends BaseActivity {
      */
     private void getData() {
         switch (type){
-            case 0:
+            case 1:
                 title_tv.setText("项目成员管理-成员列表");
                 getManagers(id);
                 break;
-            case 1:
+            case 2:
                 title_tv.setText("作业队成员管理-成员列表");
                 getStaffs(id);
                 break;
-            case 2:
+            case 3:
                 title_tv.setText("班组成员管理-成员列表");
                 getEmployees(id);
                 break;

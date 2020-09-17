@@ -58,7 +58,7 @@ public class ShowQRCodeActivity extends BaseActivity {
     private List<String> titles = new ArrayList<>();
     private List<Integer> ids = new ArrayList<>();
     private String title = "";
-    private int type;
+    private int type;// 企业：0；项目：1；作业队：2；班组 3；
     private int projectId;
     private int operteamId;
     private int classteamId;
@@ -135,14 +135,15 @@ public class ShowQRCodeActivity extends BaseActivity {
     private void initData(int type ,int id){
         switch (type){
             case 0:
+            case 1:
                 title_tv.setText("项目二维码");
                 getProject(projectId);
                 break;
-            case 1:
+            case 2:
                 title_tv.setText("作业队二维码");
                 getOperteam(id, operteamId);
                 break;
-            case 2:
+            case 3:
                 title_tv.setText("班组二维码");
                 getClassteam(id, classteamId);
                 break;
@@ -239,10 +240,6 @@ public class ShowQRCodeActivity extends BaseActivity {
                 AppToast.show(ShowQRCodeActivity.this,"获取项目信息出错!");
             }
         });
-    }
-
-    private void getOperteam(int id) {
-        getOperteam(id, -1);
     }
 
     private void getOperteam(int id, int operteamId) {

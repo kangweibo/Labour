@@ -49,12 +49,10 @@ public class MemberAddActivity extends BaseActivity {
     @BindView(R.id.txt_prole)
     TextView txt_prole;
 
-    private int type;// 0：项目；1：作业队；2：班组
+    private int type;// 企业：0；项目：1；作业队：2；班组 3；
     private int state;// 0：添加；1：修改
     private String org_id;
-
     private String member_id;
-    private Employee person;
 
     private List<String> proles = new ArrayList<>();
     private Map<String, String> prolesMap = new HashMap<>();
@@ -72,6 +70,8 @@ public class MemberAddActivity extends BaseActivity {
         String title = intent.getStringExtra("title");
         org_id = intent.getStringExtra("id");
 
+        initData();
+
         txt_title.setText(title);
         String strState, strType;
         if (state == 0) {
@@ -79,34 +79,32 @@ public class MemberAddActivity extends BaseActivity {
         } else {
             strState = "修改";
 
-            person = (Employee)intent.getSerializableExtra("member");
+            Employee person = (Employee)intent.getSerializableExtra("member");
             if (person != null) {
                 member_id = person.getId()+"";
                 edt_name.setText(person.getName());
                 edt_duty.setText(person.getDuty());
                 edt_phone.setText(person.getPhone());
                 txt_prole.setText(person.getProlename());
+
+                for(Map.Entry<String, String> entry : prolesMap.entrySet()){
+                    if (person.getProle() != null && person.getProle().equals(entry.getValue())){
+                        txt_prole.setText(entry.getKey());
+                        break;
+                    }
+                }
             }
         }
 
-        if (type == 0) {
+        if (type == 0 || type == 1) {
             strType = "项目成员";
-        } else if (type == 1){
+        } else if (type == 2){
             strType = "作业队成员";
         } else {
             strType = "班组成员";
         }
 
         title_tv.setText(strState + strType);
-
-        initData();
-
-        for(Map.Entry<String, String> entry : prolesMap.entrySet()){
-            if (person.getProle().equals(entry.getValue())){
-                txt_prole.setText(entry.getKey());
-                break;
-            }
-        }
     }
 
     @OnClick({R.id.back_iv,R.id.txt_prole,R.id.btn_submit})
@@ -144,7 +142,7 @@ public class MemberAddActivity extends BaseActivity {
             return;
         }
 
-        if (type == 0) {
+        if (type == 0 || type == 1) {
             if (prole.equals("ent_manager")){
                 proles.add("项目经理");
                 proles.add("项目定额员");
@@ -158,13 +156,12 @@ public class MemberAddActivity extends BaseActivity {
             prolesMap.put("项目经理", "project_manager");
             prolesMap.put("项目定额员", "project_quota");
             prolesMap.put("项目成员", "manager");
-        } else if (type == 1){
+        } else if (type == 2){
             if (prole.equals("project_manager") || prole.equals("project_quota")){
                 proles.add("作业队长");
                 proles.add("作业队定额员");
                 proles.add("作业队成员");
             }
-
             if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
                 proles.add("作业队定额员");
                 proles.add("作业队成员");
@@ -176,6 +173,9 @@ public class MemberAddActivity extends BaseActivity {
         } else {
             if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
                 proles.add("班组长");
+                proles.add("工人");
+            }
+            if (prole.equals("classteam_manager")){
                 proles.add("工人");
             }
 
@@ -223,10 +223,10 @@ public class MemberAddActivity extends BaseActivity {
         param.put("prole",realProle);
 
         String api;
-        if (type == 0){
+        if (type == 0 || type == 1){
             api = "/api/manager_new";
             param.put("project_id",org_id);
-        } else if (type == 1){
+        } else if (type == 2){
             api = "/api/staff_new";
             param.put("operteam_id",org_id);
         } else {
@@ -289,11 +289,11 @@ public class MemberAddActivity extends BaseActivity {
         param.put("prole",realProle);
 
         String api;
-        if (type == 0){
+        if (type == 0 || type == 1){
             api = "/api/manager_update";
             param.put("project_id",org_id);
             param.put("manager_id",member_id);
-        } else if (type == 1){
+        } else if (type == 2){
             api = "/api/staff_update";
             param.put("operteam_id",org_id);
             param.put("staff_id",member_id);

@@ -231,10 +231,7 @@ public class MineFrag extends BaseFragment {
         if (userInfo != null){
             String prole = userInfo.getProle();
 
-            if (prole.equals("classteam_manager")){
-                list.add("班组二维码");
-                imgList.add(R.mipmap.qr_code_icon);
-            } else if (prole.equals("employee")){
+            if (prole.equals("employee")){
                 list.add("扫码加入班组");
                 imgList.add(R.mipmap.qr_code_icon);
             } else if (prole.equals("staff")){
@@ -265,7 +262,10 @@ public class MineFrag extends BaseFragment {
             }
             if (prole.equals("operteam_manager") || prole.equals("operteam_quota")){
                 list.add("作业队及人员管理");
-//                list.add("班组及人员管理");
+                imgList.add(R.mipmap.organization);
+            }
+            if (prole.equals("classteam_manager")){
+                list.add("班组及人员管理");
                 imgList.add(R.mipmap.organization);
             }
         }
@@ -385,13 +385,24 @@ public class MineFrag extends BaseFragment {
                     String classteam_id = jsonObject.getString("classteam_id");
                     String operteam_id = jsonObject.getString("operteam_id");
                     String project_id = jsonObject.getString("project_id");
+                    String classteam = jsonObject.getString("classteam");
+                    String operteam = jsonObject.getString("operteam");
+                    String project = jsonObject.getString("project");
 
                     if (!TextUtils.isEmpty(classteam_id)){
                         addClassteam(classteam_id);
+                    } else if (!TextUtils.isEmpty(classteam)){
+                        addClassteam(classteam);
                     } else if (!TextUtils.isEmpty(operteam_id)){
                         addOperteam(operteam_id);
+                    } else if (!TextUtils.isEmpty(operteam)){
+                        addOperteam(operteam);
                     } else if (!TextUtils.isEmpty(project_id)){
                         addProject(project_id);
+                    } else if (!TextUtils.isEmpty(project)){
+                        addProject(project);
+                    } else {
+                        AppToast.show(getContext(),"二维码格式错误");
                     }
                 } catch (RuntimeException e) {
                     AppToast.show(getContext(),"二维码格式出错");

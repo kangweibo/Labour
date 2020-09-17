@@ -93,6 +93,11 @@ public class ProjectManagerActivity extends BaseActivity {
 //                list.add("班组/成员管理");
                 imgList.add(R.mipmap.team_icon);
             }
+
+            if (prole.equals("classteam_manager")){
+                list.add("班组/成员管理");
+                imgList.add(R.mipmap.team_icon);
+            }
         }
 
         list.add("二维码");
@@ -125,24 +130,37 @@ public class ProjectManagerActivity extends BaseActivity {
             }
 
             if (prole.equals("project_manager")) {
-                type = 0;
+                type = 1;
                 id = user.getProject().getId();
                 User.Project project = user.getProject();
                 if (project != null) {
-                    title = project.getEnt().getName() + "\n" + project.getName();
+                    title = project.getEnt().getName();
                     intent.putExtra("projectId", project.getId());
                 }
             }
 
             if (prole.equals("operteam_manager")) {
-                type = 1;
+                type = 2;
                 id = user.getOperteam().getId();
                 User.Operteam operteam = user.getOperteam();
                 if (operteam != null) {
                     title = operteam.getProject().getEnt().getName() + "\n"
-                            + operteam.getProject().getName() + "\n"
-                            + operteam.getName();
+                            + operteam.getProject().getName() ;
                     intent.putExtra("operteamId", operteam.getId());
+                }
+            }
+
+            if (prole.equals("classteam_manager")) {
+                type = 3;
+
+                User.Classteam classteam = user.getClassteam();
+                if (classteam != null) {
+                    id = classteam.getOperteam().getId();
+                    title = classteam.getOperteam().getProject().getEnt().getName() + "\n"
+                            + classteam.getOperteam().getProject().getName() + "\n"
+                            + classteam.getOperteam().getName();
+
+                    intent.putExtra("classteamId", classteam.getId());
                 }
             }
         }
@@ -179,6 +197,16 @@ public class ProjectManagerActivity extends BaseActivity {
                     title = operteam.getProject().getEnt().getName() + "\n"
                             + operteam.getProject().getName() + "\n"
                             + operteam.getName();
+                }
+            }
+
+            if (prole.equals("classteam_manager")) {
+                User.Classteam classteam = user.getClassteam();
+                if (classteam != null) {
+                    title = classteam.getOperteam().getProject().getEnt().getName() + "\n"
+                            + classteam.getOperteam().getProject().getName() + "\n"
+                            + classteam.getOperteam().getName() + "\n"
+                            + classteam.getName();
                 }
             }
         }
@@ -263,6 +291,14 @@ public class ProjectManagerActivity extends BaseActivity {
                     id = operteam.getId();
                 }
             }
+
+            if (prole.equals("classteam_manager")){
+                type = 3;
+                User.Classteam classteam = user.getClassteam();
+                if (classteam != null) {
+                    id = classteam.getId();
+                }
+            }
         }
 
         Intent intent;
@@ -276,9 +312,13 @@ public class ProjectManagerActivity extends BaseActivity {
                 intent = new Intent(ProjectManagerActivity.this,
                         MemberOrgTaskTeamActivity.class);
                 break;
-            default:
+            case 2:
                 intent = new Intent(ProjectManagerActivity.this,
                         MemberOrgClassTeamActivity.class);
+                break;
+            default:
+                intent = new Intent(ProjectManagerActivity.this,
+                        MemberManagerActivity.class);
 
         }
 

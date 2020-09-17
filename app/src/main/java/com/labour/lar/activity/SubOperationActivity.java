@@ -75,8 +75,10 @@ public class SubOperationActivity extends BaseActivity {
         if (userInfo != null){
             String prole = userInfo.getProle();
 
-            if (prole.equals("classteam_manager") || prole.equals("operteam_manager")
-                    || prole.equals("project_manager")){
+            if (prole.equals("classteam_manager")
+                    || prole.equals("operteam_manager") || prole.equals("operteam_quota")
+                    || prole.equals("project_manager") || prole.equals("project_quota")
+                    || prole.equals("ent_manager")){
                 list.add("代员工批量注册");
                 imgList.add(R.mipmap.idcard_icon);
                 list.add("代员工银行卡认证");
