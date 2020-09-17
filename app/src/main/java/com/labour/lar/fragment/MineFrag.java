@@ -21,14 +21,11 @@ import com.labour.lar.activity.BankcardAddActivity;
 import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
 import com.labour.lar.activity.InferiorsActivity;
-import com.labour.lar.activity.MemberManagerActivity;
-import com.labour.lar.activity.MemberOrgClassTeamActivity;
 import com.labour.lar.activity.MyInfoActivity;
 import com.labour.lar.activity.ProjectManagerActivity;
 import com.labour.lar.activity.SalaryManagerActivity;
 import com.labour.lar.activity.SettingActivity;
 import com.labour.lar.activity.ShowQRCodeActivity;
-import com.labour.lar.activity.ShowQRCodeActivity1;
 import com.labour.lar.activity.SubOperationActivity;
 import com.labour.lar.activity.TrainActivity;
 import com.labour.lar.activity.VerifyActivity;
@@ -210,14 +207,6 @@ public class MineFrag extends BaseFragment {
     }
 
     private void initData(MineGridViewAdapter mineGridViewAdapter) {
-//        int [] imgs = {R.mipmap.personal_icon,R.mipmap.xiangmu_icon,R.mipmap.kaoqinbaobiao_icon,
-//                R.mipmap.xiaoxitongzhi_icon, R.mipmap.seting_icon,
-//                R.mipmap.xiangmu_icon,R.mipmap.personal_icon,R.mipmap.personal_icon,
-//                R.mipmap.kaoqinbaobiao_icon,R.mipmap.personal_icon
-//        };
-//        String[] strs = {"个人信息","工程项目","考勤报表","加入班组","设置","银行卡管理",
-//                "代员工身份验证","代员工银行卡认证","代员工打卡","岗前安全培训"};
-
         list.add("个人信息");
         imgList.add(R.mipmap.userinfo_icon);
 //        list.add("工程项目");
@@ -379,34 +368,7 @@ public class MineFrag extends BaseFragment {
             if (data != null) {
                 String content = data.getStringExtra(Constant.CODED_CONTENT);
                 //AppToast.show(getContext(),"扫描结果为：" + content);
-
-                try {
-                    JSONObject jsonObject = JSON.parseObject(content);
-                    String classteam_id = jsonObject.getString("classteam_id");
-                    String operteam_id = jsonObject.getString("operteam_id");
-                    String project_id = jsonObject.getString("project_id");
-                    String classteam = jsonObject.getString("classteam");
-                    String operteam = jsonObject.getString("operteam");
-                    String project = jsonObject.getString("project");
-
-                    if (!TextUtils.isEmpty(classteam_id)){
-                        addClassteam(classteam_id);
-                    } else if (!TextUtils.isEmpty(classteam)){
-                        addClassteam(classteam);
-                    } else if (!TextUtils.isEmpty(operteam_id)){
-                        addOperteam(operteam_id);
-                    } else if (!TextUtils.isEmpty(operteam)){
-                        addOperteam(operteam);
-                    } else if (!TextUtils.isEmpty(project_id)){
-                        addProject(project_id);
-                    } else if (!TextUtils.isEmpty(project)){
-                        addProject(project);
-                    } else {
-                        AppToast.show(getContext(),"二维码格式错误");
-                    }
-                } catch (RuntimeException e) {
-                    AppToast.show(getContext(),"二维码格式出错");
-                }
+                analysisResult(content);
             }
         }
 
@@ -440,6 +402,59 @@ public class MineFrag extends BaseFragment {
                     subClockIn(employee);
                 }
             }
+        }
+    }
+
+    // 解析扫码结果
+    private void analysisResult(String content) {
+        UserInfo userInfo = UserInfoCache.getInstance(getContext()).get();
+        if (userInfo == null || userInfo.getProle() == null) {
+            AppToast.show(getContext(),"个人身份出错");
+            return;
+        }
+
+        try {
+            JSONObject jsonObject = JSON.parseObject(content);
+            String prole = userInfo.getProle();
+
+            if (prole.equals("employee")){
+                String classteam_id = jsonObject.getString("classteam_id");
+                String classteam = jsonObject.getString("classteam");
+
+                if (!TextUtils.isEmpty(classteam_id)){
+                    addClassteam(classteam_id);
+                } else if (!TextUtils.isEmpty(classteam)){
+                    addClassteam(classteam);
+                } else {
+                    AppToast.show(getContext(),"班组二维码错误");
+                }
+            } else if (prole.equals("staff")){
+                String operteam_id = jsonObject.getString("operteam_id");
+                String operteam = jsonObject.getString("operteam");
+
+                if (!TextUtils.isEmpty(operteam_id)){
+                    addOperteam(operteam_id);
+                } else if (!TextUtils.isEmpty(operteam)){
+                    addOperteam(operteam);
+                } else {
+                    AppToast.show(getContext(),"作业队二维码错误");
+                }
+            } else if (prole.equals("manager")){
+                String project_id = jsonObject.getString("project_id");
+                String project = jsonObject.getString("project");
+
+                if (!TextUtils.isEmpty(project_id)){
+                    addProject(project_id);
+                } else if (!TextUtils.isEmpty(project)){
+                    addProject(project);
+                } else {
+                    AppToast.show(getContext(),"项目二维码错误");
+                }
+            } else {
+                AppToast.show(getContext(),"个人身份错误");
+            }
+        } catch (RuntimeException e) {
+            AppToast.show(getContext(),"二维码格式出错");
         }
     }
 

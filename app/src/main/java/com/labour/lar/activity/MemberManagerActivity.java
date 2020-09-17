@@ -351,10 +351,10 @@ public class MemberManagerActivity extends BaseActivity {
         param.put("token","063d91b4f57518ff");
 
         String api;
-        if (type == 0){
+        if (type == 0 || type == 1){
             api = "/api/manager_delete";
             param.put("manager_id",member_id);
-        } else if (type == 1){
+        } else if (type == 2){
             api = "/api/staff_delete";
             param.put("staff_id",member_id);
         } else {

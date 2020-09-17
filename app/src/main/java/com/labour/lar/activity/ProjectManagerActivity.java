@@ -122,7 +122,7 @@ public class ProjectManagerActivity extends BaseActivity {
         if (user != null) {
             String prole = user.getProle();
             if (prole.equals("ent_manager")) {
-                type = 0;
+                type = 1;
                 User.Ent ent = user.getEnt();
                 if (ent != null) {
                     title = ent.getName();

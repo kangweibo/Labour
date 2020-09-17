@@ -98,7 +98,7 @@ public class ShowQRCodeActivity extends BaseActivity {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                if (type < 2) {
+                if (type < 3) {
                     int id = ids.get(position);
                     Intent intent = new Intent(ShowQRCodeActivity.this, ShowQRCodeActivity.class);
                     intent.putExtra("id", id);
@@ -134,7 +134,6 @@ public class ShowQRCodeActivity extends BaseActivity {
      */
     private void initData(int type ,int id){
         switch (type){
-            case 0:
             case 1:
                 title_tv.setText("项目二维码");
                 getProject(projectId);
@@ -316,7 +315,7 @@ public class ShowQRCodeActivity extends BaseActivity {
                         if (classetam_id == -1 || classetam_id == classetam.getId()) {
                             JSONObject jsonObject = new JSONObject();
                             String id = classetam.getId() + "";
-                            jsonObject.put("classetam_id", id);
+                            jsonObject.put("classteam_id", id);
                             String content = jsonObject.toJSONString();
                             contents.add(content);
 
