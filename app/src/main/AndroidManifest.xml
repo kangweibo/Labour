@@ -261,6 +261,14 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
         <activity
+            android:name="com.labour.lar.activity.AttendanceListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
+            android:name="com.labour.lar.activity.DepartmentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustUnspecified"/>
+        <activity
             android:name="com.labour.lar.activity.PartyContentDetailActivity"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"

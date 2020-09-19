@@ -89,6 +89,8 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
     EditText edt_phone;
     @BindView(R.id.edt_password)
     EditText edt_password;
+    @BindView(R.id.txt_department)
+    TextView txt_department;
 
     File file1;
     File file2;
@@ -104,6 +106,10 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
 
     private String bmpIdcardPhoto;
     private String bmpTakePhoto;
+
+    private int orgid;//: 部门id,
+    private int level;//: 部门级别,
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_sub_register;
@@ -119,6 +125,7 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
             user = UserCache.getInstance(this).get();
         }
         title_tv.setText("代员工批量注册");
+        edt_password.setText("123456");
         initAccessTokenWithAkSk();
     }
 
@@ -140,7 +147,8 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
         }, getApplicationContext(),  "ufsbEibCCMRZ8Ro6It3osFWw", "lMdcyLXMONMUpLFYDy2GqYaPMKqENDOD");
     }
 
-    @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,R.id.submit_btn,R.id.txt_create_num})
+    @OnClick({R.id.back_iv,R.id.take_photo_fan_iv,R.id.take_photo_zheng_iv,R.id.take_photo_iv,
+            R.id.submit_btn,R.id.txt_create_num,R.id.txt_department})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back_iv:
@@ -170,6 +178,9 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
                 break;
             case R.id.txt_create_num:
                 createPhone();
+                break;
+            case R.id.txt_department:
+                selectDepartment();
                 break;
         }
     }
@@ -206,6 +217,16 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
             }
             if (requestCode == 1) {
                 saveCameraImage(data);
+            }
+
+            if (requestCode == Constants.RELOAD) {
+                String json = data.getStringExtra("department");
+                JSONObject jsonObject = JSON.parseObject(json);
+
+                String name = jsonObject.getString("name");
+                orgid = jsonObject.getIntValue("id");
+                level = jsonObject.getIntValue("level");
+                txt_department.setText(name);
             }
         }
     }
@@ -487,6 +508,11 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
             return;
         }
 
+        if(StringUtils.isBlank(txt_department.getText().toString())){
+            AppToast.show(this,"请选择部门！");
+            return;
+        }
+
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
         param.put("userprole",user.getProle());
@@ -501,6 +527,8 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
         param.put("name",name);
         param.put("address",address);
         param.put("gender",gender);
+        param.put("level",level);
+        param.put("orgid",orgid);
         String jsonParams = param.toJSONString();
 
         String url = Constants.HTTP_BASE + "/api/batch_register";
@@ -662,5 +690,13 @@ public class SubRegisterActivity extends BaseActivity implements PermissionManag
                 AppToast.show(SubRegisterActivity.this,"账号获取错误!");
             }
         });
+    }
+
+    /**
+     * 选择部门
+     */
+    private void selectDepartment() {
+        Intent intent = new Intent(this, DepartmentActivity.class);
+        startActivityForResult(intent, Constants.RELOAD);
     }
 }

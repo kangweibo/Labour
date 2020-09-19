@@ -17,6 +17,7 @@ import com.labour.lar.BaseApplication;
 import com.labour.lar.BaseFragment;
 import com.labour.lar.Constants;
 import com.labour.lar.R;
+import com.labour.lar.activity.AttendanceListActivity;
 import com.labour.lar.activity.BankcardAddActivity;
 import com.labour.lar.activity.ClockInActivity;
 import com.labour.lar.activity.IdentifiedActivity;
@@ -147,6 +148,8 @@ public class MineFrag extends BaseFragment {
                     startActivity(new Intent(context, SalaryManagerActivity.class));
                 } else if(item.equals("设置")){
                     startActivity(new Intent(context, SettingActivity.class));
+                } else if(item.equals("考勤记录")){
+                    startActivity(new Intent(context, AttendanceListActivity.class));
                 }
             }
         });
@@ -211,8 +214,8 @@ public class MineFrag extends BaseFragment {
         imgList.add(R.mipmap.userinfo_icon);
 //        list.add("工程项目");
 //        imgList.add(R.mipmap.tab_home_checked);
-//        list.add("考勤报表");
-//        imgList.add(R.mipmap.kaoqinbaobiao_icon);
+        list.add("考勤记录");
+        imgList.add(R.mipmap.tab_kaoqin_checked);
 //        list.add("银行卡管理");
 //        imgList.add(R.mipmap.bankcard_icon);
 

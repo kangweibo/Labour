@@ -56,8 +56,6 @@ public class SubOperationActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = list.get(position);
                 if(item.equals("代员工批量注册")){
-//                    Intent intent =
-//                    startActivityForResult(intent, REQUEST_CODE_Identified);
                     startActivity(new Intent(SubOperationActivity.this, SubRegisterActivity.class));
                 } else if(item.equals("代员工银行卡认证")){
                     Intent intent = new Intent(SubOperationActivity.this, InferiorsActivity.class);

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/layout_header"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/list_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@color/line_grey"
+                android:dividerHeight="1dp"
+                android:overScrollMode="never" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/ly_select"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/translucent1"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+                <TextView android:id="@+id/txt_start_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/black"
+                    android:drawableRight="@mipmap/tree_ex"
+                    android:hint="选择开始时间"
+                    android:gravity="center_vertical"
+                    android:textColorHint="@color/text_input_tip"
+                    android:background="@drawable/common_input_bg"
+                    android:textSize="@dimen/text_size_16"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"/>
+                <TextView android:id="@+id/txt_end_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textColor="@color/black"
+                    android:drawableRight="@mipmap/tree_ex"
+                    android:hint="选择结束时间"
+                    android:gravity="center_vertical"
+                    android:textColorHint="@color/text_input_tip"
+                    android:background="@drawable/common_input_bg"
+                    android:textSize="@dimen/text_size_16"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+                <Button
+                    android:id="@+id/btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/selector_grey_btn"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:text="取消"/>
+                <Button
+                    android:id="@+id/btn_ok"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/selector_button"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:text="确定"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+
+
