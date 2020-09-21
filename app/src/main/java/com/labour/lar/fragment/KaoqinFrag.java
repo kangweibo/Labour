@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
@@ -142,7 +143,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             locationManager.startLocation();
         }
 
-        loadSignTime();
+        loadSignTimeEx();
         //showFaceLiveness();
     }
 
@@ -169,7 +170,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
     // 刷新打卡
     private void refresh(){
-        loadSignTime();
+        loadSignTimeEx();
 //        showFaceLiveness();
         location_tv.setText("正在重新定位，请稍后...");
         locationManager.startLocation();
@@ -255,34 +256,37 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         final ProgressDialog dialog = ProgressDialog.createDialog(context);
         dialog.show();
 
-        getTime(1, new OnLoadTimeListener() {
-            @Override
-            public void onSuccess(String time) {
-                loginInTime = time.split("-");
-                getTime(2, new OnLoadTimeListener() {
-                    @Override
-                    public void onSuccess(String time) {
-                        dialog.dismiss();
-                        logoOutTime = time.split("-");
+        int ent_id = getEntId();
 
-                        signState = getSignState();
-                        sign_btn.setTag(signState);
-                        if(signState == 1){
-                            sign_btn.setEnabled(true);
-                            sign_btn.setText("签到");
-                        } else if(signState == 2){
-                            sign_btn.setEnabled(true);
-                            sign_btn.setText("签退");
-                        } else {
-                            sign_btn.setEnabled(false);
-                            sign_btn.setText("签到");
-                        }
-                    }
-                    @Override
-                    public void onError() {
-                        dialog.dismiss();
-                    }
-                });
+        if (ent_id == -1){
+            AppToast.show(context,"用户所在企业为空!");
+            return;
+        }
+
+        getTime(ent_id, new OnLoadTimeListener() {
+            @Override
+            public void onSuccess(String login_time, String logout_time) {
+                dialog.dismiss();
+                loginInTime = login_time.split("-");
+                logoOutTime = logout_time.split("-");
+
+                signState = getSignState();
+                sign_btn.setTag(signState);
+                if(signState == 1){
+                    sign_btn.setEnabled(true);
+                    sign_btn.setText("签到");
+                } else if(signState == 2){
+                    sign_btn.setEnabled(true);
+                    sign_btn.setText("签退");
+                } else if(signState == 3){
+                    AppToast.show(context,"不在打卡时间段!");
+                    sign_btn.setEnabled(false);
+                    sign_btn.setText("签退");
+                } else {
+                    AppToast.show(context,"不在打卡时间段!");
+                    sign_btn.setEnabled(false);
+                    sign_btn.setText("签到");
+                }
             }
             @Override
             public void onError() {
@@ -296,18 +300,25 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         TokenCache tokenCache = TokenCache.getInstance(context);
         final Map<String,String> param = new HashMap<>();
         param.put("token",tokenCache.get());
-        param.put("id",id+"");
+        param.put("ent_id",id+"");
         String jsonParams = JSON.toJSONString(param);
 
-        String url = Constants.HTTP_BASE + "/api/sysdict";
+        String url = Constants.HTTP_BASE + "/api/sysdicts";
         OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
             @Override
             public void onSuccess(Response<String> response) {
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    JSONObject jo = jr.getData();
-                    String loginInTime = jo.getString("dictvalue");
-                    loadTimeCallback.onSuccess(loginInTime);
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    if (jsonArray.size() > 1) {
+                        JSONObject jo0 = jsonArray.getJSONObject(0);
+                        String loginTime = jo0.getString("dictvalue");
+                        JSONObject jo1 = jsonArray.getJSONObject(1);
+                        String logoutTime = jo1.getString("dictvalue");
+                        loadTimeCallback.onSuccess(loginTime, logoutTime);
+                    } else {
+                        AppToast.show(context,"签到数据不完整!");
+                    }
                 } else {
                     AppToast.show(context,"获取数据出错!");
                     loadTimeCallback.onError();
@@ -339,12 +350,13 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
 
             Calendar now = Calendar.getInstance();
             now.setTimeZone(TimeZone.getDefault());
-            if(now.after(cali1) && now.before(calo1)) {
+            if(now.after(cali1) && now.before(cali2)) {
                 signState = 1;
-            } else if(now.after(calo1)){
+            } else if(now.after(calo1) && now.before(calo2)){
                 signState = 2;
+            } else if(now.after(cali2)){
+                signState = 3;
             }
-
         } catch (ParseException e){
             e.printStackTrace();
         }
@@ -363,8 +375,37 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         return cal;
     }
 
+    private int getEntId() {
+        int id = -1;
+
+        User user = UserCache.getInstance(context).get();
+        if (user != null) {
+            User.Ent ent = user.getEnt();
+            if (ent != null) {
+                id = ent.getId();
+            }
+
+            User.Project project = user.getProject();
+            if (project != null) {
+                id = project.getEnt().getId();
+            }
+
+            User.Operteam operteam = user.getOperteam();
+            if (operteam != null) {
+                id = operteam.getProject().getEnt().getId();
+            }
+
+            User.Classteam classteam = user.getClassteam();
+            if (classteam != null) {
+                id = classteam.getOperteam().getProject().getEnt().getId();
+            }
+        }
+
+        return id;
+    }
+
     public static interface OnLoadTimeListener {
-        public void onSuccess(String time);
+        public void onSuccess(String login_time, String logout_time);
         public void onError();
     }
 
