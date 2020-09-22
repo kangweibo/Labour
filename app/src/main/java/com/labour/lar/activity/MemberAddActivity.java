@@ -157,7 +157,7 @@ public class MemberAddActivity extends BaseActivity {
             prolesMap.put("项目定额员", "project_quota");
             prolesMap.put("项目成员", "manager");
         } else if (type == 2){
-            if (prole.equals("project_manager") || prole.equals("project_quota")){
+            if (prole.equals("ent_manager") || prole.equals("project_manager") || prole.equals("project_quota")){
                 proles.add("作业队长");
                 proles.add("作业队定额员");
                 proles.add("作业队成员");
