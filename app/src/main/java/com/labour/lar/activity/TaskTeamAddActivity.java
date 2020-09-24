@@ -11,6 +11,7 @@ import com.labour.lar.R;
 import com.labour.lar.module.Operteam;
 import com.labour.lar.util.AjaxResult;
 import com.labour.lar.util.StringUtils;
+import com.labour.lar.util.TimeUtil;
 import com.labour.lar.widget.DialogUtil;
 import com.labour.lar.widget.ProgressDialog;
 import com.labour.lar.widget.toast.AppToast;
@@ -232,6 +233,12 @@ public class TaskTeamAddActivity extends BaseActivity {
                     return;
                 }
                 calendarStart = calendar;
+
+                if (calendarEnd != null) {
+                    long timePoor = TimeUtil.getDatePoor(calendarStart, calendarEnd);
+                    edt_project_time.setText(timePoor + "");
+                }
+
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_start_time.setText(time);
@@ -254,6 +261,12 @@ public class TaskTeamAddActivity extends BaseActivity {
                     return;
                 }
                 calendarEnd = calendar;
+
+                if (calendarStart != null) {
+                    long timePoor = TimeUtil.getDatePoor(calendarStart, calendarEnd);
+                    edt_project_time.setText(timePoor + "");
+                }
+
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_end_time.setText(time);
