@@ -92,17 +92,17 @@ public class MainActivity extends BaseActivity {
         //keepAliveManager.startKeepAlive();
 
         //启动保活服务
-        KeepLive.startWork(getApplication(), KeepLive.RunMode.ENERGY,
-                new ForegroundNotification("劳务管理","劳务管理程序正在运行", R.mipmap.ic_launcher, //定义前台服务的默认样式。即标题、描述和图标
-                        //定义前台服务的通知点击事件
-                        new ForegroundNotificationClickListener() {
-                            @Override
-                            public void foregroundNotificationClick(Context context, Intent intent) {
-                            }
-                        }),
-                //你需要保活的服务，如socket连接、定时任务等，建议不用匿名内部类的方式在这里写
-                new KeepLiveService(this)
-        );
+//        KeepLive.startWork(getApplication(), KeepLive.RunMode.ENERGY,
+//                new ForegroundNotification("劳务管理","劳务管理程序正在运行", R.mipmap.ic_launcher, //定义前台服务的默认样式。即标题、描述和图标
+//                        //定义前台服务的通知点击事件
+//                        new ForegroundNotificationClickListener() {
+//                            @Override
+//                            public void foregroundNotificationClick(Context context, Intent intent) {
+//                            }
+//                        }),
+//                //你需要保活的服务，如socket连接、定时任务等，建议不用匿名内部类的方式在这里写
+//                new KeepLiveService(this)
+//        );
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.SIGN_CHECK_IN_OUT_RECEIVER_ACTION);

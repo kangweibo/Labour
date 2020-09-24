@@ -41,6 +41,12 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
             holder.field2_rl.setVisibility(View.VISIBLE);
         }
 
+        if (item.status == 1){
+            holder.field1_tv.setTextColor(mContext.getResources().getColor(R.color.common_blue));
+        } else {
+            holder.field1_tv.setTextColor(mContext.getResources().getColor(R.color.common_red));
+        }
+
         holder.arraw_iv.setVisibility(item.isShowArraw?View.VISIBLE:View.GONE);
 //        holder.btn_examine.setVisibility(item.isShowPass?View.VISIBLE:View.GONE);
 
@@ -63,6 +69,7 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
         public boolean isShowArraw;
         public boolean isShowPass;
         public int type;
+        public int status;
     }
 
     class ItemHolder {

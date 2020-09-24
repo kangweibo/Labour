@@ -204,7 +204,7 @@ public class MemberAddActivity extends BaseActivity {
         String prole = txt_prole.getText().toString();
         String realProle = prolesMap.get(prole);
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty) || StringUtils.isBlank(phone)
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(phone)
                 || StringUtils.isBlank(prole)){
             AppToast.show(this,"请填写完整人员信息！");
             return;
@@ -265,11 +265,10 @@ public class MemberAddActivity extends BaseActivity {
         String name = edt_name.getText().toString();
         String duty = edt_duty.getText().toString();
         String phone = edt_phone.getText().toString();
-//        String passwd = edt_password.getText().toString();
         String prole = txt_prole.getText().toString();
         String realProle = prolesMap.get(prole);
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duty) || StringUtils.isBlank(phone)
+        if(StringUtils.isBlank(name) || StringUtils.isBlank(phone)
                 || StringUtils.isBlank(prole)){
             AppToast.show(this,"请填写完整人员信息！");
             return;

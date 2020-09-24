@@ -50,6 +50,9 @@ public class ProjectAddActivity extends BaseActivity {
     private String project_id;
     private String ent_id;
 
+    private Calendar calendarStart;
+    private Calendar calendarEnd;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_project_add;
@@ -111,10 +114,20 @@ public class ProjectAddActivity extends BaseActivity {
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(budget)
-                || StringUtils.isBlank(project_time)|| StringUtils.isBlank(start_time)
-                || StringUtils.isBlank(end_time)){
-            AppToast.show(this,"请填写完整项目信息！");
+        if(StringUtils.isBlank(name)){
+            AppToast.show(this,"请填写项目名称！");
+            return;
+        }
+        if(StringUtils.isBlank(budget)){
+            AppToast.show(this,"请填写项目合同金额！");
+            return;
+        }
+        if(StringUtils.isBlank(start_time)){
+            AppToast.show(this,"请填写项目开始时间！");
+            return;
+        }
+        if(StringUtils.isBlank(project_time) && StringUtils.isBlank(end_time)){
+            AppToast.show(this,"请填写项目工期或结束时间！");
             return;
         }
 
@@ -162,10 +175,20 @@ public class ProjectAddActivity extends BaseActivity {
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(budget)
-                || StringUtils.isBlank(project_time)|| StringUtils.isBlank(start_time)
-                || StringUtils.isBlank(end_time)){
-            AppToast.show(this,"请填写完整项目信息！");
+        if(StringUtils.isBlank(name)){
+            AppToast.show(this,"请填写项目名称！");
+            return;
+        }
+        if(StringUtils.isBlank(budget)){
+            AppToast.show(this,"请填写项目合同金额！");
+            return;
+        }
+        if(StringUtils.isBlank(start_time)){
+            AppToast.show(this,"请填写项目开始时间！");
+            return;
+        }
+        if(StringUtils.isBlank(project_time) && StringUtils.isBlank(end_time)){
+            AppToast.show(this,"请填写项目工期或结束时间！");
             return;
         }
 
@@ -212,6 +235,11 @@ public class ProjectAddActivity extends BaseActivity {
                 new DialogUtil.OnDialogListener<Calendar>() {
             @Override
             public void onPositiveButtonClick(Calendar calendar) {
+                if (calendarEnd != null && !calendar.before(calendarEnd)){
+                    AppToast.show(ProjectAddActivity.this,"开始时间必须早于结束时间!");
+                    return;
+                }
+                calendarStart = calendar;
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_start_time.setText(time);
@@ -229,6 +257,11 @@ public class ProjectAddActivity extends BaseActivity {
                 new DialogUtil.OnDialogListener<Calendar>() {
             @Override
             public void onPositiveButtonClick(Calendar calendar) {
+                if (calendarStart != null && !calendar.after(calendarStart)){
+                    AppToast.show(ProjectAddActivity.this,"结束时间必须晚于开始时间!");
+                    return;
+                }
+                calendarEnd = calendar;
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_end_time.setText(time);

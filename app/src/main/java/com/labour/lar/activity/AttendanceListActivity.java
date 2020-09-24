@@ -150,10 +150,9 @@ public class AttendanceListActivity extends BaseActivity {
 
         JSONObject param = new JSONObject();
         param.put("token","063d91b4f57518ff");
-//        param.put("dtype",prole);
-//        param.put("userid",userInfo.getId());
-        param.put("dtype","employee");
-        param.put("userid","1");
+        param.put("dtype",prole);
+        param.put("userid",userInfo.getId());
+
         String jsonParams = param.toJSONString();
 
         String url = Constants.HTTP_BASE + "/api/user_duties";

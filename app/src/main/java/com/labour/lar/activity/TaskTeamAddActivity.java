@@ -49,6 +49,9 @@ public class TaskTeamAddActivity extends BaseActivity {
     private String operteam_id;
     private String project_id;
 
+    private Calendar calendarStart;
+    private Calendar calendarEnd;
+
     @Override
     public int getActivityLayoutId() {
         return R.layout.activity_taskteam_add;
@@ -109,9 +112,16 @@ public class TaskTeamAddActivity extends BaseActivity {
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duration)
-                || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
-            AppToast.show(this,"请填写完整作业队信息！");
+        if(StringUtils.isBlank(name)){
+            AppToast.show(this,"请填写作业队名称！");
+            return;
+        }
+        if(StringUtils.isBlank(start_time)){
+            AppToast.show(this,"请填写作业队开始时间！");
+            return;
+        }
+        if(StringUtils.isBlank(duration) && StringUtils.isBlank(end_time)){
+            AppToast.show(this,"请填写作业队工期或结束时间！");
             return;
         }
 
@@ -160,9 +170,16 @@ public class TaskTeamAddActivity extends BaseActivity {
         String start_time = txt_start_time.getText().toString();
         String end_time = txt_end_time.getText().toString();
 
-        if(StringUtils.isBlank(name) || StringUtils.isBlank(duration)
-                || StringUtils.isBlank(start_time)|| StringUtils.isBlank(end_time)){
-            AppToast.show(this,"请填写完整作业队信息！");
+        if(StringUtils.isBlank(name)){
+            AppToast.show(this,"请填写作业队名称！");
+            return;
+        }
+        if(StringUtils.isBlank(start_time)){
+            AppToast.show(this,"请填写作业队开始时间！");
+            return;
+        }
+        if(StringUtils.isBlank(duration) && StringUtils.isBlank(end_time)){
+            AppToast.show(this,"请填写作业队工期或结束时间！");
             return;
         }
 
@@ -210,6 +227,11 @@ public class TaskTeamAddActivity extends BaseActivity {
                 new DialogUtil.OnDialogListener<Calendar>() {
             @Override
             public void onPositiveButtonClick(Calendar calendar) {
+                if (calendarEnd != null && !calendar.before(calendarEnd)){
+                    AppToast.show(TaskTeamAddActivity.this,"开始时间必须早于结束时间!");
+                    return;
+                }
+                calendarStart = calendar;
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_start_time.setText(time);
@@ -227,6 +249,11 @@ public class TaskTeamAddActivity extends BaseActivity {
                 new DialogUtil.OnDialogListener<Calendar>() {
             @Override
             public void onPositiveButtonClick(Calendar calendar) {
+                if (calendarStart != null && !calendar.after(calendarStart)){
+                    AppToast.show(TaskTeamAddActivity.this,"结束时间必须晚于开始时间!");
+                    return;
+                }
+                calendarEnd = calendar;
                 String time = new SimpleDateFormat("yyyy-MM-dd",
                         Locale.getDefault()).format(calendar.getTime());
                 txt_end_time.setText(time);

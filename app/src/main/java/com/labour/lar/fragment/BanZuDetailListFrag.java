@@ -221,6 +221,10 @@ public class BanZuDetailListFrag extends BaseFragment {
                 item.type = 1;
             }
 
+            if (employee.getStatus() != null && employee.getStatus().equals("上岗")) {
+                item.status = 1;
+            }
+
 //            UserCache userCache = UserCache.getInstance(getContext());
 //            User user = userCache.get();
 //
