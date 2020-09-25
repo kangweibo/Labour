@@ -273,20 +273,22 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                 signState = getSignState();
                 sign_btn.setTag(signState);
                 if(signState == 1){
-                    sign_btn.setEnabled(true);
+//                    sign_btn.setEnabled(true);
                     sign_btn.setText("签到");
                 } else if(signState == 2){
-                    sign_btn.setEnabled(true);
+//                    sign_btn.setEnabled(true);
                     sign_btn.setText("签退");
                 } else if(signState == 3){
                     AppToast.show(context,"不在打卡时间段!");
-                    sign_btn.setEnabled(false);
+//                    sign_btn.setEnabled(false);
                     sign_btn.setText("签退");
                 } else {
                     AppToast.show(context,"不在打卡时间段!");
-                    sign_btn.setEnabled(false);
+//                    sign_btn.setEnabled(false);
                     sign_btn.setText("签到");
                 }
+
+                checkSignState();
             }
             @Override
             public void onError() {
@@ -442,10 +444,13 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             url = Constants.HTTP_BASE + "/api/clockin";
             param.put("clockintime",clockintime);
             param.put("clockingeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
-        } else {
+        } else if(signState == 2) {
             url = Constants.HTTP_BASE + "/api/clockout";
             param.put("clockouttime",clockintime);
             param.put("clockoutgeo",latLonPoint.getLongitude()+"," + latLonPoint.getLatitude());
+        } else {
+            AppToast.show(context,"不在打卡时间段，打卡失败！");
+            return;
         }
 
         ProgressDialog dialog = ProgressDialog.createDialog(context);
@@ -494,7 +499,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     }
 
     private void checkSignState() {
-        if (latLonPoint != null && isFaceMatch) {
+        if (latLonPoint != null && isFaceMatch && (signState == 1 || signState == 2)) {
             sign_btn.setEnabled(true);
         } else {
             sign_btn.setEnabled(false);

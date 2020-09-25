@@ -213,10 +213,15 @@ public class MyInfoFrag extends BaseFragment implements PermissionManager.Permis
         item14.type = "发放总额";
         item14.value = userInfo.getTotalsalary()+"元";
 
+        MyinfoAdapter.ListItem item15 = new MyinfoAdapter.ListItem();
+        item15.type = "职责";
+        item15.value = userInfo.getDuty();
+
         list.add(item11);
         list.add(item12);
         list.add(item13);
         list.add(item14);
+        list.add(item15);
 
         myinfoAdapter.notifyDataSetChanged();
     }
