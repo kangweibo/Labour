@@ -93,7 +93,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     private String project_id;
     private boolean isCanSet;//能否设置围栏
 
-    private List<MapGeoFence> fences;
+    private List<MapGeoFence> fences = new ArrayList<>();
     private List<EmpsLocation> empsLoc;
 
     @Override
@@ -242,8 +242,10 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
                 dialog.dismiss();
                 AjaxResult jr = new AjaxResult(response.body());
                 if(jr.getSuccess() == 1){
-                    JSONArray jsonArray = jr.getJSONArrayData();
-                    fences = JSON.parseArray(JSON.toJSONString(jsonArray), MapGeoFence.class);
+                    JSONObject jsonObject = jr.getData();
+                    MapGeoFence fence = JSON.parseObject(JSON.toJSONString(jsonObject), MapGeoFence.class);
+                    fences.clear();
+                    fences.add(fence);
 
                     refreshMap();
                 } else {

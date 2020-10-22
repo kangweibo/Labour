@@ -171,6 +171,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
 
         taskTeamDetailListFrag = new TaskTeamDetailListFrag();
         taskTeamDetailListFrag.setOperteam(operteam);
+        taskTeamDetailListFrag.setFenceId(fenceId);
 
         GisMapFrag gisMapFrag = new GisMapFrag();
         gisMapFrag.setProjectId(operteam.getProject_id()+"");

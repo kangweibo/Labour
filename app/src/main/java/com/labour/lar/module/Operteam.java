@@ -31,7 +31,6 @@ public class Operteam implements Serializable {
     private String ondutynum_db;// 队部在岗人数
     private String totalworkday_db;// 队部部累计工时
     private String totalsalary_db;// 队部发放总额
-    private int clockinfence;
 
     public int getId() {
         return id;
@@ -223,13 +222,5 @@ public class Operteam implements Serializable {
 
     public void setTotalsalary_db(String totalsalary_db) {
         this.totalsalary_db = totalsalary_db;
-    }
-
-    public int getClockinfence() {
-        return clockinfence;
-    }
-
-    public void setClockinfence(int clockinfence) {
-        this.clockinfence = clockinfence;
     }
 }

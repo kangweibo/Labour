@@ -69,6 +69,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
     private Classteam classteamSelect;
     private Operteam operteam;
     private BottomSelectDialog dialog;
+    private String fenceId;
 
     private boolean isShowOperteamSecret;
     private boolean isShowClassteamSecret;
@@ -135,7 +136,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
                     Intent intent = new Intent(context, BanZuDetailActivity.class);
                     intent.putExtra("classteam", classteam);
                     intent.putExtra("project_id", operteam.getProject_id() + "");
-                    intent.putExtra("fenceId", operteam.getClockinfence() + "");
+                    intent.putExtra("fenceId", fenceId);
                     startActivity(intent);
                 }
             }
@@ -260,6 +261,10 @@ public class TaskTeamDetailListFrag extends BaseFragment {
      */
     public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
+    }
+
+    public void setFenceId(String fenceId){
+        this.fenceId = fenceId;
     }
 
     public void addClassteam() {
