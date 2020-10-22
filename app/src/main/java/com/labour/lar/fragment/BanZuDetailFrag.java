@@ -55,6 +55,7 @@ public class BanZuDetailFrag extends BaseFragment {
     FragmentManager fm;
     String[] titles  = {"劳务管理","地图围栏"};
 
+    private String fenceId;
     private String project_id;
     private Classteam classteam;
 
@@ -107,6 +108,7 @@ public class BanZuDetailFrag extends BaseFragment {
 
         GisMapFrag gisMapFrag = new GisMapFrag();
         gisMapFrag.setProjectId(project_id);
+        gisMapFrag.setFenceId(fenceId);
 
         frgs.add(banZuDetailListFrag);
         frgs.add(gisMapFrag);
@@ -162,6 +164,10 @@ public class BanZuDetailFrag extends BaseFragment {
 
     public void setProjectId(String project_id){
         this.project_id = project_id;
+    }
+
+    public void setFenceId(String fenceId){
+        this.fenceId = fenceId;
     }
 
     public void addPerson() {

@@ -22,8 +22,10 @@ public class TaskTeamDetailActivity extends BaseActivity {
     @Override
     public void afterInitLayout() {
         Operteam operteam = (Operteam)getIntent().getSerializableExtra("operteam");
+        String fenceId = getIntent().getStringExtra("fenceId");
         TaskTeamDetailFrag taskTeamDetailFrag = new TaskTeamDetailFrag();
         taskTeamDetailFrag.setOperteam(operteam);
+        taskTeamDetailFrag.setFenceId(fenceId);
 
         FragmentTransaction trs = fm.beginTransaction();
         trs.add(R.id.container,taskTeamDetailFrag);

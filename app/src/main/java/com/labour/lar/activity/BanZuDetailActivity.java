@@ -20,10 +20,11 @@ public class BanZuDetailActivity extends BaseActivity {
     public void afterInitLayout() {
         Classteam classteam = (Classteam)getIntent().getSerializableExtra("classteam");
         String project_id = getIntent().getStringExtra("project_id");
+        String fenceId = getIntent().getStringExtra("fenceId");
         BanZuDetailFrag banZuDetailFrag = new BanZuDetailFrag();
         banZuDetailFrag.setClassteam(classteam);
         banZuDetailFrag.setProjectId(project_id);
-
+        banZuDetailFrag.setFenceId(fenceId);
         FragmentTransaction trs = fm.beginTransaction();
         trs.add(R.id.container,banZuDetailFrag);
         trs.commit();

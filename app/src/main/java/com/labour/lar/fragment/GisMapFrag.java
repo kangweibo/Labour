@@ -89,7 +89,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
 
     private BottomSelectDialog dialog;
     private View mRootView;
-//    private Project project;
+    private String fenceId;
     private String project_id;
     private boolean isCanSet;//能否设置围栏
 
@@ -187,7 +187,7 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
     }
 
     // 获取围栏
-    private void getFence() {
+    private void getFence1() {
         if(StringUtils.isBlank(project_id)){
             return;
         }
@@ -197,6 +197,42 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/project_geofences";
+        ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
+        dialog.show();
+
+        OkGo.<String>post(url).upJson(jsonParams).tag("request_tag").execute(new StringCallback() {
+            @Override
+            public void onSuccess(Response<String> response) {
+                dialog.dismiss();
+                AjaxResult jr = new AjaxResult(response.body());
+                if(jr.getSuccess() == 1){
+                    JSONArray jsonArray = jr.getJSONArrayData();
+                    fences = JSON.parseArray(JSON.toJSONString(jsonArray), MapGeoFence.class);
+
+                    refreshMap();
+                } else {
+                    AppToast.show(getContext(),"没有围栏!");
+                }
+            }
+            @Override
+            public void onError(Response<String> response) {
+                dialog.dismiss();
+                AppToast.show(getContext(),"围栏获取出错!");
+            }
+        });
+    }
+
+    // 获取围栏
+    private void getFence() {
+        if(StringUtils.isBlank(fenceId)){
+            return;
+        }
+
+        final Map<String,String> param = new HashMap<>();
+        param.put("id",fenceId);
+        String jsonParams = JSON.toJSONString(param);
+
+        String url = Constants.HTTP_BASE + "/api/get_geofence";
         ProgressDialog dialog = ProgressDialog.createDialog(this.getContext());
         dialog.show();
 
@@ -583,9 +619,9 @@ public class GisMapFrag extends Fragment implements AMap.OnMarkerClickListener, 
         });
     }
 
-//    public void setProject(Project project){
-//        this.project = project;
-//    }
+    public void setFenceId(String fenceId){
+        this.fenceId = fenceId;
+    }
 
     public void setProjectId(String project_id){
         this.project_id = project_id;

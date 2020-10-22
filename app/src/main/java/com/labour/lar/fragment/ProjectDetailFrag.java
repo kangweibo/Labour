@@ -186,6 +186,7 @@ public class ProjectDetailFrag extends BaseFragment {
         GisMapFrag gisMapFrag = new GisMapFrag();
         projectDetailListFrag.setProject(project);
         gisMapFrag.setProjectId(project.getId()+"");
+        gisMapFrag.setFenceId(project.getClockinfence()+"");
 
         frgs.add(projectDetailListFrag);
         frgs.add(gisMapFrag);

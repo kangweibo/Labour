@@ -69,6 +69,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
     String[] titles  = {"劳务管理","地图围栏"};
     private TaskTeamDetailListFrag taskTeamDetailListFrag;
 
+    private String fenceId;
     private Operteam operteam; //作业队
 
     @Override
@@ -173,6 +174,7 @@ public class TaskTeamDetailFrag extends BaseFragment {
 
         GisMapFrag gisMapFrag = new GisMapFrag();
         gisMapFrag.setProjectId(operteam.getProject_id()+"");
+        gisMapFrag.setFenceId(fenceId);
 
         frgs.add(taskTeamDetailListFrag);
         frgs.add(gisMapFrag);
@@ -226,6 +228,10 @@ public class TaskTeamDetailFrag extends BaseFragment {
      */
     public void setOperteam(Operteam operteam) {
         this.operteam = operteam;
+    }
+
+    public void setFenceId(String fenceId){
+        this.fenceId = fenceId;
     }
 
     // 添加班组

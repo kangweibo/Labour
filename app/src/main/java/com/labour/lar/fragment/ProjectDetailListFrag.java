@@ -128,6 +128,7 @@ public class ProjectDetailListFrag extends BaseFragment {
                     Operteam operteam = operteamList.get(position-1);
                     Intent intent = new Intent(context, TaskTeamDetailActivity.class);
                     intent.putExtra("operteam", operteam);
+                    intent.putExtra("fenceId", project.getClockinfence()+"");
                     startActivity(intent);
                 }
             }

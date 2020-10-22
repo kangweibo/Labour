@@ -303,6 +303,7 @@ public class GeoFenceActivity extends Activity {
 		jsonObject.put("id",id);
 		jsonObject.put("project_id",project_id);
 		jsonObject.put("points", jsonArray);
+		jsonObject.put("geotype", "polygon");
 		String jsonParams =jsonObject.toJSONString();
 
 		String url = Constants.HTTP_BASE + "/api/update_geofence";

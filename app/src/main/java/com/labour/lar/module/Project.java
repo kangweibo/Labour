@@ -31,6 +31,7 @@ public class Project implements Serializable {
     private String ondutynum_xmb;// 项目部在岗人数
     private String totalworkday_xmb;// 项目部累计工时
     private String totalsalary_xmb;// 项目部发放总额
+    private int clockinfence;
 
     public int getId() {
         return id;
@@ -246,5 +247,13 @@ public class Project implements Serializable {
 
     public void setTotalsalary_xmb(String totalsalary_xmb) {
         this.totalsalary_xmb = totalsalary_xmb;
+    }
+
+    public int getClockinfence() {
+        return clockinfence;
+    }
+
+    public void setClockinfence(int clockinfence) {
+        this.clockinfence = clockinfence;
     }
 }

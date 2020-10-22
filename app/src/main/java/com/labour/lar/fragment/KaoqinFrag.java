@@ -94,6 +94,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
     private boolean insideFence = false;
     // 是否匹配人脸
     private boolean isFaceMatch = false;
+    private int face_match = -1;
 
     private UserInfo userInfo;
 
@@ -317,6 +318,8 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                         String loginTime = jo0.getString("dictvalue");
                         JSONObject jo1 = jsonArray.getJSONObject(1);
                         String logoutTime = jo1.getString("dictvalue");
+                        JSONObject jo3 = jsonArray.getJSONObject(3);
+                        face_match = jo3.getIntValue("dictvalue");
                         loadTimeCallback.onSuccess(loginTime, logoutTime);
                     } else {
                         AppToast.show(context,"签到数据不完整!");
@@ -437,7 +440,6 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
         param.put("usertype",userInfo.getProle());
         param.put("userid",userId+"");
         param.put("clockdate",clockdate);
-        String jsonParams = JSON.toJSONString(param);
         String url;
 
         if(signState == 1){
@@ -453,6 +455,7 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
             return;
         }
 
+        String jsonParams = JSON.toJSONString(param);
         ProgressDialog dialog = ProgressDialog.createDialog(context);
         dialog.show();
 
@@ -594,13 +597,18 @@ public class KaoqinFrag extends BaseFragment implements AMapLocationListener, Ge
                     if (result != null) {
                         int score =  result.getInteger("score");
 
-                        if (score > 70){
-                            isFaceMatch = true;
-                            AppToast.show(context,"身份认证成功!");
-                            checkSignState();
-                        } else {
+                        if (face_match == -1){
                             isFaceMatch = false;
-                            AppToast.show(context,"身份认证失败!");
+                            AppToast.show(context,"匹配参数未获取，身份认证失败!");
+                        } else {
+                            if (score > face_match) {
+                                isFaceMatch = true;
+                                AppToast.show(context, "身份认证成功!");
+                                checkSignState();
+                            } else {
+                                isFaceMatch = false;
+                                AppToast.show(context, "身份认证失败!");
+                            }
                         }
                     }
                 } else {

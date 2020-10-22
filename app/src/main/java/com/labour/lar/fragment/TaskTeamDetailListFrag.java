@@ -135,6 +135,7 @@ public class TaskTeamDetailListFrag extends BaseFragment {
                     Intent intent = new Intent(context, BanZuDetailActivity.class);
                     intent.putExtra("classteam", classteam);
                     intent.putExtra("project_id", operteam.getProject_id() + "");
+                    intent.putExtra("fenceId", operteam.getClockinfence() + "");
                     startActivity(intent);
                 }
             }
