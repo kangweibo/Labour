@@ -221,7 +221,11 @@ public class StaffDetailListFrag extends BaseFragment {
             }
 
             if (employee.getStatus() != null && employee.getStatus().equals("上岗")) {
-                item.status = 1;
+                if (employee.getCurrentstatus() != null && employee.getCurrentstatus().equals("在岗")) {
+                    item.status = 1;
+                } else {
+                    item.status = 2;
+                }
             }
 
 //            UserCache userCache = UserCache.getInstance(getContext());

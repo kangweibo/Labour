@@ -43,6 +43,8 @@ public class EmployeeListAdapter extends BaseAdapter<EmployeeListAdapter.ListIte
 
         if (item.status == 1){
             holder.field1_tv.setTextColor(mContext.getResources().getColor(R.color.common_green));
+        } else if (item.status == 2){
+            holder.field1_tv.setTextColor(mContext.getResources().getColor(R.color.common_blue));
         } else {
             holder.field1_tv.setTextColor(mContext.getResources().getColor(R.color.common_red));
         }

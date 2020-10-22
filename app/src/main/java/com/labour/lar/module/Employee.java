@@ -14,6 +14,7 @@ public class Employee implements Serializable {
 
     private String email;//":": "111@qq.com",
     private String status;//":": "1",
+    private String currentstatus;
 
     private Pic pic;// "url": "/uploads/staff/pic/2/temp.png"
     private Pic idpic1;//"url": "/uploads/staff/idpic1/2/temp.png"
@@ -102,6 +103,14 @@ public class Employee implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCurrentstatus() {
+        return currentstatus;
+    }
+
+    public void setCurrentstatus(String currentstatus) {
+        this.currentstatus = currentstatus;
     }
 
     public Pic getPic() {

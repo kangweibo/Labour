@@ -93,7 +93,7 @@ public class PasswordActivity extends BaseActivity {
         final Map<String,String> param = new HashMap<>();
         param.put("id",user.getId()+"");
         param.put("passwd",new_password);
-        param.put("role",user.getProle());
+        param.put("prole",user.getProle());
         String jsonParams = JSON.toJSONString(param);
 
         String url = Constants.HTTP_BASE + "/api/change_passwd";
